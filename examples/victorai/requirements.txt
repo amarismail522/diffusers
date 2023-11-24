@@ -1,0 +1,15 @@
+#python3.10
+# git+https://github.com/ShivamShrirao/diffusers #for text to image
+# git+https://github.com/huggingface/VictorAI.git #for image to image
+triton
+torch
+torchvision
+accelerate
+transformers
+ftfy
+bitsandbytes==0.35.0
+gradio
+natsort
+safetensors
+xformers
+#git+https://github.com/facebookresearch/xformers@4c06c79#egg=xformers #Install when training

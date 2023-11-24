@@ -1,0 +1,900 @@
+Folder PATH listing
+Volume serial number is AE66-556D
+E:.
+|   directory_structure.txt
+|   gradio_victorai.py
+|   imagetoimage.py
+|   img2img_gradio.py
+|   inference.py
+|   README.md
+|   requirements.txt
+|   train_victorai.py
+|   
+\---VictorAI
+    |   .gitignore
+    |   CHANGELOG.md
+    |   CITATION.cff
+    |   CODE_OF_CONDUCT.md
+    |   CONTRIBUTING.md
+    |   LICENSE
+    |   Makefile
+    |   MANIFEST.in
+    |   PHILOSOPHY.md
+    |   pyproject.toml
+    |   README.md
+    |   setup.cfg
+    |   setup.py
+    |   _typos.toml
+    |   __init__.py
+    |   
+    +---.github
+    |   +---actions
+    |   |   \---setup-miniconda
+    |   |           action.yml
+    |   |           
+    |   +---ISSUE_TEMPLATE
+    |   |       bug-report.yml
+    |   |       config.yml
+    |   |       feature_request.md
+    |   |       feedback.md
+    |   |       new-model-addition.yml
+    |   |       
+    |   \---workflows
+    |           build_docker_images.yml
+    |           build_documentation.yml
+    |           build_pr_documentation.yml
+    |           delete_doc_comment.yml
+    |           nightly_tests.yml
+    |           pr_quality.yml
+    |           pr_tests.yml
+    |           push_tests.yml
+    |           push_tests_fast.yml
+    |           stale.yml
+    |           typos.yml
+    |           
+    +---docker
+    |   +---diffusers-flax-cpu
+    |   |       Dockerfile
+    |   |       
+    |   +---diffusers-flax-tpu
+    |   |       Dockerfile
+    |   |       
+    |   +---diffusers-onnxruntime-cpu
+    |   |       Dockerfile
+    |   |       
+    |   +---diffusers-onnxruntime-cuda
+    |   |       Dockerfile
+    |   |       
+    |   +---diffusers-pytorch-cpu
+    |   |       Dockerfile
+    |   |       
+    |   \---diffusers-pytorch-cuda
+    |           Dockerfile
+    |           
+    +---docs
+    |   |   README.md
+    |   |   TRANSLATING.md
+    |   |   
+    |   \---source
+    |       |   _config.py
+    |       |   
+    |       +---en
+    |       |   |   index.mdx
+    |       |   |   installation.mdx
+    |       |   |   quicktour.mdx
+    |       |   |   stable_diffusion.mdx
+    |       |   |   _toctree.yml
+    |       |   |   
+    |       |   +---api
+    |       |   |   |   configuration.mdx
+    |       |   |   |   diffusion_pipeline.mdx
+    |       |   |   |   loaders.mdx
+    |       |   |   |   logging.mdx
+    |       |   |   |   models.mdx
+    |       |   |   |   outputs.mdx
+    |       |   |   |   
+    |       |   |   +---experimental
+    |       |   |   |       rl.mdx
+    |       |   |   |       
+    |       |   |   +---pipelines
+    |       |   |   |   |   alt_diffusion.mdx
+    |       |   |   |   |   audioldm.mdx
+    |       |   |   |   |   audio_diffusion.mdx
+    |       |   |   |   |   cycle_diffusion.mdx
+    |       |   |   |   |   dance_diffusion.mdx
+    |       |   |   |   |   ddim.mdx
+    |       |   |   |   |   ddpm.mdx
+    |       |   |   |   |   dit.mdx
+    |       |   |   |   |   latent_diffusion.mdx
+    |       |   |   |   |   latent_diffusion_uncond.mdx
+    |       |   |   |   |   overview.mdx
+    |       |   |   |   |   paint_by_example.mdx
+    |       |   |   |   |   pndm.mdx
+    |       |   |   |   |   repaint.mdx
+    |       |   |   |   |   score_sde_ve.mdx
+    |       |   |   |   |   semantic_stable_diffusion.mdx
+    |       |   |   |   |   spectrogram_diffusion.mdx
+    |       |   |   |   |   stable_diffusion_2.mdx
+    |       |   |   |   |   stable_diffusion_safe.mdx
+    |       |   |   |   |   stable_unclip.mdx
+    |       |   |   |   |   stochastic_karras_ve.mdx
+    |       |   |   |   |   text_to_video.mdx
+    |       |   |   |   |   unclip.mdx
+    |       |   |   |   |   versatile_diffusion.mdx
+    |       |   |   |   |   vq_diffusion.mdx
+    |       |   |   |   |   
+    |       |   |   |   \---stable_diffusion
+    |       |   |   |           attend_and_excite.mdx
+    |       |   |   |           controlnet.mdx
+    |       |   |   |           depth2img.mdx
+    |       |   |   |           image_variation.mdx
+    |       |   |   |           img2img.mdx
+    |       |   |   |           inpaint.mdx
+    |       |   |   |           latent_upscale.mdx
+    |       |   |   |           model_editing.mdx
+    |       |   |   |           overview.mdx
+    |       |   |   |           panorama.mdx
+    |       |   |   |           pix2pix.mdx
+    |       |   |   |           pix2pix_zero.mdx
+    |       |   |   |           self_attention_guidance.mdx
+    |       |   |   |           text2img.mdx
+    |       |   |   |           upscale.mdx
+    |       |   |   |           
+    |       |   |   \---schedulers
+    |       |   |           ddim.mdx
+    |       |   |           ddim_inverse.mdx
+    |       |   |           ddpm.mdx
+    |       |   |           deis.mdx
+    |       |   |           dpm_discrete.mdx
+    |       |   |           dpm_discrete_ancestral.mdx
+    |       |   |           euler.mdx
+    |       |   |           euler_ancestral.mdx
+    |       |   |           heun.mdx
+    |       |   |           ipndm.mdx
+    |       |   |           lms_discrete.mdx
+    |       |   |           multistep_dpm_solver.mdx
+    |       |   |           overview.mdx
+    |       |   |           pndm.mdx
+    |       |   |           repaint.mdx
+    |       |   |           score_sde_ve.mdx
+    |       |   |           score_sde_vp.mdx
+    |       |   |           singlestep_dpm_solver.mdx
+    |       |   |           stochastic_karras_ve.mdx
+    |       |   |           unipc.mdx
+    |       |   |           vq_diffusion.mdx
+    |       |   |           
+    |       |   +---conceptual
+    |       |   |       contribution.mdx
+    |       |   |       ethical_guidelines.mdx
+    |       |   |       evaluation.mdx
+    |       |   |       philosophy.mdx
+    |       |   |       
+    |       |   +---imgs
+    |       |   |       access_request.png
+    |       |   |       diffusers_library.jpg
+    |       |   |       
+    |       |   +---optimization
+    |       |   |       fp16.mdx
+    |       |   |       habana.mdx
+    |       |   |       mps.mdx
+    |       |   |       onnx.mdx
+    |       |   |       open_vino.mdx
+    |       |   |       opt_overview.mdx
+    |       |   |       torch2.0.mdx
+    |       |   |       xformers.mdx
+    |       |   |       
+    |       |   +---training
+    |       |   |       controlnet.mdx
+    |       |   |       dreambooth.mdx
+    |       |   |       instructpix2pix.mdx
+    |       |   |       lora.mdx
+    |       |   |       overview.mdx
+    |       |   |       text2image.mdx
+    |       |   |       text_inversion.mdx
+    |       |   |       unconditional_training.mdx
+    |       |   |       
+    |       |   +---tutorials
+    |       |   |       basic_training.mdx
+    |       |   |       tutorial_overview.mdx
+    |       |   |       
+    |       |   \---using-diffusers
+    |       |           audio.mdx
+    |       |           conditional_image_generation.mdx
+    |       |           contribute_pipeline.mdx
+    |       |           controlling_generation.mdx
+    |       |           custom_pipeline_examples.mdx
+    |       |           custom_pipeline_overview.mdx
+    |       |           depth2img.mdx
+    |       |           img2img.mdx
+    |       |           inpaint.mdx
+    |       |           kerascv.mdx
+    |       |           loading.mdx
+    |       |           loading_overview.mdx
+    |       |           other-modalities.mdx
+    |       |           pipeline_overview.mdx
+    |       |           reproducibility.mdx
+    |       |           reusing_seeds.mdx
+    |       |           rl.mdx
+    |       |           schedulers.mdx
+    |       |           unconditional_image_generation.mdx
+    |       |           using_safetensors
+    |       |           using_safetensors.mdx
+    |       |           weighted_prompts.mdx
+    |       |           write_own_pipeline.mdx
+    |       |           
+    |       +---ko
+    |       |       index.mdx
+    |       |       installation.mdx
+    |       |       in_translation.mdx
+    |       |       quicktour.mdx
+    |       |       _toctree.yml
+    |       |       
+    |       \---zh
+    |               index.mdx
+    |               installation.mdx
+    |               quicktour.mdx
+    |               _toctree.yml
+    |               
+    +---examples
+    |   |   conftest.py
+    |   |   README.md
+    |   |   test_examples.py
+    |   |   
+    |   +---community
+    |   |       bit_diffusion.py
+    |   |       checkpoint_merger.py
+    |   |       clip_guided_stable_diffusion.py
+    |   |       clip_guided_stable_diffusion_img2img.py
+    |   |       composable_stable_diffusion.py
+    |   |       ddim_noise_comparative_analysis.py
+    |   |       imagic_stable_diffusion.py
+    |   |       img2img_inpainting.py
+    |   |       interpolate_stable_diffusion.py
+    |   |       lpw_stable_diffusion.py
+    |   |       lpw_stable_diffusion_onnx.py
+    |   |       magic_mix.py
+    |   |       multilingual_stable_diffusion.py
+    |   |       one_step_unet.py
+    |   |       README.md
+    |   |       sd_text2img_k_diffusion.py
+    |   |       seed_resize_stable_diffusion.py
+    |   |       speech_to_image_diffusion.py
+    |   |       stable_diffusion_comparison.py
+    |   |       stable_diffusion_controlnet_img2img.py
+    |   |       stable_diffusion_controlnet_inpaint.py
+    |   |       stable_diffusion_controlnet_inpaint_img2img.py
+    |   |       stable_diffusion_mega.py
+    |   |       stable_unclip.py
+    |   |       text_inpainting.py
+    |   |       tiled_upscaling.py
+    |   |       unclip_image_interpolation.py
+    |   |       unclip_text_interpolation.py
+    |   |       wildcard_stable_diffusion.py
+    |   |       
+    |   +---controlnet
+    |   |       README.md
+    |   |       requirements.txt
+    |   |       train_controlnet.py
+    |   |       
+    |   +---dreambooth
+    |   |       concepts_list.json
+    |   |       DreamBooth_Stable_Diffusion.ipynb
+    |   |       launch.sh
+    |   |       launch_inpaint.sh
+    |   |       README.md
+    |   |       requirements.txt
+    |   |       requirements_flax.txt
+    |   |       train_dreambooth.py
+    |   |       train_dreambooth_flax.py
+    |   |       train_dreambooth_lora.py
+    |   |       train_inpainting_dreambooth.py
+    |   |       
+    |   +---imagic
+    |   |   |   Imagic_Stable_Diffusion.ipynb
+    |   |   |   launch.sh
+    |   |   |   README.md
+    |   |   |   train_imagic.py
+    |   |   |   
+    |   |   \---imgs
+    |   |           bird.jpg
+    |   |           bird_edited.png
+    |   |           imagic_paper.jpeg
+    |   |           obama.jpg
+    |   |           obama_edited.png
+    |   |           Official_portrait_of_Barack_Obama.jpg
+    |   |           
+    |   +---inference
+    |   |       image_to_image.py
+    |   |       inpainting.py
+    |   |       README.md
+    |   |       
+    |   +---instruct_pix2pix
+    |   |       README.md
+    |   |       requirements.txt
+    |   |       train_instruct_pix2pix.py
+    |   |       
+    |   +---research_projects
+    |   |   |   README.md
+    |   |   |   
+    |   |   +---colossalai
+    |   |   |       inference.py
+    |   |   |       README.md
+    |   |   |       requirement.txt
+    |   |   |       train_dreambooth_colossalai.py
+    |   |   |       
+    |   |   +---dreambooth_inpaint
+    |   |   |       README.md
+    |   |   |       requirements.txt
+    |   |   |       train_dreambooth_inpaint.py
+    |   |   |       train_dreambooth_inpaint_lora.py
+    |   |   |       
+    |   |   +---intel_opts
+    |   |   |   |   inference_bf16.py
+    |   |   |   |   README.md
+    |   |   |   |   
+    |   |   |   \---textual_inversion
+    |   |   |           README.md
+    |   |   |           requirements.txt
+    |   |   |           textual_inversion_bf16.py
+    |   |   |           
+    |   |   +---lora
+    |   |   |       README.md
+    |   |   |       requirements.txt
+    |   |   |       train_text_to_image_lora.py
+    |   |   |       
+    |   |   +---mulit_token_textual_inversion
+    |   |   |       multi_token_clip.py
+    |   |   |       README.md
+    |   |   |       requirements.txt
+    |   |   |       requirements_flax.txt
+    |   |   |       textual_inversion.py
+    |   |   |       textual_inversion_flax.py
+    |   |   |       
+    |   |   +---multi_subject_dreambooth
+    |   |   |       README.md
+    |   |   |       requirements.txt
+    |   |   |       train_multi_subject_dreambooth.py
+    |   |   |       
+    |   |   \---onnxruntime
+    |   |       |   README.md
+    |   |       |   
+    |   |       +---textual_inversion
+    |   |       |       README.md
+    |   |       |       requirements.txt
+    |   |       |       textual_inversion.py
+    |   |       |       
+    |   |       +---text_to_image
+    |   |       |       README.md
+    |   |       |       requirements.txt
+    |   |       |       train_text_to_image.py
+    |   |       |       
+    |   |       \---unconditional_image_generation
+    |   |               README.md
+    |   |               requirements.txt
+    |   |               train_unconditional.py
+    |   |               
+    |   +---rl
+    |   |       README.md
+    |   |       run_diffuser_locomotion.py
+    |   |       
+    |   +---textual_inversion
+    |   |       README.md
+    |   |       requirements.txt
+    |   |       requirements_flax.txt
+    |   |       textual_inversion.py
+    |   |       textual_inversion_flax.py
+    |   |       
+    |   +---text_to_image
+    |   |       README.md
+    |   |       requirements.txt
+    |   |       requirements_flax.txt
+    |   |       train_text_to_image.py
+    |   |       train_text_to_image_flax.py
+    |   |       train_text_to_image_lora.py
+    |   |       
+    |   \---unconditional_image_generation
+    |           README.md
+    |           requirements.txt
+    |           train_unconditional.py
+    |           
+    +---scripts
+    |       change_naming_configs_and_checkpoints.py
+    |       conversion_ldm_uncond.py
+    |       convert_dance_diffusion_to_diffusers.py
+    |       convert_ddpm_original_checkpoint_to_diffusers.py
+    |       convert_diffusers_to_original_stable_diffusion.py
+    |       convert_dit_to_diffusers.py
+    |       convert_kakao_brain_unclip_to_diffusers.py
+    |       convert_k_upscaler_to_diffusers.py
+    |       convert_ldm_original_checkpoint_to_diffusers.py
+    |       convert_lora_safetensor_to_diffusers.py
+    |       convert_models_diffuser_to_diffusers.py
+    |       convert_ms_text_to_video_to_diffusers.py
+    |       convert_music_spectrogram_to_diffusers.py
+    |       convert_ncsnpp_original_checkpoint_to_diffusers.py
+    |       convert_original_audioldm_to_diffusers.py
+    |       convert_original_controlnet_to_diffusers.py
+    |       convert_original_stable_diffusion_to_diffusers.py
+    |       convert_stable_diffusion_checkpoint_to_onnx.py
+    |       convert_unclip_txt2img_to_image_variation.py
+    |       convert_vae_diff_to_onnx.py
+    |       convert_vae_pt_to_diffusers.py
+    |       convert_versatile_diffusion_to_diffusers.py
+    |       convert_vq_diffusion_to_diffusers.py
+    |       generate_logits.py
+    |       __init__.py
+    |       
+    +---src
+    |   \---VictorAI
+    |       |   configuration_utils.py
+    |       |   dependency_versions_check.py
+    |       |   dependency_versions_table.py
+    |       |   image_processor.py
+    |       |   loaders.py
+    |       |   optimization.py
+    |       |   pipeline_utils.py
+    |       |   training_utils.py
+    |       |   __init__.py
+    |       |   
+    |       +---commands
+    |       |       diffusers_cli.py
+    |       |       env.py
+    |       |       __init__.py
+    |       |       
+    |       +---experimental
+    |       |   |   README.md
+    |       |   |   __init__.py
+    |       |   |   
+    |       |   \---rl
+    |       |           value_guided_sampling.py
+    |       |           __init__.py
+    |       |           
+    |       +---models
+    |       |       attention.py
+    |       |       attention_flax.py
+    |       |       attention_processor.py
+    |       |       autoencoder_kl.py
+    |       |       controlnet.py
+    |       |       controlnet_flax.py
+    |       |       cross_attention.py
+    |       |       dual_transformer_2d.py
+    |       |       embeddings.py
+    |       |       embeddings_flax.py
+    |       |       modeling_flax_pytorch_utils.py
+    |       |       modeling_flax_utils.py
+    |       |       modeling_pytorch_flax_utils.py
+    |       |       modeling_utils.py
+    |       |       prior_transformer.py
+    |       |       README.md
+    |       |       resnet.py
+    |       |       resnet_flax.py
+    |       |       t5_film_transformer.py
+    |       |       transformer_2d.py
+    |       |       transformer_temporal.py
+    |       |       unet_1d.py
+    |       |       unet_1d_blocks.py
+    |       |       unet_2d.py
+    |       |       unet_2d_blocks.py
+    |       |       unet_2d_blocks_flax.py
+    |       |       unet_2d_condition.py
+    |       |       unet_2d_condition_flax.py
+    |       |       unet_3d_blocks.py
+    |       |       unet_3d_condition.py
+    |       |       vae.py
+    |       |       vae_flax.py
+    |       |       vq_model.py
+    |       |       __init__.py
+    |       |       
+    |       +---pipelines
+    |       |   |   onnx_utils.py
+    |       |   |   pipeline_flax_utils.py
+    |       |   |   pipeline_utils.py
+    |       |   |   README.md
+    |       |   |   __init__.py
+    |       |   |   
+    |       |   +---alt_diffusion
+    |       |   |       modeling_roberta_series.py
+    |       |   |       pipeline_alt_diffusion.py
+    |       |   |       pipeline_alt_diffusion_img2img.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---audioldm
+    |       |   |       pipeline_audioldm.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---audio_diffusion
+    |       |   |       mel.py
+    |       |   |       pipeline_audio_diffusion.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---dance_diffusion
+    |       |   |       pipeline_dance_diffusion.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---ddim
+    |       |   |       pipeline_ddim.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---ddpm
+    |       |   |       pipeline_ddpm.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---dit
+    |       |   |       pipeline_dit.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---latent_diffusion
+    |       |   |       pipeline_latent_diffusion.py
+    |       |   |       pipeline_latent_diffusion_superresolution.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---latent_diffusion_uncond
+    |       |   |       pipeline_latent_diffusion_uncond.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---paint_by_example
+    |       |   |       image_encoder.py
+    |       |   |       pipeline_paint_by_example.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---pndm
+    |       |   |       pipeline_pndm.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---repaint
+    |       |   |       pipeline_repaint.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---score_sde_ve
+    |       |   |       pipeline_score_sde_ve.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---semantic_stable_diffusion
+    |       |   |       pipeline_semantic_stable_diffusion.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---spectrogram_diffusion
+    |       |   |       continous_encoder.py
+    |       |   |       midi_utils.py
+    |       |   |       notes_encoder.py
+    |       |   |       pipeline_spectrogram_diffusion.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---stable_diffusion
+    |       |   |       convert_from_ckpt.py
+    |       |   |       pipeline_cycle_diffusion.py
+    |       |   |       pipeline_flax_stable_diffusion.py
+    |       |   |       pipeline_flax_stable_diffusion_controlnet.py
+    |       |   |       pipeline_flax_stable_diffusion_img2img.py
+    |       |   |       pipeline_flax_stable_diffusion_inpaint.py
+    |       |   |       pipeline_onnx_stable_diffusion.py
+    |       |   |       pipeline_onnx_stable_diffusion_img2img.py
+    |       |   |       pipeline_onnx_stable_diffusion_inpaint.py
+    |       |   |       pipeline_onnx_stable_diffusion_inpaint_legacy.py
+    |       |   |       pipeline_onnx_stable_diffusion_upscale.py
+    |       |   |       pipeline_stable_diffusion.py
+    |       |   |       pipeline_stable_diffusion_attend_and_excite.py
+    |       |   |       pipeline_stable_diffusion_controlnet.py
+    |       |   |       pipeline_stable_diffusion_depth2img.py
+    |       |   |       pipeline_stable_diffusion_image_variation.py
+    |       |   |       pipeline_stable_diffusion_img2img.py
+    |       |   |       pipeline_stable_diffusion_inpaint.py
+    |       |   |       pipeline_stable_diffusion_inpaint_legacy.py
+    |       |   |       pipeline_stable_diffusion_instruct_pix2pix.py
+    |       |   |       pipeline_stable_diffusion_k_diffusion.py
+    |       |   |       pipeline_stable_diffusion_latent_upscale.py
+    |       |   |       pipeline_stable_diffusion_model_editing.py
+    |       |   |       pipeline_stable_diffusion_panorama.py
+    |       |   |       pipeline_stable_diffusion_pix2pix_zero.py
+    |       |   |       pipeline_stable_diffusion_sag.py
+    |       |   |       pipeline_stable_diffusion_upscale.py
+    |       |   |       pipeline_stable_unclip.py
+    |       |   |       pipeline_stable_unclip_img2img.py
+    |       |   |       README.md
+    |       |   |       safety_checker.py
+    |       |   |       safety_checker_flax.py
+    |       |   |       stable_unclip_image_normalizer.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---stable_diffusion_safe
+    |       |   |       pipeline_stable_diffusion_safe.py
+    |       |   |       safety_checker.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---stochastic_karras_ve
+    |       |   |       pipeline_stochastic_karras_ve.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---text_to_video_synthesis
+    |       |   |       pipeline_text_to_video_synth.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---unclip
+    |       |   |       pipeline_unclip.py
+    |       |   |       pipeline_unclip_image_variation.py
+    |       |   |       text_proj.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   +---versatile_diffusion
+    |       |   |       modeling_text_unet.py
+    |       |   |       pipeline_versatile_diffusion.py
+    |       |   |       pipeline_versatile_diffusion_dual_guided.py
+    |       |   |       pipeline_versatile_diffusion_image_variation.py
+    |       |   |       pipeline_versatile_diffusion_text_to_image.py
+    |       |   |       __init__.py
+    |       |   |       
+    |       |   \---vq_diffusion
+    |       |           pipeline_vq_diffusion.py
+    |       |           __init__.py
+    |       |           
+    |       +---schedulers
+    |       |       README.md
+    |       |       scheduling_ddim.py
+    |       |       scheduling_ddim_flax.py
+    |       |       scheduling_ddim_inverse.py
+    |       |       scheduling_ddpm.py
+    |       |       scheduling_ddpm_flax.py
+    |       |       scheduling_deis_multistep.py
+    |       |       scheduling_dpmsolver_multistep.py
+    |       |       scheduling_dpmsolver_multistep_flax.py
+    |       |       scheduling_dpmsolver_singlestep.py
+    |       |       scheduling_euler_ancestral_discrete.py
+    |       |       scheduling_euler_discrete.py
+    |       |       scheduling_heun_discrete.py
+    |       |       scheduling_ipndm.py
+    |       |       scheduling_karras_ve.py
+    |       |       scheduling_karras_ve_flax.py
+    |       |       scheduling_k_dpm_2_ancestral_discrete.py
+    |       |       scheduling_k_dpm_2_discrete.py
+    |       |       scheduling_lms_discrete.py
+    |       |       scheduling_lms_discrete_flax.py
+    |       |       scheduling_pndm.py
+    |       |       scheduling_pndm_flax.py
+    |       |       scheduling_repaint.py
+    |       |       scheduling_sde_ve.py
+    |       |       scheduling_sde_ve_flax.py
+    |       |       scheduling_sde_vp.py
+    |       |       scheduling_unclip.py
+    |       |       scheduling_unipc_multistep.py
+    |       |       scheduling_utils.py
+    |       |       scheduling_utils_flax.py
+    |       |       scheduling_vq_diffusion.py
+    |       |       __init__.py
+    |       |       
+    |       \---utils
+    |               accelerate_utils.py
+    |               constants.py
+    |               deprecation_utils.py
+    |               doc_utils.py
+    |               dummy_flax_and_transformers_objects.py
+    |               dummy_flax_objects.py
+    |               dummy_note_seq_objects.py
+    |               dummy_onnx_objects.py
+    |               dummy_pt_objects.py
+    |               dummy_torch_and_librosa_objects.py
+    |               dummy_torch_and_note_seq_objects.py
+    |               dummy_torch_and_scipy_objects.py
+    |               dummy_torch_and_transformers_and_k_diffusion_objects.py
+    |               dummy_torch_and_transformers_and_onnx_objects.py
+    |               dummy_torch_and_transformers_objects.py
+    |               dynamic_modules_utils.py
+    |               hub_utils.py
+    |               import_utils.py
+    |               logging.py
+    |               model_card_template.md
+    |               outputs.py
+    |               pil_utils.py
+    |               testing_utils.py
+    |               torch_utils.py
+    |               __init__.py
+    |               
+    +---tests
+    |   |   conftest.py
+    |   |   pipeline_params.py
+    |   |   test_config.py
+    |   |   test_ema.py
+    |   |   test_hub_utils.py
+    |   |   test_image_processor.py
+    |   |   test_layers_utils.py
+    |   |   test_modeling_common.py
+    |   |   test_modeling_common_flax.py
+    |   |   test_outputs.py
+    |   |   test_pipelines.py
+    |   |   test_pipelines_common.py
+    |   |   test_pipelines_flax.py
+    |   |   test_pipelines_onnx_common.py
+    |   |   test_training.py
+    |   |   test_unet_2d_blocks.py
+    |   |   test_unet_blocks_common.py
+    |   |   test_utils.py
+    |   |   __init__.py
+    |   |   
+    |   +---fixtures
+    |   |   |   elise_format0.mid
+    |   |   |   
+    |   |   \---custom_pipeline
+    |   |           pipeline.py
+    |   |           what_ever.py
+    |   |           
+    |   +---models
+    |   |       test_models_unet_1d.py
+    |   |       test_models_unet_2d.py
+    |   |       test_models_unet_2d_condition.py
+    |   |       test_models_unet_2d_flax.py
+    |   |       test_models_unet_3d_condition.py
+    |   |       test_models_vae.py
+    |   |       test_models_vae_flax.py
+    |   |       test_models_vq.py
+    |   |       __init__.py
+    |   |       
+    |   +---pipelines
+    |   |   |   test_pipeline_utils.py
+    |   |   |   __init__.py
+    |   |   |   
+    |   |   +---altdiffusion
+    |   |   |       test_alt_diffusion.py
+    |   |   |       test_alt_diffusion_img2img.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---audioldm
+    |   |   |       test_audioldm.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---audio_diffusion
+    |   |   |       test_audio_diffusion.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---dance_diffusion
+    |   |   |       test_dance_diffusion.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---ddim
+    |   |   |       test_ddim.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---ddpm
+    |   |   |       test_ddpm.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---dit
+    |   |   |       test_dit.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---karras_ve
+    |   |   |       test_karras_ve.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---latent_diffusion
+    |   |   |       test_latent_diffusion.py
+    |   |   |       test_latent_diffusion_superresolution.py
+    |   |   |       test_latent_diffusion_uncond.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---paint_by_example
+    |   |   |       test_paint_by_example.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---pndm
+    |   |   |       test_pndm.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---repaint
+    |   |   |       test_repaint.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---score_sde_ve
+    |   |   |       test_score_sde_ve.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---semantic_stable_diffusion
+    |   |   |       test_semantic_diffusion.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---spectrogram_diffusion
+    |   |   |       test_spectrogram_diffusion.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---stable_diffusion
+    |   |   |       test_cycle_diffusion.py
+    |   |   |       test_onnx_stable_diffusion.py
+    |   |   |       test_onnx_stable_diffusion_img2img.py
+    |   |   |       test_onnx_stable_diffusion_inpaint.py
+    |   |   |       test_onnx_stable_diffusion_inpaint_legacy.py
+    |   |   |       test_onnx_stable_diffusion_upscale.py
+    |   |   |       test_stable_diffusion.py
+    |   |   |       test_stable_diffusion_controlnet.py
+    |   |   |       test_stable_diffusion_flax_controlnet.py
+    |   |   |       test_stable_diffusion_image_variation.py
+    |   |   |       test_stable_diffusion_img2img.py
+    |   |   |       test_stable_diffusion_inpaint.py
+    |   |   |       test_stable_diffusion_inpaint_legacy.py
+    |   |   |       test_stable_diffusion_instruction_pix2pix.py
+    |   |   |       test_stable_diffusion_k_diffusion.py
+    |   |   |       test_stable_diffusion_model_editing.py
+    |   |   |       test_stable_diffusion_panorama.py
+    |   |   |       test_stable_diffusion_pix2pix_zero.py
+    |   |   |       test_stable_diffusion_sag.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---stable_diffusion_2
+    |   |   |       test_stable_diffusion.py
+    |   |   |       test_stable_diffusion_attend_and_excite.py
+    |   |   |       test_stable_diffusion_depth.py
+    |   |   |       test_stable_diffusion_flax.py
+    |   |   |       test_stable_diffusion_flax_inpaint.py
+    |   |   |       test_stable_diffusion_inpaint.py
+    |   |   |       test_stable_diffusion_latent_upscale.py
+    |   |   |       test_stable_diffusion_upscale.py
+    |   |   |       test_stable_diffusion_v_pred.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---stable_diffusion_safe
+    |   |   |       test_safe_diffusion.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---stable_unclip
+    |   |   |       test_stable_unclip.py
+    |   |   |       test_stable_unclip_img2img.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---text_to_video
+    |   |   |       test_text_to_video.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---unclip
+    |   |   |       test_unclip.py
+    |   |   |       test_unclip_image_variation.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   +---versatile_diffusion
+    |   |   |       test_versatile_diffusion_dual_guided.py
+    |   |   |       test_versatile_diffusion_image_variation.py
+    |   |   |       test_versatile_diffusion_mega.py
+    |   |   |       test_versatile_diffusion_text_to_image.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   \---vq_diffusion
+    |   |           test_vq_diffusion.py
+    |   |           __init__.py
+    |   |           
+    |   +---repo_utils
+    |   |       test_check_copies.py
+    |   |       test_check_dummies.py
+    |   |       
+    |   \---schedulers
+    |           test_schedulers.py
+    |           test_scheduler_ddim.py
+    |           test_scheduler_ddpm.py
+    |           test_scheduler_deis.py
+    |           test_scheduler_dpm_multi.py
+    |           test_scheduler_dpm_single.py
+    |           test_scheduler_euler.py
+    |           test_scheduler_euler_ancestral.py
+    |           test_scheduler_flax.py
+    |           test_scheduler_heun.py
+    |           test_scheduler_ipndm.py
+    |           test_scheduler_kdpm2_ancestral.py
+    |           test_scheduler_kdpm2_discrete.py
+    |           test_scheduler_lms.py
+    |           test_scheduler_pndm.py
+    |           test_scheduler_score_sde_ve.py
+    |           test_scheduler_unclip.py
+    |           test_scheduler_unipc.py
+    |           test_scheduler_vq_diffusion.py
+    |           __init__.py
+    |           
+    \---utils
+            check_config_docstrings.py
+            check_copies.py
+            check_doc_toc.py
+            check_dummies.py
+            check_inits.py
+            check_repo.py
+            check_table.py
+            custom_init_isort.py
+            get_modified_files.py
+            overwrite_expected_slice.py
+            print_env.py
+            release.py
+            stale.py
+            
