@@ -45,7 +45,7 @@ For text-to-image, you normally pass a text prompt to the model. But with Contro
 Load an image and use the [opencv-python](https://github.com/opencv/opencv-python) library to extract the canny image:
 
 ```py
-from VictorAI.utils import load_image, make_image_grid
+from diffusers.utils import load_image, make_image_grid
 from PIL import Image
 import cv2
 import numpy as np
@@ -76,14 +76,14 @@ canny_image = Image.fromarray(image)
   </div>
 </div>
 
-Next, load a ControlNet model conditioned on canny edge detection and pass it to the [`StableVictorControlNetPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to speed up inference and reduce memory usage.
+Next, load a ControlNet model conditioned on canny edge detection and pass it to the [`StableDiffusionControlNetPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to speed up inference and reduce memory usage.
 
 ```py
-from VictorAI import StableVictorControlNetPipeline, ControlNetModel, UniPCMultistepScheduler
+from diffusers import StableDiffusionControlNetPipeline, ControlNetModel, UniPCMultistepScheduler
 import torch
 
 controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16, use_safetensors=True)
-pipe = StableVictorControlNetPipeline.from_pretrained(
+pipe = StableDiffusionControlNetPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", controlnet=controlnet, torch_dtype=torch.float16, use_safetensors=True
 )
 
@@ -108,7 +108,7 @@ make_image_grid([original_image, canny_image, output], rows=1, cols=3)
 
 For image-to-image, you'd typically pass an initial image and a prompt to the pipeline to generate a new image. With ControlNet, you can pass an additional conditioning input to guide the model. Let's condition the model with a depth map, an image which contains spatial information. This way, the ControlNet can use the depth map as a control to guide the model to generate an image that preserves spatial information.
 
-You'll use the [`StableVictorControlNetImg2ImgPipeline`] for this task, which is different from the [`StableVictorControlNetPipeline`] because it allows you to pass an initial image as the starting point for the image generation process.
+You'll use the [`StableDiffusionControlNetImg2ImgPipeline`] for this task, which is different from the [`StableDiffusionControlNetPipeline`] because it allows you to pass an initial image as the starting point for the image generation process.
 
 Load an image and use the `depth-estimation` [`~transformers.Pipeline`] from 🤗 Transformers to extract the depth map of an image:
 
@@ -117,7 +117,7 @@ import torch
 import numpy as np
 
 from transformers import pipeline
-from VictorAI.utils import load_image, make_image_grid
+from diffusers.utils import load_image, make_image_grid
 
 image = load_image(
     "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet-img2img.jpg"
@@ -136,14 +136,14 @@ depth_estimator = pipeline("depth-estimation")
 depth_map = get_depth_map(image, depth_estimator).unsqueeze(0).half().to("cuda")
 ```
 
-Next, load a ControlNet model conditioned on depth maps and pass it to the [`StableVictorControlNetImg2ImgPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to speed up inference and reduce memory usage.
+Next, load a ControlNet model conditioned on depth maps and pass it to the [`StableDiffusionControlNetImg2ImgPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to speed up inference and reduce memory usage.
 
 ```py
-from VictorAI import StableVictorControlNetImg2ImgPipeline, ControlNetModel, UniPCMultistepScheduler
+from diffusers import StableDiffusionControlNetImg2ImgPipeline, ControlNetModel, UniPCMultistepScheduler
 import torch
 
 controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11f1p_sd15_depth", torch_dtype=torch.float16, use_safetensors=True)
-pipe = StableVictorControlNetImg2ImgPipeline.from_pretrained(
+pipe = StableDiffusionControlNetImg2ImgPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", controlnet=controlnet, torch_dtype=torch.float16, use_safetensors=True
 )
 
@@ -178,7 +178,7 @@ For inpainting, you need an initial image, a mask image, and a prompt describing
 Load an initial image and a mask image:
 
 ```py
-from VictorAI.utils import load_image, make_image_grid
+from diffusers.utils import load_image, make_image_grid
 
 init_image = load_image(
     "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet-inpaint.jpg"
@@ -222,13 +222,13 @@ control_image = make_inpaint_condition(init_image, mask_image)
   </div>
 </div>
 
-Load a ControlNet model conditioned on inpainting and pass it to the [`StableVictorControlNetInpaintPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to speed up inference and reduce memory usage.
+Load a ControlNet model conditioned on inpainting and pass it to the [`StableDiffusionControlNetInpaintPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to speed up inference and reduce memory usage.
 
 ```py
-from VictorAI import StableVictorControlNetInpaintPipeline, ControlNetModel, UniPCMultistepScheduler
+from diffusers import StableDiffusionControlNetInpaintPipeline, ControlNetModel, UniPCMultistepScheduler
 
 controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_inpaint", torch_dtype=torch.float16, use_safetensors=True)
-pipe = StableVictorControlNetInpaintPipeline.from_pretrained(
+pipe = StableDiffusionControlNetInpaintPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", controlnet=controlnet, torch_dtype=torch.float16, use_safetensors=True
 )
 
@@ -269,15 +269,15 @@ Guess mode does not have any impact on prompt conditioning and you can still pro
 Set `guess_mode=True` in the pipeline, and it is [recommended](https://github.com/lllyasviel/ControlNet#guess-mode--non-prompt-mode) to set the `guidance_scale` value between 3.0 and 5.0.
 
 ```py
-from VictorAI import StableVictorControlNetPipeline, ControlNetModel
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
+from diffusers.utils import load_image, make_image_grid
 import numpy as np
 import torch
 from PIL import Image
 import cv2
 
 controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", use_safetensors=True)
-pipe = StableVictorControlNetPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", controlnet=controlnet, use_safetensors=True).to("cuda")
+pipe = StableDiffusionControlNetPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", controlnet=controlnet, use_safetensors=True).to("cuda")
 
 original_image = load_image("https://huggingface.co/takuma104/controlnet_dev/resolve/main/bird_512x512.png")
 
@@ -313,8 +313,8 @@ There aren't too many ControlNet models compatible with Stable Diffusion XL (SDX
 Let's use a SDXL ControlNet conditioned on canny images to generate an image. Start by loading an image and prepare the canny image:
 
 ```py
-from VictorAI import StableVictorXLControlNetPipeline, ControlNetModel, AutoencoderKL
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import StableDiffusionXLControlNetPipeline, ControlNetModel, AutoencoderKL
+from diffusers.utils import load_image, make_image_grid
 from PIL import Image
 import cv2
 import numpy as np
@@ -347,7 +347,7 @@ make_image_grid([original_image, canny_image], rows=1, cols=2)
   </div>
 </div>
 
-Load a SDXL ControlNet model conditioned on canny edge detection and pass it to the [`StableVictorXLControlNetPipeline`]. You can also enable model offloading to reduce memory usage.
+Load a SDXL ControlNet model conditioned on canny edge detection and pass it to the [`StableDiffusionXLControlNetPipeline`]. You can also enable model offloading to reduce memory usage.
 
 ```py
 controlnet = ControlNetModel.from_pretrained(
@@ -356,7 +356,7 @@ controlnet = ControlNetModel.from_pretrained(
     use_safetensors=True
 )
 vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16, use_safetensors=True)
-pipe = StableVictorXLControlNetPipeline.from_pretrained(
+pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
     controlnet=controlnet,
     vae=vae,
@@ -370,7 +370,7 @@ Now pass your prompt (and optionally a negative prompt if you're using one) and 
 
 <Tip>
 
-The [`controlnet_conditioning_scale`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/controlnet#diffusers.StableVictorControlNetPipeline.__call__.controlnet_conditioning_scale) parameter determines how much weight to assign to the conditioning inputs. A value of 0.5 is recommended for good generalization, but feel free to experiment with this number!
+The [`controlnet_conditioning_scale`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/controlnet#diffusers.StableDiffusionControlNetPipeline.__call__.controlnet_conditioning_scale) parameter determines how much weight to assign to the conditioning inputs. A value of 0.5 is recommended for good generalization, but feel free to experiment with this number!
 
 </Tip>
 
@@ -391,11 +391,11 @@ make_image_grid([original_image, canny_image, image], rows=1, cols=3)
     <img class="rounded-xl" src="https://huggingface.co/diffusers/controlnet-canny-sdxl-1.0/resolve/main/out_hug_lab_7.png"/>
 </div>
 
-You can use [`StableVictorXLControlNetPipeline`] in guess mode as well by setting the parameter to `True`:
+You can use [`StableDiffusionXLControlNetPipeline`] in guess mode as well by setting the parameter to `True`:
 
 ```py
-from VictorAI import StableVictorXLControlNetPipeline, ControlNetModel, AutoencoderKL
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import StableDiffusionXLControlNetPipeline, ControlNetModel, AutoencoderKL
+from diffusers.utils import load_image, make_image_grid
 import numpy as np
 import torch
 import cv2
@@ -412,7 +412,7 @@ controlnet = ControlNetModel.from_pretrained(
     "diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True
 )
 vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16, use_safetensors=True)
-pipe = StableVictorXLControlNetPipeline.from_pretrained(
+pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", controlnet=controlnet, vae=vae, torch_dtype=torch.float16, use_safetensors=True
 )
 pipe.enable_model_cpu_offload()
@@ -440,14 +440,14 @@ Replace the SDXL model with a model like [runwayml/stable-diffusion-v1-5](https:
 You can compose multiple ControlNet conditionings from different image inputs to create a *MultiControlNet*. To get better results, it is often helpful to:
 
 1. mask conditionings such that they don't overlap (for example, mask the area of a canny image where the pose conditioning is located)
-2. experiment with the [`controlnet_conditioning_scale`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/controlnet#diffusers.StableVictorControlNetPipeline.__call__.controlnet_conditioning_scale) parameter to determine how much weight to assign to each conditioning input
+2. experiment with the [`controlnet_conditioning_scale`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/controlnet#diffusers.StableDiffusionControlNetPipeline.__call__.controlnet_conditioning_scale) parameter to determine how much weight to assign to each conditioning input
 
 In this example, you'll combine a canny image and a human pose estimation image to generate a new image.
 
 Prepare the canny image conditioning:
 
 ```py
-from VictorAI.utils import load_image, make_image_grid
+from diffusers.utils import load_image, make_image_grid
 from PIL import Image
 import numpy as np
 import cv2
@@ -515,10 +515,10 @@ make_image_grid([original_image, openpose_image], rows=1, cols=2)
   </div>
 </div>
 
-Load a list of ControlNet models that correspond to each conditioning, and pass them to the [`StableVictorXLControlNetPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to reduce memory usage.
+Load a list of ControlNet models that correspond to each conditioning, and pass them to the [`StableDiffusionXLControlNetPipeline`]. Use the faster [`UniPCMultistepScheduler`] and enable model offloading to reduce memory usage.
 
 ```py
-from VictorAI import StableVictorXLControlNetPipeline, ControlNetModel, AutoencoderKL, UniPCMultistepScheduler
+from diffusers import StableDiffusionXLControlNetPipeline, ControlNetModel, AutoencoderKL, UniPCMultistepScheduler
 import torch
 
 controlnets = [
@@ -531,7 +531,7 @@ controlnets = [
 ]
 
 vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16, use_safetensors=True)
-pipe = StableVictorXLControlNetPipeline.from_pretrained(
+pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", controlnet=controlnets, vae=vae, torch_dtype=torch.float16, use_safetensors=True
 )
 pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)

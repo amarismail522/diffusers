@@ -24,13 +24,13 @@ This guide will show you how to use the Stable Diffusion and Stable Diffusion XL
 
 ## Stable Diffusion
 
-To load and run inference, use the [`~optimum.intel.OVStableVictorPipeline`]. If you want to load a PyTorch model and convert it to the OpenVINO format on-the-fly, set `export=True`:
+To load and run inference, use the [`~optimum.intel.OVStableDiffusionPipeline`]. If you want to load a PyTorch model and convert it to the OpenVINO format on-the-fly, set `export=True`:
 
 ```python
-from optimum.intel import OVStableVictorPipeline
+from optimum.intel import OVStableDiffusionPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipeline = OVStableVictorPipeline.from_pretrained(model_id, export=True)
+pipeline = OVStableDiffusionPipeline.from_pretrained(model_id, export=True)
 prompt = "sailing ship in storm by Rembrandt"
 image = pipeline(prompt).images[0]
 
@@ -64,13 +64,13 @@ You can find more examples in the 🤗 Optimum [documentation](https://huggingfa
 
 ## Stable Diffusion XL
 
-To load and run inference with SDXL, use the [`~optimum.intel.OVStableVictorXLPipeline`]:
+To load and run inference with SDXL, use the [`~optimum.intel.OVStableDiffusionXLPipeline`]:
 
 ```python
-from optimum.intel import OVStableVictorXLPipeline
+from optimum.intel import OVStableDiffusionXLPipeline
 
 model_id = "stabilityai/stable-diffusion-xl-base-1.0"
-pipeline = OVStableVictorXLPipeline.from_pretrained(model_id)
+pipeline = OVStableDiffusionXLPipeline.from_pretrained(model_id)
 prompt = "sailing ship in storm by Rembrandt"
 image = pipeline(prompt).images[0]
 ```

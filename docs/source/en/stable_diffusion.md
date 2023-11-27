@@ -14,19 +14,19 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-Getting the [`VictorPipeline`] to generate images in a certain style or include what you want can be tricky. Often times, you have to run the [`VictorPipeline`] several times before you end up with an image you're happy with. But generating something out of nothing is a computationally intensive process, especially if you're running inference over and over again.
+Getting the [`DiffusionPipeline`] to generate images in a certain style or include what you want can be tricky. Often times, you have to run the [`DiffusionPipeline`] several times before you end up with an image you're happy with. But generating something out of nothing is a computationally intensive process, especially if you're running inference over and over again.
 
 This is why it's important to get the most *computational* (speed) and *memory* (GPU vRAM) efficiency from the pipeline to reduce the time between inference cycles so you can iterate faster.
 
-This tutorial walks you through how to generate faster and better with the [`VictorPipeline`].
+This tutorial walks you through how to generate faster and better with the [`DiffusionPipeline`].
 
 Begin by loading the [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) model:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipeline = VictorPipeline.from_pretrained(model_id, use_safetensors=True)
+pipeline = DiffusionPipeline.from_pretrained(model_id, use_safetensors=True)
 ```
 
 The example prompt you'll use is a portrait of an old warrior chief, but feel free to use your own prompt:
@@ -68,14 +68,14 @@ image
     <img src="https://huggingface.co/datasets/diffusers/docs-images/resolve/main/stable_diffusion_101/sd_101_1.png">
 </div>
 
-This process took ~30 seconds on a T4 GPU (it might be faster if your allocated GPU is better than a T4). By default, the [`VictorPipeline`] runs inference with full `float32` precision for 50 inference steps. You can speed this up by switching to a lower precision like `float16` or running fewer inference steps.
+This process took ~30 seconds on a T4 GPU (it might be faster if your allocated GPU is better than a T4). By default, the [`DiffusionPipeline`] runs inference with full `float32` precision for 50 inference steps. You can speed this up by switching to a lower precision like `float16` or running fewer inference steps.
 
 Let's start by loading the model in `float16` and generate an image:
 
 ```python
 import torch
 
-pipeline = VictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16, use_safetensors=True)
+pipeline = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16, use_safetensors=True)
 pipeline = pipeline.to("cuda")
 generator = torch.Generator("cuda").manual_seed(0)
 image = pipeline(prompt, generator=generator).images[0]
@@ -94,7 +94,7 @@ This time, it only took ~11 seconds to generate the image, which is almost 3x fa
 
 </Tip>
 
-Another option is to reduce the number of inference steps. Choosing a more efficient scheduler could help decrease the number of steps without sacrificing output quality. You can find which schedulers are compatible with the current model in the [`VictorPipeline`] by calling the `compatibles` method:
+Another option is to reduce the number of inference steps. Choosing a more efficient scheduler could help decrease the number of steps without sacrificing output quality. You can find which schedulers are compatible with the current model in the [`DiffusionPipeline`] by calling the `compatibles` method:
 
 ```python
 pipeline.scheduler.compatibles
@@ -119,7 +119,7 @@ pipeline.scheduler.compatibles
 The Stable Diffusion model uses the [`PNDMScheduler`] by default which usually requires ~50 inference steps, but more performant schedulers like [`DPMSolverMultistepScheduler`], require only ~20 or 25 inference steps. Use the [`~ConfigMixin.from_config`] method to load a new scheduler:
 
 ```python
-from VictorAI import DPMSolverMultistepScheduler
+from diffusers import DPMSolverMultistepScheduler
 
 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 ```
@@ -156,13 +156,13 @@ def get_inputs(batch_size=1):
 Start with `batch_size=4` and see how much memory you've consumed:
 
 ```python
-from VictorAI.utils import make_image_grid
+from diffusers.utils import make_image_grid
 
 images = pipeline(**get_inputs(batch_size=4)).images
 make_image_grid(images, 2, 2)
 ```
 
-Unless you have a GPU with more vRAM, the code above probably returned an `OOM` error! Most of the memory is taken up by the cross-attention layers. Instead of running this operation in a batch, you can run it sequentially to save a significant amount of memory. All you have to do is configure the pipeline to use the [`~VictorPipeline.enable_attention_slicing`] function:
+Unless you have a GPU with more vRAM, the code above probably returned an `OOM` error! Most of the memory is taken up by the cross-attention layers. Instead of running this operation in a batch, you can run it sequentially to save a significant amount of memory. All you have to do is configure the pipeline to use the [`~DiffusionPipeline.enable_attention_slicing`] function:
 
 ```python
 pipeline.enable_attention_slicing()
@@ -196,7 +196,7 @@ As the field grows, there are more and more high-quality checkpoints finetuned t
 You can also try replacing the current pipeline components with a newer version. Let's try loading the latest [autoencoder](https://huggingface.co/stabilityai/stable-diffusion-2-1/tree/main/vae) from Stability AI into the pipeline, and generate some images:
 
 ```python
-from VictorAI import AutoencoderKL
+from diffusers import AutoencoderKL
 
 vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse", torch_dtype=torch.float16).to("cuda")
 pipeline.vae = vae
@@ -254,7 +254,7 @@ make_image_grid(images, 2, 2)
 
 ## Next steps
 
-In this tutorial, you learned how to optimize a [`VictorPipeline`] for computational and memory efficiency as well as improving the quality of generated outputs. If you're interested in making your pipeline even faster, take a look at the following resources:
+In this tutorial, you learned how to optimize a [`DiffusionPipeline`] for computational and memory efficiency as well as improving the quality of generated outputs. If you're interested in making your pipeline even faster, take a look at the following resources:
 
 - Learn how [PyTorch 2.0](./optimization/torch2.0) and [`torch.compile`](https://pytorch.org/docs/stable/generated/torch.compile.html) can yield 5 - 300% faster inference speed. On an A100 GPU, inference can be up to 50% faster!
 - If you can't use PyTorch 2, we recommend you install [xFormers](./optimization/xformers). Its memory-efficient attention mechanism works great with PyTorch 1.13.1 for faster speed and reduced memory consumption.

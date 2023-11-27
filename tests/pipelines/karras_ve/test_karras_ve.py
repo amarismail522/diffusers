@@ -18,8 +18,8 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import KarrasVePipeline, KarrasVeScheduler, UNet2DModel
-from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch, torch_device
+from diffusers import KarrasVePipeline, KarrasVeScheduler, UNet2DModel
+from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch, torch_device
 
 
 enable_full_determinism()

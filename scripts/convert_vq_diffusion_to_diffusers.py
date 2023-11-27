@@ -28,7 +28,7 @@ $ python ./scripts/convert_vq_diffusion_to_diffusers.py \
     --original_config_file ./ithq.yaml \
     --vqvae_checkpoint_path ./ithq_vqvae.pth \
     --vqvae_original_config_file ./ithq_vqvae.yaml \
-    --dump_path <path to save pre-trained `VQVictorPipeline`>
+    --dump_path <path to save pre-trained `VQDiffusionPipeline`>
 ```
 """
 
@@ -41,8 +41,8 @@ from accelerate import init_empty_weights, load_checkpoint_and_dispatch
 from transformers import CLIPTextModel, CLIPTokenizer
 from yaml.loader import FullLoader
 
-from VictorAI import Transformer2DModel, VQVictorPipeline, VQDiffusionScheduler, VQModel
-from VictorAI.pipelines.vq_diffusion.pipeline_vq_diffusion import LearnedClassifierFreeSamplingEmbeddings
+from diffusers import Transformer2DModel, VQDiffusionPipeline, VQDiffusionScheduler, VQModel
+from diffusers.pipelines.vq_diffusion.pipeline_vq_diffusion import LearnedClassifierFreeSamplingEmbeddings
 
 
 try:
@@ -912,7 +912,7 @@ if __name__ == "__main__":
 
     print(f"saving VQ diffusion model, path: {args.dump_path}")
 
-    pipe = VQVictorPipeline(
+    pipe = VQDiffusionPipeline(
         vqvae=vqvae_model,
         transformer=transformer_model,
         tokenizer=tokenizer_model,

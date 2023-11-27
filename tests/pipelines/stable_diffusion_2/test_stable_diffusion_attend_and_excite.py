@@ -20,13 +20,13 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
-    StableVictorAttendAndExcitePipeline,
+    StableDiffusionAttendAndExcitePipeline,
     UNet2DConditionModel,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     load_numpy,
     nightly,
     numpy_cosine_similarity_distance,
@@ -42,10 +42,10 @@ torch.backends.cuda.matmul.allow_tf32 = False
 
 
 @skip_mps
-class StableVictorAttendAndExcitePipelineFastTests(
+class StableDiffusionAttendAndExcitePipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorAttendAndExcitePipeline
+    pipeline_class = StableDiffusionAttendAndExcitePipeline
     test_attention_slicing = False
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS.union({"token_indices"})
@@ -188,7 +188,7 @@ class StableVictorAttendAndExcitePipelineFastTests(
 
 @require_torch_gpu
 @nightly
-class StableVictorAttendAndExcitePipelineIntegrationTests(unittest.TestCase):
+class StableDiffusionAttendAndExcitePipelineIntegrationTests(unittest.TestCase):
     # Attend and excite requires being able to run a backward pass at
     # inference time. There's no deterministic backward operator for pad
 
@@ -210,7 +210,7 @@ class StableVictorAttendAndExcitePipelineIntegrationTests(unittest.TestCase):
     def test_attend_and_excite_fp16(self):
         generator = torch.manual_seed(51)
 
-        pipe = StableVictorAttendAndExcitePipeline.from_pretrained(
+        pipe = StableDiffusionAttendAndExcitePipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.to("cuda")

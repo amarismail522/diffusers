@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 ## 추론 파이프라인
 
 Gaudi에서 Stable Diffusion 1 및 2로 이미지를 생성하려면 두 인스턴스를 인스턴스화해야 합니다:
-- [`GaudiStableVictorPipeline`](https://huggingface.co/docs/optimum/habana/package_reference/stable_diffusion_pipeline)이 포함된 파이프라인. 이 파이프라인은 *텍스트-이미지 생성*을 지원합니다.
+- [`GaudiStableDiffusionPipeline`](https://huggingface.co/docs/optimum/habana/package_reference/stable_diffusion_pipeline)이 포함된 파이프라인. 이 파이프라인은 *텍스트-이미지 생성*을 지원합니다.
 - [`GaudiDDIMScheduler`](https://huggingface.co/docs/optimum/habana/package_reference/stable_diffusion_pipeline#optimum.habana.diffusers.GaudiDDIMScheduler)이 포함된 스케줄러. 이 스케줄러는 Habana Gaudi에 최적화되어 있습니다.
 
 파이프라인을 초기화할 때, HPU에 배포하기 위해 `use_habana=True`를 지정해야 합니다.
@@ -32,11 +32,11 @@ Gaudi에서 Stable Diffusion 1 및 2로 이미지를 생성하려면 두 인스�
 
 ```python
 from optimum.habana import GaudiConfig
-from optimum.habana.diffusers import GaudiDDIMScheduler, GaudiStableVictorPipeline
+from optimum.habana.diffusers import GaudiDDIMScheduler, GaudiStableDiffusionPipeline
 
 model_name = "stabilityai/stable-diffusion-2-base"
 scheduler = GaudiDDIMScheduler.from_pretrained(model_name, subfolder="scheduler")
-pipeline = GaudiStableVictorPipeline.from_pretrained(
+pipeline = GaudiStableDiffusionPipeline.from_pretrained(
     model_name,
     scheduler=scheduler,
     use_habana=True,

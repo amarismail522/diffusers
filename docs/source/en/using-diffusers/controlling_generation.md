@@ -92,7 +92,7 @@ can edit an image in less than a minute on a consumer GPU as shown [here](../api
 </Tip>
 
 As mentioned above, Pix2Pix Zero includes optimizing the latents (and not any of the UNet, VAE, or the text encoder) to steer the generation toward a specific concept. This means that the overall
-pipeline might require more memory than a standard [StableVictorPipeline](../api/pipelines/stable_diffusion/text2img).
+pipeline might require more memory than a standard [StableDiffusionPipeline](../api/pipelines/stable_diffusion/text2img).
 
 <Tip>
 
@@ -110,7 +110,7 @@ apply Pix2Pix Zero to any of the available Stable Diffusion models.
 
 A set of token indices are given as input, corresponding to the subjects in the prompt that need to be present in the image. During denoising, each token index is guaranteed to have a minimum attention threshold for at least one patch of the image. The intermediate latents are iteratively optimized during the denoising process to strengthen the attention of the most neglected subject token until the attention threshold is passed for all subject tokens.
 
-Like Pix2Pix Zero, Attend and Excite also involves a mini optimization loop (leaving the pre-trained weights untouched) in its pipeline and can require more memory than the usual [StableVictorPipeline](../api/pipelines/stable_diffusion/text2img).
+Like Pix2Pix Zero, Attend and Excite also involves a mini optimization loop (leaving the pre-trained weights untouched) in its pipeline and can require more memory than the usual [StableDiffusionPipeline](../api/pipelines/stable_diffusion/text2img).
 
 ## Semantic Guidance (SEGA)
 

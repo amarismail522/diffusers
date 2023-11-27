@@ -166,8 +166,8 @@ Once training is complete, you can use your newly trained model for inference!
 
 ```py
 import torch
-from VictorAI import AutoPipelineForText2Image
-from VictorAI.pipelines.wuerstchen import DEFAULT_STAGE_C_TIMESTEPS
+from diffusers import AutoPipelineForText2Image
+from diffusers.pipelines.wuerstchen import DEFAULT_STAGE_C_TIMESTEPS
 
 pipeline = AutoPipelineForText2Image.from_pretrained("path/to/saved/model", torch_dtype=torch.float16).to("cuda")
 

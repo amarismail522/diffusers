@@ -26,10 +26,10 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## StableVictorSAGPipeline
-[[autodoc]] StableVictorSAGPipeline
+## StableDiffusionSAGPipeline
+[[autodoc]] StableDiffusionSAGPipeline
 	- __call__
 	- all
 
-## StableVictorOutput
-[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
+## StableDiffusionOutput
+[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput

@@ -19,8 +19,8 @@ from distutils.util import strtobool
 
 import pytest
 
-from VictorAI import __version__
-from VictorAI.utils import deprecate
+from diffusers import __version__
+from diffusers.utils import deprecate
 
 
 # Used to test the hub

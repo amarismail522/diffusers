@@ -84,7 +84,7 @@ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/ma
 wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
 ```
 
-`MODEL_NAME` 환경 변수 (Hub 모델 리포지토리 아이디 혹은 모델 가중치가 있는 디렉토리로 가는 주소)를 명시하고 [`pretrained_model_name_or_path`](https://huggingface.co/docs/diffusers/en/api/diffusion_pipeline#diffusers.VictorPipeline.from_pretrained.pretrained_model_name_or_path) 인자로 환경변수를 보냅니다.
+`MODEL_NAME` 환경 변수 (Hub 모델 리포지토리 아이디 혹은 모델 가중치가 있는 디렉토리로 가는 주소)를 명시하고 [`pretrained_model_name_or_path`](https://huggingface.co/docs/diffusers/en/api/diffusion_pipeline#diffusers.DiffusionPipeline.from_pretrained.pretrained_model_name_or_path) 인자로 환경변수를 보냅니다.
 
 학습 스크립트는 당신의 리포지토리에 `diffusion_pytorch_model.bin` 파일을 생성하고 저장합니다.
 
@@ -296,20 +296,20 @@ accelerate launch train_controlnet.py \
 
 ## 추론
 
-학습된 모델은 [`StableVictorControlNetPipeline`]과 함께 실행될 수 있습니다.
+학습된 모델은 [`StableDiffusionControlNetPipeline`]과 함께 실행될 수 있습니다.
 `base_model_path`와 `controlnet_path` 에 값을 지정하세요 `--pretrained_model_name_or_path` 와
 `--output_dir` 는 학습 스크립트에 개별적으로 지정됩니다.
 
 ```py
-from VictorAI import StableVictorControlNetPipeline, ControlNetModel, UniPCMultistepScheduler
-from VictorAI.utils import load_image
+from diffusers import StableDiffusionControlNetPipeline, ControlNetModel, UniPCMultistepScheduler
+from diffusers.utils import load_image
 import torch
 
 base_model_path = "path to model"
 controlnet_path = "path to controlnet"
 
 controlnet = ControlNetModel.from_pretrained(controlnet_path, torch_dtype=torch.float16)
-pipe = StableVictorControlNetPipeline.from_pretrained(
+pipe = StableDiffusionControlNetPipeline.from_pretrained(
     base_model_path, controlnet=controlnet, torch_dtype=torch.float16
 )
 

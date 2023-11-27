@@ -19,7 +19,7 @@ import torch
 from packaging import version
 from torch.onnx import export
 
-from VictorAI import AutoencoderKL
+from diffusers import AutoencoderKL
 
 
 is_torch_less_than_1_11 = version.parse(version.parse(torch.__version__).base_version) < version.parse("1.11")

@@ -20,15 +20,15 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
     EulerAncestralDiscreteScheduler,
     PNDMScheduler,
-    StableVictorModelEditingPipeline,
+    StableDiffusionModelEditingPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, skip_mps, torch_device
+from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, skip_mps, torch_device
 
 from ..pipeline_params import TEXT_TO_IMAGE_BATCH_PARAMS, TEXT_TO_IMAGE_IMAGE_PARAMS, TEXT_TO_IMAGE_PARAMS
 from ..test_pipelines_common import PipelineKarrasSchedulerTesterMixin, PipelineLatentTesterMixin, PipelineTesterMixin
@@ -38,10 +38,10 @@ enable_full_determinism()
 
 
 @skip_mps
-class StableVictorModelEditingPipelineFastTests(
+class StableDiffusionModelEditingPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorModelEditingPipeline
+    pipeline_class = StableDiffusionModelEditingPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -112,7 +112,7 @@ class StableVictorModelEditingPipelineFastTests(
     def test_stable_diffusion_model_editing_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorModelEditingPipeline(**components)
+        sd_pipe = StableDiffusionModelEditingPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -128,7 +128,7 @@ class StableVictorModelEditingPipelineFastTests(
     def test_stable_diffusion_model_editing_negative_prompt(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorModelEditingPipeline(**components)
+        sd_pipe = StableDiffusionModelEditingPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -150,7 +150,7 @@ class StableVictorModelEditingPipelineFastTests(
         components["scheduler"] = EulerAncestralDiscreteScheduler(
             beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear"
         )
-        sd_pipe = StableVictorModelEditingPipeline(**components)
+        sd_pipe = StableDiffusionModelEditingPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -168,7 +168,7 @@ class StableVictorModelEditingPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
         components["scheduler"] = PNDMScheduler()
-        sd_pipe = StableVictorModelEditingPipeline(**components)
+        sd_pipe = StableDiffusionModelEditingPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -186,7 +186,7 @@ class StableVictorModelEditingPipelineFastTests(
 
 @nightly
 @require_torch_gpu
-class StableVictorModelEditingSlowTests(unittest.TestCase):
+class StableDiffusionModelEditingSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -205,7 +205,7 @@ class StableVictorModelEditingSlowTests(unittest.TestCase):
 
     def test_stable_diffusion_model_editing_default(self):
         model_ckpt = "CompVis/stable-diffusion-v1-4"
-        pipe = StableVictorModelEditingPipeline.from_pretrained(model_ckpt, safety_checker=None)
+        pipe = StableDiffusionModelEditingPipeline.from_pretrained(model_ckpt, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -239,7 +239,7 @@ class StableVictorModelEditingSlowTests(unittest.TestCase):
 
         model_ckpt = "CompVis/stable-diffusion-v1-4"
         scheduler = DDIMScheduler.from_pretrained(model_ckpt, subfolder="scheduler")
-        pipe = StableVictorModelEditingPipeline.from_pretrained(
+        pipe = StableDiffusionModelEditingPipeline.from_pretrained(
             model_ckpt, scheduler=scheduler, safety_checker=None
         )
         pipe = pipe.to(torch_device)

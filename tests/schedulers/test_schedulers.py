@@ -25,11 +25,11 @@ import torch
 from huggingface_hub import delete_repo
 
 import diffusers
-from VictorAI import (
+from diffusers import (
     CMStochasticIterativeScheduler,
     DDIMScheduler,
     DEISMultistepScheduler,
-    VictorPipeline,
+    DiffusionPipeline,
     EulerAncestralDiscreteScheduler,
     EulerDiscreteScheduler,
     IPNDMScheduler,
@@ -38,9 +38,9 @@ from VictorAI import (
     VQDiffusionScheduler,
     logging,
 )
-from VictorAI.configuration_utils import ConfigMixin, register_to_config
-from VictorAI.schedulers.scheduling_utils import SchedulerMixin
-from VictorAI.utils.testing_utils import CaptureLogger, torch_device
+from diffusers.configuration_utils import ConfigMixin, register_to_config
+from diffusers.schedulers.scheduling_utils import SchedulerMixin
+from diffusers.utils.testing_utils import CaptureLogger, torch_device
 
 from ..others.test_utils import TOKEN, USER, is_staging_test
 
@@ -211,7 +211,7 @@ class SchedulerBaseTests(unittest.TestCase):
         assert cap_logger_3.out == "{'f'} was not found in config. Values will be initialized to default values.\n"
 
     def test_default_arguments_not_in_config(self):
-        pipe = VictorPipeline.from_pretrained(
+        pipe = DiffusionPipeline.from_pretrained(
             "hf-internal-testing/tiny-stable-diffusion-pipe", torch_dtype=torch.float16
         )
         assert pipe.scheduler.__class__ == DDIMScheduler
@@ -236,7 +236,7 @@ class SchedulerBaseTests(unittest.TestCase):
         assert pipe.scheduler.config.timestep_spacing == "trailing"
 
     def test_default_solver_type_after_switch(self):
-        pipe = VictorPipeline.from_pretrained(
+        pipe = DiffusionPipeline.from_pretrained(
             "hf-internal-testing/tiny-stable-diffusion-pipe", torch_dtype=torch.float16
         )
         assert pipe.scheduler.__class__ == DDIMScheduler

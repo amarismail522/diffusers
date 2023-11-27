@@ -81,16 +81,16 @@ The following sections give more in-detail examples of how to use IF. Specifical
 By default diffusers makes use of [model cpu offloading](../../optimization/memory#model-offloading) to run the whole IF pipeline with as little as 14 GB of VRAM.
 
 ```python
-from VictorAI import VictorPipeline
-from VictorAI.utils import pt_to_pil, make_image_grid
+from diffusers import DiffusionPipeline
+from diffusers.utils import pt_to_pil, make_image_grid
 import torch
 
 # stage 1
-stage_1 = VictorPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
+stage_1 = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
 stage_1.enable_model_cpu_offload()
 
 # stage 2
-stage_2 = VictorPipeline.from_pretrained(
+stage_2 = DiffusionPipeline.from_pretrained(
     "DeepFloyd/IF-II-L-v1.0", text_encoder=None, variant="fp16", torch_dtype=torch.float16
 )
 stage_2.enable_model_cpu_offload()
@@ -101,7 +101,7 @@ safety_modules = {
     "safety_checker": stage_1.safety_checker,
     "watermarker": stage_1.watermarker,
 }
-stage_3 = VictorPipeline.from_pretrained(
+stage_3 = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-x4-upscaler", **safety_modules, torch_dtype=torch.float16
 )
 stage_3.enable_model_cpu_offload()
@@ -140,11 +140,11 @@ The same IF model weights can be used for text-guided image-to-image translation
 In this case just make sure to load the weights using the [`IFImg2ImgPipeline`] and [`IFImg2ImgSuperResolutionPipeline`] pipelines.
 
 **Note**: You can also directly move the weights of the text-to-image pipelines to the image-to-image pipelines
-without loading them twice by making use of the [`~VictorPipeline.components`] argument as explained [here](#converting-between-different-pipelines).
+without loading them twice by making use of the [`~DiffusionPipeline.components`] argument as explained [here](#converting-between-different-pipelines).
 
 ```python
-from VictorAI import IFImg2ImgPipeline, IFImg2ImgSuperResolutionPipeline, VictorPipeline
-from VictorAI.utils import pt_to_pil, load_image, make_image_grid
+from diffusers import IFImg2ImgPipeline, IFImg2ImgSuperResolutionPipeline, DiffusionPipeline
+from diffusers.utils import pt_to_pil, load_image, make_image_grid
 import torch
 
 # download image
@@ -168,7 +168,7 @@ safety_modules = {
     "safety_checker": stage_1.safety_checker,
     "watermarker": stage_1.watermarker,
 }
-stage_3 = VictorPipeline.from_pretrained(
+stage_3 = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-x4-upscaler", **safety_modules, torch_dtype=torch.float16
 )
 stage_3.enable_model_cpu_offload()
@@ -212,11 +212,11 @@ The same IF model weights can be used for text-guided image-to-image translation
 In this case just make sure to load the weights using the [`IFInpaintingPipeline`] and [`IFInpaintingSuperResolutionPipeline`] pipelines.
 
 **Note**: You can also directly move the weights of the text-to-image pipelines to the image-to-image pipelines
-without loading them twice by making use of the [`~VictorPipeline.components()`] function as explained [here](#converting-between-different-pipelines).
+without loading them twice by making use of the [`~DiffusionPipeline.components()`] function as explained [here](#converting-between-different-pipelines).
 
 ```python
-from VictorAI import IFInpaintingPipeline, IFInpaintingSuperResolutionPipeline, VictorPipeline
-from VictorAI.utils import pt_to_pil, load_image, make_image_grid
+from diffusers import IFInpaintingPipeline, IFInpaintingSuperResolutionPipeline, DiffusionPipeline
+from diffusers.utils import pt_to_pil, load_image, make_image_grid
 import torch
 
 # download image
@@ -243,7 +243,7 @@ safety_modules = {
     "safety_checker": stage_1.safety_checker,
     "watermarker": stage_1.watermarker,
 }
-stage_3 = VictorPipeline.from_pretrained(
+stage_3 = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-x4-upscaler", **safety_modules, torch_dtype=torch.float16
 )
 stage_3.enable_model_cpu_offload()
@@ -288,19 +288,19 @@ make_image_grid([original_image, mask_image, pt_to_pil(stage_1_output)[0], pt_to
 In addition to being loaded with `from_pretrained`, Pipelines can also be loaded directly from each other.
 
 ```python
-from VictorAI import IFPipeline, IFSuperResolutionPipeline
+from diffusers import IFPipeline, IFSuperResolutionPipeline
 
 pipe_1 = IFPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0")
 pipe_2 = IFSuperResolutionPipeline.from_pretrained("DeepFloyd/IF-II-L-v1.0")
 
 
-from VictorAI import IFImg2ImgPipeline, IFImg2ImgSuperResolutionPipeline
+from diffusers import IFImg2ImgPipeline, IFImg2ImgSuperResolutionPipeline
 
 pipe_1 = IFImg2ImgPipeline(**pipe_1.components)
 pipe_2 = IFImg2ImgSuperResolutionPipeline(**pipe_2.components)
 
 
-from VictorAI import IFInpaintingPipeline, IFInpaintingSuperResolutionPipeline
+from diffusers import IFInpaintingPipeline, IFInpaintingSuperResolutionPipeline
 
 pipe_1 = IFInpaintingPipeline(**pipe_1.components)
 pipe_2 = IFInpaintingSuperResolutionPipeline(**pipe_2.components)
@@ -311,7 +311,7 @@ pipe_2 = IFInpaintingSuperResolutionPipeline(**pipe_2.components)
 The simplest optimization to run IF faster is to move all model components to the GPU.
 
 ```py
-pipe = VictorPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
+pipe = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
 pipe.to("cuda")
 ```
 
@@ -326,7 +326,7 @@ pipe("<prompt>", num_inference_steps=30)
 Or with the `timesteps` argument:
 
 ```py
-from VictorAI.pipelines.deepfloyd_if import fast27_timesteps
+from diffusers.pipelines.deepfloyd_if import fast27_timesteps
 
 pipe("<prompt>", timesteps=fast27_timesteps)
 ```
@@ -346,10 +346,10 @@ You can also use [`torch.compile`](../../optimization/torch2.0). Note that we ha
 with IF and it might not give expected results.
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipe = VictorPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
+pipe = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
 pipe.to("cuda")
 
 pipe.text_encoder = torch.compile(pipe.text_encoder, mode="reduce-overhead", fullgraph=True)
@@ -363,14 +363,14 @@ When optimizing for GPU memory, we can use the standard diffusers CPU offloading
 Either the model based CPU offloading,
 
 ```py
-pipe = VictorPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
+pipe = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
 pipe.enable_model_cpu_offload()
 ```
 
 or the more aggressive layer based CPU offloading.
 
 ```py
-pipe = VictorPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
+pipe = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
 pipe.enable_sequential_cpu_offload()
 ```
 
@@ -383,9 +383,9 @@ text_encoder = T5EncoderModel.from_pretrained(
     "DeepFloyd/IF-I-XL-v1.0", subfolder="text_encoder", device_map="auto", load_in_8bit=True, variant="8bit"
 )
 
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipe = VictorPipeline.from_pretrained(
+pipe = DiffusionPipeline.from_pretrained(
     "DeepFloyd/IF-I-XL-v1.0",
     text_encoder=text_encoder,  # pass the previously instantiated 8bit text encoder
     unet=None,
@@ -399,18 +399,18 @@ For CPU RAM constrained machines like Google Colab free tier where we can't load
 the text encoder or UNet when the respective model components are needed.
 
 ```py
-from VictorAI import IFPipeline, IFSuperResolutionPipeline
+from diffusers import IFPipeline, IFSuperResolutionPipeline
 import torch
 import gc
 from transformers import T5EncoderModel
-from VictorAI.utils import pt_to_pil, make_image_grid
+from diffusers.utils import pt_to_pil, make_image_grid
 
 text_encoder = T5EncoderModel.from_pretrained(
     "DeepFloyd/IF-I-XL-v1.0", subfolder="text_encoder", device_map="auto", load_in_8bit=True, variant="8bit"
 )
 
 # text to image
-pipe = VictorPipeline.from_pretrained(
+pipe = DiffusionPipeline.from_pretrained(
     "DeepFloyd/IF-I-XL-v1.0",
     text_encoder=text_encoder,  # pass the previously instantiated 8bit text encoder
     unet=None,

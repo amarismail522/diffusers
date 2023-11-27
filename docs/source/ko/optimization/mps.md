@@ -38,9 +38,9 @@ Diffusers는 Stable Diffusion 추론을 위해 PyTorch `mps`를 사용해 Apple 
 
 ```python
 # `huggingface-cli login`에 로그인되어 있음을 확인
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 pipe = pipe.to("mps")
 
 # 컴퓨터가 64GB 이하의 RAM 램일 때 추천

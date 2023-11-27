@@ -23,17 +23,17 @@ from parameterized import parameterized
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
 import diffusers
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     EulerDiscreteScheduler,
     LCMScheduler,
     MultiAdapter,
-    StableVictorXLAdapterPipeline,
+    StableDiffusionXLAdapterPipeline,
     T2IAdapter,
     UNet2DConditionModel,
 )
-from VictorAI.utils import load_image, logging
-from VictorAI.utils.testing_utils import (
+from diffusers.utils import load_image, logging
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     numpy_cosine_similarity_distance,
@@ -53,10 +53,10 @@ from ..test_pipelines_common import (
 enable_full_determinism()
 
 
-class StableVictorXLAdapterPipelineFastTests(
+class StableDiffusionXLAdapterPipelineFastTests(
     PipelineTesterMixin, SDXLOptionalComponentsTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorXLAdapterPipeline
+    pipeline_class = StableDiffusionXLAdapterPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS
     batch_params = TEXT_GUIDED_IMAGE_VARIATION_BATCH_PARAMS
 
@@ -294,7 +294,7 @@ class StableVictorXLAdapterPipelineFastTests(
     def test_stable_diffusion_adapter_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLAdapterPipeline(**components)
+        sd_pipe = StableDiffusionXLAdapterPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -326,7 +326,7 @@ class StableVictorXLAdapterPipelineFastTests(
         each downscaling level.
         """
         components = self.get_dummy_components_with_full_downscaling()
-        sd_pipe = StableVictorXLAdapterPipeline(**components)
+        sd_pipe = StableDiffusionXLAdapterPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -373,7 +373,7 @@ class StableVictorXLAdapterPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableVictorXLAdapterPipeline(**components)
+        sd_pipe = StableDiffusionXLAdapterPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -390,8 +390,8 @@ class StableVictorXLAdapterPipelineFastTests(
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
 
-class StableVictorXLMultiAdapterPipelineFastTests(
-    StableVictorXLAdapterPipelineFastTests, PipelineTesterMixin, unittest.TestCase
+class StableDiffusionXLMultiAdapterPipelineFastTests(
+    StableDiffusionXLAdapterPipelineFastTests, PipelineTesterMixin, unittest.TestCase
 ):
     def get_dummy_components(self, time_cond_proj_dim=None):
         return super().get_dummy_components("multi_adapter", time_cond_proj_dim=time_cond_proj_dim)
@@ -407,7 +407,7 @@ class StableVictorXLMultiAdapterPipelineFastTests(
     def test_stable_diffusion_adapter_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLAdapterPipeline(**components)
+        sd_pipe = StableDiffusionXLAdapterPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -595,7 +595,7 @@ class StableVictorXLMultiAdapterPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableVictorXLAdapterPipeline(**components)
+        sd_pipe = StableDiffusionXLAdapterPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -627,7 +627,7 @@ class AdapterSDXLPipelineSlowTests(unittest.TestCase):
         adapter = T2IAdapter.from_pretrained("TencentARC/t2i-adapter-lineart-sdxl-1.0", torch_dtype=torch.float16).to(
             "cpu"
         )
-        pipe = StableVictorXLAdapterPipeline.from_pretrained(
+        pipe = StableDiffusionXLAdapterPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0",
             adapter=adapter,
             torch_dtype=torch.float16,

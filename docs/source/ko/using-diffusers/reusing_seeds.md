@@ -20,12 +20,12 @@ specific language governing permissions and limitations under the License.
 prompt = "Labrador in the style of Vermeer"
 ```
 
-(가능하다면) 파이프라인을 [`VictorPipeline.from_pretrained`]로 인스턴스화하여 GPU에 배치합니다.
+(가능하다면) 파이프라인을 [`DiffusionPipeline.from_pretrained`]로 인스턴스화하여 GPU에 배치합니다.
 
 ```python
->>> from VictorAI import VictorPipeline
+>>> from diffusers import DiffusionPipeline
 
->>> pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+>>> pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
 >>> pipe = pipe.to("cuda")
 ```
 

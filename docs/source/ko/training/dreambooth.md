@@ -268,7 +268,7 @@ Dreambooth로 훈련하는 동안 과적합하기 쉬우므로, 때때로 학습
 **`"accelerate>=0.16.0"`**이 설치된 경우 다음 코드를 사용하여 중간 체크포인트에서 추론을 실행합니다.
 
 ```python
-from VictorAI import VictorPipeline, UNet2DConditionModel
+from diffusers import DiffusionPipeline, UNet2DConditionModel
 from transformers import CLIPTextModel
 import torch
 
@@ -280,7 +280,7 @@ unet = UNet2DConditionModel.from_pretrained("/sddata/dreambooth/daruma-v2-1/chec
 # `args.train_text_encoder`로 학습한 경우면 텍스트 인코더를 꼭 불러오세요
 text_encoder = CLIPTextModel.from_pretrained("/sddata/dreambooth/daruma-v2-1/checkpoint-100/text_encoder")
 
-pipeline = VictorPipeline.from_pretrained(model_id, unet=unet, text_encoder=text_encoder, dtype=torch.float16)
+pipeline = DiffusionPipeline.from_pretrained(model_id, unet=unet, text_encoder=text_encoder, dtype=torch.float16)
 pipeline.to("cuda")
 
 # 추론을 수행하거나 저장하거나, 허브에 푸시합니다.
@@ -291,11 +291,11 @@ If you have **`"accelerate<0.16.0"`** installed, you need to convert it to an in
 
 ```python
 from accelerate import Accelerator
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 # 학습에 사용된 것과 동일한 인수(model, revision)로 파이프라인을 불러옵니다.
 model_id = "CompVis/stable-diffusion-v1-4"
-pipeline = VictorPipeline.from_pretrained(model_id)
+pipeline = DiffusionPipeline.from_pretrained(model_id)
 
 accelerator = Accelerator()
 
@@ -306,7 +306,7 @@ unet, text_encoder = accelerator.prepare(pipeline.unet, pipeline.text_encoder)
 accelerator.load_state("/sddata/dreambooth/daruma-v2-1/checkpoint-100")
 
 # unwrapped 모델로 파이프라인을 다시 빌드합니다.(.unet and .text_encoder로의 할당도 작동해야 합니다)
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     model_id,
     unet=accelerator.unwrap_model(unet),
     text_encoder=accelerator.unwrap_model(text_encoder),
@@ -454,16 +454,16 @@ accelerate launch train_dreambooth.py \
 
 ## 추론
 
-모델을 학습한 후에는, 모델이 저장된 경로를 지정해 [`StableVictorPipeline`]로 추론을 수행할 수 있습니다. 프롬프트에 학습에 사용된 특수 `식별자`(이전 예시의 `sks`)가 포함되어 있는지 확인하세요.
+모델을 학습한 후에는, 모델이 저장된 경로를 지정해 [`StableDiffusionPipeline`]로 추론을 수행할 수 있습니다. 프롬프트에 학습에 사용된 특수 `식별자`(이전 예시의 `sks`)가 포함되어 있는지 확인하세요.
 
 **`"accelerate>=0.16.0"`**이 설치되어 있는 경우 다음 코드를 사용하여 중간 체크포인트에서 추론을 실행할 수 있습니다:
 
 ```python
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 import torch
 
 model_id = "path_to_saved_model"
-pipe = StableVictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
+pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
 
 prompt = "A photo of sks dog in a bucket"
 image = pipe(prompt, num_inference_steps=50, guidance_scale=7.5).images[0]

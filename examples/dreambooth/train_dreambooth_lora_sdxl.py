@@ -42,19 +42,19 @@ from tqdm.auto import tqdm
 from transformers import AutoTokenizer, PretrainedConfig
 
 import diffusers
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDPMScheduler,
     DPMSolverMultistepScheduler,
-    StableVictorXLPipeline,
+    StableDiffusionXLPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.loaders import LoraLoaderMixin
-from VictorAI.models.lora import LoRALinearLayer, text_encoder_lora_state_dict
-from VictorAI.optimization import get_scheduler
-from VictorAI.training_utils import unet_lora_state_dict
-from VictorAI.utils import check_min_version, is_wandb_available
-from VictorAI.utils.import_utils import is_xformers_available
+from diffusers.loaders import LoraLoaderMixin
+from diffusers.models.lora import LoRALinearLayer, text_encoder_lora_state_dict
+from diffusers.optimization import get_scheduler
+from diffusers.training_utils import unet_lora_state_dict
+from diffusers.utils import check_min_version, is_wandb_available
+from diffusers.utils.import_utils import is_xformers_available
 
 
 # Will error if the minimal version of diffusers is not installed. Remove at your own risks.
@@ -546,7 +546,7 @@ def tokenize_prompt(tokenizer, prompt):
     return text_input_ids
 
 
-# Adapted from pipelines.StableVictorXLPipeline.encode_prompt
+# Adapted from pipelines.StableDiffusionXLPipeline.encode_prompt
 def encode_prompt(text_encoders, tokenizers, prompt, text_input_ids_list=None):
     prompt_embeds_list = []
 
@@ -626,7 +626,7 @@ def main(args):
                 torch_dtype = torch.float16
             elif args.prior_generation_precision == "bf16":
                 torch_dtype = torch.bfloat16
-            pipeline = StableVictorXLPipeline.from_pretrained(
+            pipeline = StableDiffusionXLPipeline.from_pretrained(
                 args.pretrained_model_name_or_path,
                 torch_dtype=torch_dtype,
                 revision=args.revision,
@@ -816,7 +816,7 @@ def main(args):
                 # make sure to pop weight so that corresponding model is not saved again
                 weights.pop()
 
-            StableVictorXLPipeline.save_lora_weights(
+            StableDiffusionXLPipeline.save_lora_weights(
                 output_dir,
                 unet_lora_layers=unet_lora_layers_to_save,
                 text_encoder_lora_layers=text_encoder_one_lora_layers_to_save,
@@ -899,7 +899,7 @@ def main(args):
     # time ids
 
     def compute_time_ids():
-        # Adapted from pipeline.StableVictorXLPipeline._get_add_time_ids
+        # Adapted from pipeline.StableDiffusionXLPipeline._get_add_time_ids
         original_size = (args.resolution, args.resolution)
         target_size = (args.resolution, args.resolution)
         crops_coords_top_left = (args.crops_coords_top_left_h, args.crops_coords_top_left_w)
@@ -1217,7 +1217,7 @@ def main(args):
                     text_encoder_two = text_encoder_cls_two.from_pretrained(
                         args.pretrained_model_name_or_path, subfolder="text_encoder_2", revision=args.revision
                     )
-                pipeline = StableVictorXLPipeline.from_pretrained(
+                pipeline = StableDiffusionXLPipeline.from_pretrained(
                     args.pretrained_model_name_or_path,
                     vae=vae,
                     text_encoder=accelerator.unwrap_model(text_encoder_one),
@@ -1288,7 +1288,7 @@ def main(args):
             text_encoder_lora_layers = None
             text_encoder_2_lora_layers = None
 
-        StableVictorXLPipeline.save_lora_weights(
+        StableDiffusionXLPipeline.save_lora_weights(
             save_directory=args.output_dir,
             unet_lora_layers=unet_lora_layers,
             text_encoder_lora_layers=text_encoder_lora_layers,
@@ -1303,7 +1303,7 @@ def main(args):
             revision=args.revision,
             torch_dtype=weight_dtype,
         )
-        pipeline = StableVictorXLPipeline.from_pretrained(
+        pipeline = StableDiffusionXLPipeline.from_pretrained(
             args.pretrained_model_name_or_path, vae=vae, revision=args.revision, torch_dtype=weight_dtype
         )
 

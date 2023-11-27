@@ -26,15 +26,15 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## StableVictorInstructPix2PixPipeline
-[[autodoc]] StableVictorInstructPix2PixPipeline
+## StableDiffusionInstructPix2PixPipeline
+[[autodoc]] StableDiffusionInstructPix2PixPipeline
 	- __call__
 	- all
 	- load_textual_inversion
 	- load_lora_weights
 	- save_lora_weights
 
-## StableVictorXLInstructPix2PixPipeline
-[[autodoc]] StableVictorXLInstructPix2PixPipeline
+## StableDiffusionXLInstructPix2PixPipeline
+[[autodoc]] StableDiffusionXLInstructPix2PixPipeline
 	- __call__
 	- all

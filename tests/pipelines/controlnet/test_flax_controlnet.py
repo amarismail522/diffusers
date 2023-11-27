@@ -16,9 +16,9 @@
 import gc
 import unittest
 
-from VictorAI import FlaxControlNetModel, FlaxStableVictorControlNetPipeline
-from VictorAI.utils import is_flax_available, load_image
-from VictorAI.utils.testing_utils import require_flax, slow
+from diffusers import FlaxControlNetModel, FlaxStableDiffusionControlNetPipeline
+from diffusers.utils import is_flax_available, load_image
+from diffusers.utils.testing_utils import require_flax, slow
 
 
 if is_flax_available():
@@ -40,7 +40,7 @@ class FlaxControlNetPipelineIntegrationTests(unittest.TestCase):
         controlnet, controlnet_params = FlaxControlNetModel.from_pretrained(
             "lllyasviel/sd-controlnet-canny", from_pt=True, dtype=jnp.bfloat16
         )
-        pipe, params = FlaxStableVictorControlNetPipeline.from_pretrained(
+        pipe, params = FlaxStableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", controlnet=controlnet, from_pt=True, dtype=jnp.bfloat16
         )
         params["controlnet"] = controlnet_params
@@ -85,7 +85,7 @@ class FlaxControlNetPipelineIntegrationTests(unittest.TestCase):
         controlnet, controlnet_params = FlaxControlNetModel.from_pretrained(
             "lllyasviel/sd-controlnet-openpose", from_pt=True, dtype=jnp.bfloat16
         )
-        pipe, params = FlaxStableVictorControlNetPipeline.from_pretrained(
+        pipe, params = FlaxStableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", controlnet=controlnet, from_pt=True, dtype=jnp.bfloat16
         )
         params["controlnet"] = controlnet_params

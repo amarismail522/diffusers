@@ -30,16 +30,16 @@ The following paragraphs show how to do so with the 🧨 Diffusers library.
 
 ## Load pipeline
 
-Let's start by loading the [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) model in the [`VictorPipeline`]:
+Let's start by loading the [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) model in the [`DiffusionPipeline`]:
 
 ```python
 from huggingface_hub import login
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
 login()
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
 )
 ```
@@ -175,7 +175,7 @@ of a different class that is compatible with the pipeline. Here,
 we change the scheduler to the [`DDIMScheduler`].
 
 ```python
-from VictorAI import DDIMScheduler
+from diffusers import DDIMScheduler
 
 pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config)
 ```
@@ -204,7 +204,7 @@ A number of better schedulers have been released that can be run with much fewer
 [`LMSDiscreteScheduler`] usually leads to better results:
 
 ```python
-from VictorAI import LMSDiscreteScheduler
+from diffusers import LMSDiscreteScheduler
 
 pipeline.scheduler = LMSDiscreteScheduler.from_config(pipeline.scheduler.config)
 
@@ -223,7 +223,7 @@ image
 [`EulerDiscreteScheduler`] and [`EulerAncestralDiscreteScheduler`] can generate high quality results with as little as 30 steps.
 
 ```python
-from VictorAI import EulerDiscreteScheduler
+from diffusers import EulerDiscreteScheduler
 
 pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
 
@@ -242,7 +242,7 @@ image
 and:
 
 ```python
-from VictorAI import EulerAncestralDiscreteScheduler
+from diffusers import EulerAncestralDiscreteScheduler
 
 pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(pipeline.scheduler.config)
 
@@ -261,7 +261,7 @@ image
 [`DPMSolverMultistepScheduler`] gives a reasonable speed/quality trade-off and can be run with as little as 20 steps.
 
 ```python
-from VictorAI import DPMSolverMultistepScheduler
+from diffusers import DPMSolverMultistepScheduler
 
 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 
@@ -289,14 +289,14 @@ import numpy as np
 from flax.jax_utils import replicate
 from flax.training.common_utils import shard
 
-from VictorAI import FlaxStableVictorPipeline, FlaxDPMSolverMultistepScheduler
+from diffusers import FlaxStableDiffusionPipeline, FlaxDPMSolverMultistepScheduler
 
 model_id = "runwayml/stable-diffusion-v1-5"
 scheduler, scheduler_state = FlaxDPMSolverMultistepScheduler.from_pretrained(
     model_id,
     subfolder="scheduler"
 )
-pipeline, params = FlaxStableVictorPipeline.from_pretrained(
+pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
     model_id,
     scheduler=scheduler,
     revision="bf16",

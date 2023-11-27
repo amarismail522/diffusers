@@ -1,4 +1,4 @@
-from VictorAI.utils.testing_utils import require_onnxruntime
+from diffusers.utils.testing_utils import require_onnxruntime
 
 
 @require_onnxruntime

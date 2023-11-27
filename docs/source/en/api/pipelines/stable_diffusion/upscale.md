@@ -22,9 +22,9 @@ If you're interested in using one of the official checkpoints for a task, explor
 
 </Tip>
 
-## StableVictorUpscalePipeline
+## StableDiffusionUpscalePipeline
 
-[[autodoc]] StableVictorUpscalePipeline
+[[autodoc]] StableDiffusionUpscalePipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -32,6 +32,6 @@ If you're interested in using one of the official checkpoints for a task, explor
 	- enable_xformers_memory_efficient_attention
 	- disable_xformers_memory_efficient_attention
 
-## StableVictorPipelineOutput
+## StableDiffusionPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput

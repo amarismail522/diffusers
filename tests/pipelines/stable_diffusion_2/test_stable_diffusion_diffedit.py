@@ -23,16 +23,16 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMInverseScheduler,
     DDIMScheduler,
     DPMSolverMultistepInverseScheduler,
     DPMSolverMultistepScheduler,
-    StableVictorDiffEditPipeline,
+    StableDiffusionDiffEditPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -49,8 +49,8 @@ from ..test_pipelines_common import PipelineLatentTesterMixin, PipelineTesterMix
 enable_full_determinism()
 
 
-class StableVictorDiffEditPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = StableVictorDiffEditPipeline
+class StableDiffusionDiffEditPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = StableDiffusionDiffEditPipeline
     params = TEXT_GUIDED_IMAGE_INPAINTING_PARAMS - {"height", "width", "image"} | {"image_latents"}
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS - {"image"} | {"image_latents"}
     image_params = frozenset(
@@ -292,7 +292,7 @@ class StableVictorDiffEditPipelineFastTests(PipelineLatentTesterMixin, PipelineT
 
 @require_torch_gpu
 @nightly
-class StableVictorDiffEditPipelineIntegrationTests(unittest.TestCase):
+class StableDiffusionDiffEditPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -310,7 +310,7 @@ class StableVictorDiffEditPipelineIntegrationTests(unittest.TestCase):
     def test_stable_diffusion_diffedit_full(self):
         generator = torch.manual_seed(0)
 
-        pipe = StableVictorDiffEditPipeline.from_pretrained(
+        pipe = StableDiffusionDiffEditPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-1-base", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
@@ -364,7 +364,7 @@ class StableVictorDiffEditPipelineIntegrationTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class StableVictorDiffEditPipelineNightlyTests(unittest.TestCase):
+class StableDiffusionDiffEditPipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -383,7 +383,7 @@ class StableVictorDiffEditPipelineNightlyTests(unittest.TestCase):
     def test_stable_diffusion_diffedit_dpm(self):
         generator = torch.manual_seed(0)
 
-        pipe = StableVictorDiffEditPipeline.from_pretrained(
+        pipe = StableDiffusionDiffEditPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-1", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)

@@ -34,12 +34,12 @@ Motion Adapter checkpoints can be found under [guoyww](https://huggingface.co/gu
 
 AnimateDiff works with a MotionAdapter checkpoint and a Stable Diffusion model checkpoint. The MotionAdapter is a collection of Motion Modules that are responsible for adding coherent motion across image frames. These modules are applied after the Resnet and Attention blocks in Stable Diffusion UNet.
 
-The following example demonstrates how to use a *MotionAdapter* checkpoint with Diffusers for inference based on StableVictor-1.4/1.5.
+The following example demonstrates how to use a *MotionAdapter* checkpoint with Diffusers for inference based on StableDiffusion-1.4/1.5.
 
 ```python
 import torch
-from VictorAI import MotionAdapter, AnimateDiffPipeline, DDIMScheduler
-from VictorAI.utils import export_to_gif
+from diffusers import MotionAdapter, AnimateDiffPipeline, DDIMScheduler
+from diffusers.utils import export_to_gif
 
 # Load the motion adapter
 adapter = MotionAdapter.from_pretrained("guoyww/animatediff-motion-adapter-v1-5-2")
@@ -98,8 +98,8 @@ Motion LoRAs are a collection of LoRAs that work with the `guoyww/animatediff-mo
 
 ```python
 import torch
-from VictorAI import MotionAdapter, AnimateDiffPipeline, DDIMScheduler
-from VictorAI.utils import export_to_gif
+from diffusers import MotionAdapter, AnimateDiffPipeline, DDIMScheduler
+from diffusers.utils import export_to_gif
 
 # Load the motion adapter
 adapter = MotionAdapter.from_pretrained("guoyww/animatediff-motion-adapter-v1-5-2")
@@ -160,8 +160,8 @@ Then you can use the following code to combine Motion LoRAs.
 
 ```python
 import torch
-from VictorAI import MotionAdapter, AnimateDiffPipeline, DDIMScheduler
-from VictorAI.utils import export_to_gif
+from diffusers import MotionAdapter, AnimateDiffPipeline, DDIMScheduler
+from diffusers.utils import export_to_gif
 
 # Load the motion adapter
 adapter = MotionAdapter.from_pretrained("guoyww/animatediff-motion-adapter-v1-5-2")

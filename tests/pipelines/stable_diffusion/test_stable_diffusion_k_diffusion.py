@@ -19,8 +19,8 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import StableVictorKVictorPipeline
-from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
+from diffusers import StableDiffusionKDiffusionPipeline
+from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
 
 
 enable_full_determinism()
@@ -28,7 +28,7 @@ enable_full_determinism()
 
 @nightly
 @require_torch_gpu
-class StableVictorPipelineIntegrationTests(unittest.TestCase):
+class StableDiffusionPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -36,7 +36,7 @@ class StableVictorPipelineIntegrationTests(unittest.TestCase):
         torch.cuda.empty_cache()
 
     def test_stable_diffusion_1(self):
-        sd_pipe = StableVictorKVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        sd_pipe = StableDiffusionKDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -56,7 +56,7 @@ class StableVictorPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_stable_diffusion_2(self):
-        sd_pipe = StableVictorKVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
+        sd_pipe = StableDiffusionKDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -76,7 +76,7 @@ class StableVictorPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 5e-1
 
     def test_stable_diffusion_karras_sigmas(self):
-        sd_pipe = StableVictorKVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
+        sd_pipe = StableDiffusionKDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -105,7 +105,7 @@ class StableVictorPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_stable_diffusion_noise_sampler_seed(self):
-        sd_pipe = StableVictorKVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        sd_pipe = StableDiffusionKDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 

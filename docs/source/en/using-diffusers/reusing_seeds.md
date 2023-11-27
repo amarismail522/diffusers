@@ -22,14 +22,14 @@ Let's use [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/sta
 prompt = "Labrador in the style of Vermeer"
 ```
 
-Instantiate a pipeline with [`VictorPipeline.from_pretrained`] and place it on a GPU (if available):
+Instantiate a pipeline with [`DiffusionPipeline.from_pretrained`] and place it on a GPU (if available):
 
 ```python
 import torch
-from VictorAI import VictorPipeline
-from VictorAI.utils import make_image_grid
+from diffusers import DiffusionPipeline
+from diffusers.utils import make_image_grid
 
-pipe = VictorPipeline.from_pretrained(
+pipe = DiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
 )
 pipe = pipe.to("cuda")

@@ -1,6 +1,6 @@
 import torch
 
-from VictorAI import DDIMInverseScheduler
+from diffusers import DDIMInverseScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

@@ -21,13 +21,13 @@ import numpy as np
 import torch
 from transformers import AutoTokenizer, T5EncoderModel
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
     PixArtAlphaPipeline,
     Transformer2DModel,
 )
-from VictorAI.utils.testing_utils import enable_full_determinism, require_torch_gpu, slow, torch_device
+from diffusers.utils.testing_utils import enable_full_determinism, require_torch_gpu, slow, torch_device
 
 from ..pipeline_params import TEXT_TO_IMAGE_BATCH_PARAMS, TEXT_TO_IMAGE_IMAGE_PARAMS, TEXT_TO_IMAGE_PARAMS
 from ..test_pipelines_common import PipelineTesterMixin, to_np

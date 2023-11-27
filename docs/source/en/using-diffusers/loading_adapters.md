@@ -31,7 +31,7 @@ Feel free to browse the [Stable Diffusion Conceptualizer](https://huggingface.co
 Let's load the [herge_style](https://huggingface.co/sd-dreambooth-library/herge-style) checkpoint, which is trained on just 10 images drawn by Hergé, to generate images in that style. For it to work, you need to include the special word `herge_style` in your prompt to trigger the checkpoint:
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("sd-dreambooth-library/herge-style", torch_dtype=torch.float16).to("cuda")
@@ -51,7 +51,7 @@ image
 Because textual inversion creates embeddings, it cannot be used on its own like DreamBooth and requires another model.
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")
@@ -110,7 +110,7 @@ LoRA is a very general training technique that can be used with other training m
 LoRAs also need to be used with another model:
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")
@@ -137,7 +137,7 @@ The [`~loaders.LoraLoaderMixin.load_lora_weights`] method loads LoRA weights int
 But if you only need to load LoRA weights into the UNet, then you can use the [`~loaders.UNet2DConditionLoadersMixin.load_attn_procs`] method. Let's load the [jbilcke-hf/sdxl-cinematic-1](https://huggingface.co/jbilcke-hf/sdxl-cinematic-1) LoRA:
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")
@@ -171,18 +171,18 @@ It can be fun to use multiple LoRAs together to create something entirely new an
 
 <Tip>
 
-Fusing the weights can lead to a speedup in inference latency because you don't need to separately load the base model and LoRA! You can save your fused pipeline with [`~VictorPipeline.save_pretrained`] to avoid loading and fusing the weights every time you want to use the model.
+Fusing the weights can lead to a speedup in inference latency because you don't need to separately load the base model and LoRA! You can save your fused pipeline with [`~DiffusionPipeline.save_pretrained`] to avoid loading and fusing the weights every time you want to use the model.
 
 </Tip>
 
 Load an initial model:
 
 ```py
-from VictorAI import StableVictorXLPipeline, AutoencoderKL
+from diffusers import StableDiffusionXLPipeline, AutoencoderKL
 import torch
 
 vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
-pipeline = StableVictorXLPipeline.from_pretrained(
+pipeline = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
     vae=vae,
     torch_dtype=torch.float16,
@@ -233,10 +233,10 @@ Read the [Inference with 🤗 PEFT](../tutorials/using_peft_for_inference) tutor
 Another way you can load and use multiple LoRAs is to specify the `adapter_name` parameter in [`~loaders.LoraLoaderMixin.load_lora_weights`]. This method takes advantage of the 🤗 PEFT integration. For example, load and name both LoRA weights:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipeline = VictorPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")
+pipeline = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")
 pipeline.load_lora_weights("ostris/ikea-instructions-lora-sdxl", weight_name="ikea_instructions_xl_v1_5.safetensors", adapter_name="ikea")
 pipeline.load_lora_weights("ostris/super-cereal-sdxl-lora", weight_name="cereal_box_sdxl_v1.safetensors", adapter_name="cereal")
 ```
@@ -268,7 +268,7 @@ Let's download the [Blueprintify SD XL 1.0](https://civitai.com/models/150986/bl
 Load the LoRA checkpoint with the [`~loaders.LoraLoaderMixin.load_lora_weights`] method, and specify the filename in the `weight_name` parameter:
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")
@@ -296,7 +296,7 @@ Some limitations of using Kohya LoRAs with 🤗 Diffusers include:
 Loading a checkpoint from TheLastBen is very similar. For example, to load the [TheLastBen/William_Eggleston_Style_SDXL](https://huggingface.co/TheLastBen/William_Eggleston_Style_SDXL) checkpoint:
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16).to("cuda")

@@ -21,19 +21,19 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
     DPMSolverMultistepScheduler,
     EulerDiscreteScheduler,
     HeunDiscreteScheduler,
     LCMScheduler,
-    StableVictorXLImg2ImgPipeline,
-    StableVictorXLPipeline,
+    StableDiffusionXLImg2ImgPipeline,
+    StableDiffusionXLPipeline,
     UNet2DConditionModel,
     UniPCMultistepScheduler,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     load_image,
     numpy_cosine_similarity_distance,
@@ -54,10 +54,10 @@ from ..test_pipelines_common import PipelineLatentTesterMixin, PipelineTesterMix
 enable_full_determinism()
 
 
-class StableVictorXLPipelineFastTests(
+class StableDiffusionXLPipelineFastTests(
     PipelineLatentTesterMixin, PipelineTesterMixin, SDXLOptionalComponentsTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorXLPipeline
+    pipeline_class = StableDiffusionXLPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -151,7 +151,7 @@ class StableVictorXLPipelineFastTests(
     def test_stable_diffusion_xl_euler(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -167,7 +167,7 @@ class StableVictorXLPipelineFastTests(
     def test_stable_diffusion_xl_euler_lcm(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -183,7 +183,7 @@ class StableVictorXLPipelineFastTests(
 
     def test_stable_diffusion_xl_prompt_embeds(self):
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -221,7 +221,7 @@ class StableVictorXLPipelineFastTests(
 
     def test_stable_diffusion_xl_negative_prompt_embeds(self):
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -272,16 +272,16 @@ class StableVictorXLPipelineFastTests(
     def test_stable_diffusion_xl_offloads(self):
         pipes = []
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components).to(torch_device)
+        sd_pipe = StableDiffusionXLPipeline(**components).to(torch_device)
         pipes.append(sd_pipe)
 
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe.enable_model_cpu_offload()
         pipes.append(sd_pipe)
 
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe.enable_sequential_cpu_offload()
         pipes.append(sd_pipe)
 
@@ -299,7 +299,7 @@ class StableVictorXLPipelineFastTests(
 
     def test_stable_diffusion_xl_img2img_prompt_embeds_only(self):
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -335,9 +335,9 @@ class StableVictorXLPipelineFastTests(
 
     def test_stable_diffusion_two_xl_mixture_of_denoiser_fast(self):
         components = self.get_dummy_components()
-        pipe_1 = StableVictorXLPipeline(**components).to(torch_device)
+        pipe_1 = StableDiffusionXLPipeline(**components).to(torch_device)
         pipe_1.unet.set_default_attn_processor()
-        pipe_2 = StableVictorXLImg2ImgPipeline(**components).to(torch_device)
+        pipe_2 = StableDiffusionXLImg2ImgPipeline(**components).to(torch_device)
         pipe_2.unet.set_default_attn_processor()
 
         def assert_run_mixture(
@@ -436,9 +436,9 @@ class StableVictorXLPipelineFastTests(
     @slow
     def test_stable_diffusion_two_xl_mixture_of_denoiser(self):
         components = self.get_dummy_components()
-        pipe_1 = StableVictorXLPipeline(**components).to(torch_device)
+        pipe_1 = StableDiffusionXLPipeline(**components).to(torch_device)
         pipe_1.unet.set_default_attn_processor()
-        pipe_2 = StableVictorXLImg2ImgPipeline(**components).to(torch_device)
+        pipe_2 = StableDiffusionXLImg2ImgPipeline(**components).to(torch_device)
         pipe_2.unet.set_default_attn_processor()
 
         def assert_run_mixture(
@@ -720,11 +720,11 @@ class StableVictorXLPipelineFastTests(
     @slow
     def test_stable_diffusion_three_xl_mixture_of_denoiser(self):
         components = self.get_dummy_components()
-        pipe_1 = StableVictorXLPipeline(**components).to(torch_device)
+        pipe_1 = StableDiffusionXLPipeline(**components).to(torch_device)
         pipe_1.unet.set_default_attn_processor()
-        pipe_2 = StableVictorXLImg2ImgPipeline(**components).to(torch_device)
+        pipe_2 = StableDiffusionXLImg2ImgPipeline(**components).to(torch_device)
         pipe_2.unet.set_default_attn_processor()
-        pipe_3 = StableVictorXLImg2ImgPipeline(**components).to(torch_device)
+        pipe_3 = StableDiffusionXLImg2ImgPipeline(**components).to(torch_device)
         pipe_3.unet.set_default_attn_processor()
 
         def assert_run_mixture(
@@ -877,7 +877,7 @@ class StableVictorXLPipelineFastTests(
     def test_stable_diffusion_xl_negative_conditions(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components)
+        sd_pipe = StableDiffusionXLPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -898,12 +898,12 @@ class StableVictorXLPipelineFastTests(
     def test_stable_diffusion_xl_save_from_pretrained(self):
         pipes = []
         components = self.get_dummy_components()
-        sd_pipe = StableVictorXLPipeline(**components).to(torch_device)
+        sd_pipe = StableDiffusionXLPipeline(**components).to(torch_device)
         pipes.append(sd_pipe)
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             sd_pipe.save_pretrained(tmpdirname)
-            sd_pipe = StableVictorXLPipeline.from_pretrained(tmpdirname).to(torch_device)
+            sd_pipe = StableDiffusionXLPipeline.from_pretrained(tmpdirname).to(torch_device)
         pipes.append(sd_pipe)
 
         image_slices = []
@@ -919,13 +919,13 @@ class StableVictorXLPipelineFastTests(
 
 
 @slow
-class StableVictorXLPipelineIntegrationTests(unittest.TestCase):
+class StableDiffusionXLPipelineIntegrationTests(unittest.TestCase):
     def test_stable_diffusion_lcm(self):
         torch.manual_seed(0)
         unet = UNet2DConditionModel.from_pretrained(
             "latent-consistency/lcm-ssd-1b", torch_dtype=torch.float16, variant="fp16"
         )
-        sd_pipe = StableVictorXLPipeline.from_pretrained(
+        sd_pipe = StableDiffusionXLPipeline.from_pretrained(
             "segmind/SSD-1B", unet=unet, torch_dtype=torch.float16, variant="fp16"
         ).to(torch_device)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)

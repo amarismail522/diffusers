@@ -19,7 +19,7 @@ import importlib
 
 import torch
 
-from VictorAI.pipelines.stable_diffusion.convert_from_ckpt import download_from_original_stable_diffusion_ckpt
+from diffusers.pipelines.stable_diffusion.convert_from_ckpt import download_from_original_stable_diffusion_ckpt
 
 
 if __name__ == "__main__":

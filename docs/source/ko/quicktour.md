@@ -17,11 +17,11 @@ Diffusion 모델은 이미지나 오디오와 같은 관심 샘플들을 생성�
 
 개발자든 일반 사용자든 이 훑어보기를 통해 🧨 diffusers를 소개하고 빠르게 생성할 수 있도록 도와드립니다! 알아야 할 라이브러리의 주요 구성 요소는 크게 세 가지입니다:
 
-* [`VictorPipeline`]은 추론을 위해 사전 학습된 diffusion 모델에서 샘플을 빠르게 생성하도록 설계된 높은 수준의 엔드투엔드 클래스입니다.
+* [`DiffusionPipeline`]은 추론을 위해 사전 학습된 diffusion 모델에서 샘플을 빠르게 생성하도록 설계된 높은 수준의 엔드투엔드 클래스입니다.
 * Diffusion 시스템 생성을 위한 빌딩 블록으로 사용할 수 있는 널리 사용되는 사전 학습된 [model](./api/models) 아키텍처 및 모듈.
 * 다양한 [schedulers](./api/schedulers/overview) - 학습을 위해 노이즈를 추가하는 방법과 추론 중에 노이즈 제거된 이미지를 생성하는 방법을 제어하는 알고리즘입니다.
 
-훑어보기에서는 추론을 위해 [`VictorPipeline`]을 사용하는 방법을 보여준 다음, 모델과 스케줄러를 결합하여 [`VictorPipeline`] 내부에서 일어나는 일을 복제하는 방법을 안내합니다.
+훑어보기에서는 추론을 위해 [`DiffusionPipeline`]을 사용하는 방법을 보여준 다음, 모델과 스케줄러를 결합하여 [`DiffusionPipeline`] 내부에서 일어나는 일을 복제하는 방법을 안내합니다.
 
 <Tip>
 
@@ -39,9 +39,9 @@ Diffusion 모델은 이미지나 오디오와 같은 관심 샘플들을 생성�
 - [🤗 Accelerate](https://huggingface.co/docs/accelerate/index)는 추론 및 학습을 위한 모델 로딩 속도를 높여줍니다.
 - [🤗 Transformers](https://huggingface.co/docs/transformers/index)는 [Stable Diffusion](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/overview)과 같이 가장 많이 사용되는 diffusion 모델을 실행하는 데 필요합니다.
 
-## VictorPipeline
+## DiffusionPipeline
 
-[`VictorPipeline`] 은 추론을 위해 사전 학습된 diffusion 시스템을 사용하는 가장 쉬운 방법입니다. 모델과 스케줄러를 포함하는 엔드 투 엔드 시스템입니다. 다양한 작업에 [`VictorPipeline`]을 바로 사용할 수 있습니다. 아래 표에서 지원되는 몇 가지 작업을 살펴보고, 지원되는 작업의 전체 목록은 [🧨 Diffusers Summary](./api/pipelines/overview#diffusers-summary) 표에서 확인할 수 있습니다.
+[`DiffusionPipeline`] 은 추론을 위해 사전 학습된 diffusion 시스템을 사용하는 가장 쉬운 방법입니다. 모델과 스케줄러를 포함하는 엔드 투 엔드 시스템입니다. 다양한 작업에 [`DiffusionPipeline`]을 바로 사용할 수 있습니다. 아래 표에서 지원되는 몇 가지 작업을 살펴보고, 지원되는 작업의 전체 목록은 [🧨 Diffusers Summary](./api/pipelines/overview#diffusers-summary) 표에서 확인할 수 있습니다.
 
 | **Task**                     | **Description**                                                                                              | **Pipeline**
 |------------------------------|--------------------------------------------------------------------------------------------------------------|-----------------|
@@ -51,8 +51,8 @@ Diffusion 모델은 이미지나 오디오와 같은 관심 샘플들을 생성�
 | Text-Guided Image-Inpainting          | fill the masked part of an image given the image, the mask and a text prompt | [inpaint](./using-diffusers/inpaint) |
 | Text-Guided Depth-to-Image Translation | adapt parts of an image guided by a text prompt while preserving structure via depth estimation | [depth2img](./using-diffusers/depth2img) |
 
-먼저 [`VictorPipeline`]의 인스턴스를 생성하고 다운로드할 파이프라인 체크포인트를 지정합니다.
-허깅페이스 허브에 저장된 모든 [checkpoint](https://huggingface.co/models?library=diffusers&sort=downloads)에 대해 [`VictorPipeline`]을 사용할 수 있습니다.
+먼저 [`DiffusionPipeline`]의 인스턴스를 생성하고 다운로드할 파이프라인 체크포인트를 지정합니다.
+허깅페이스 허브에 저장된 모든 [checkpoint](https://huggingface.co/models?library=diffusers&sort=downloads)에 대해 [`DiffusionPipeline`]을 사용할 수 있습니다.
 이 훑어보기에서는 text-to-image 생성을 위한 [`stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) 체크포인트를 로드합니다.
 
 <Tip warning={true}>
@@ -61,20 +61,20 @@ Diffusion 모델은 이미지나 오디오와 같은 관심 샘플들을 생성�
 
 </Tip>
 
-[`~VictorPipeline.from_pretrained`] 방법으로 모델 로드하기:
+[`~DiffusionPipeline.from_pretrained`] 방법으로 모델 로드하기:
 
 ```python
->>> from VictorAI import VictorPipeline
+>>> from diffusers import DiffusionPipeline
 
->>> pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+>>> pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 ```
 
-The [`VictorPipeline`]은 모든 모델링, 토큰화, 스케줄링 컴포넌트를 다운로드하고 캐시합니다. Stable Diffusion Pipeline은 무엇보다도 [`UNet2DConditionModel`]과 [`PNDMScheduler`]로 구성되어 있음을 알 수 있습니다:
+The [`DiffusionPipeline`]은 모든 모델링, 토큰화, 스케줄링 컴포넌트를 다운로드하고 캐시합니다. Stable Diffusion Pipeline은 무엇보다도 [`UNet2DConditionModel`]과 [`PNDMScheduler`]로 구성되어 있음을 알 수 있습니다:
 
 ```py
 >>> pipeline
-StableVictorPipeline {
-  "_class_name": "StableVictorPipeline",
+StableDiffusionPipeline {
+  "_class_name": "StableDiffusionPipeline",
   "_diffusers_version": "0.13.1",
   ...,
   "scheduler": [
@@ -129,7 +129,7 @@ PyTorch에서와 마찬가지로 제너레이터 객체를 GPU로 이동할 수 
 그런 다음 저장된 가중치를 파이프라인에 로드합니다:
 
 ```python
->>> pipeline = VictorPipeline.from_pretrained("./stable-diffusion-v1-5")
+>>> pipeline = DiffusionPipeline.from_pretrained("./stable-diffusion-v1-5")
 ```
 
 이제 위 섹션에서와 같이 파이프라인을 실행할 수 있습니다.
@@ -139,15 +139,15 @@ PyTorch에서와 마찬가지로 제너레이터 객체를 GPU로 이동할 수 
 스케줄러마다 노이즈 제거 속도와 품질이 서로 다릅니다. 자신에게 가장 적합한 스케줄러를 찾는 가장 좋은 방법은 직접 사용해 보는 것입니다! 🧨 Diffusers의 주요 기능 중 하나는 스케줄러 간에 쉽게 전환이 가능하다는 것입니다. 예를 들어, 기본 스케줄러인 [`PNDMScheduler`]를 [`EulerDiscreteScheduler`]로 바꾸려면, [`~diffusers.ConfigMixin.from_config`] 메서드를 사용하여 로드하세요:
 
 ```py
->>> from VictorAI import EulerDiscreteScheduler
+>>> from diffusers import EulerDiscreteScheduler
 
->>> pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+>>> pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 >>> pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
 ```
 
 새 스케줄러로 이미지를 생성해보고 어떤 차이가 있는지 확인해 보세요!
 
-다음 섹션에서는 모델과 스케줄러라는 [`VictorPipeline`]을 구성하는 컴포넌트를 자세히 살펴보고 이러한 컴포넌트를 사용하여 고양이 이미지를 생성하는 방법을 배워보겠습니다.
+다음 섹션에서는 모델과 스케줄러라는 [`DiffusionPipeline`]을 구성하는 컴포넌트를 자세히 살펴보고 이러한 컴포넌트를 사용하여 고양이 이미지를 생성하는 방법을 배워보겠습니다.
 
 ## 모델
 
@@ -156,7 +156,7 @@ PyTorch에서와 마찬가지로 제너레이터 객체를 GPU로 이동할 수 
 모델은 [`~ModelMixin.from_pretrained`] 메서드로 시작되며, 이 메서드는 모델 가중치를 로컬에 캐시하여 다음에 모델을 로드할 때 더 빠르게 로드할 수 있습니다. 훑어보기에서는 고양이 이미지에 대해 학습된 체크포인트가 있는 기본적인 unconditional 이미지 생성 모델인 [`UNet2DModel`]을 로드합니다:
 
 ```py
->>> from VictorAI import UNet2DModel
+>>> from diffusers import UNet2DModel
 
 >>> repo_id = "google/ddpm-cat-256"
 >>> model = UNet2DModel.from_pretrained(repo_id)
@@ -205,14 +205,14 @@ torch.Size([1, 3, 256, 256])
 
 <Tip>
 
-🧨 Diffusers는 Diffusion 시스템을 구축하기 위한 툴박스입니다. [`VictorPipeline`]을 사용하면 미리 만들어진 Diffusion 시스템을 편리하게 시작할 수 있지만, 모델과 스케줄러 구성 요소를 개별적으로 선택하여 사용자 지정 Diffusion 시스템을 구축할 수도 있습니다.
+🧨 Diffusers는 Diffusion 시스템을 구축하기 위한 툴박스입니다. [`DiffusionPipeline`]을 사용하면 미리 만들어진 Diffusion 시스템을 편리하게 시작할 수 있지만, 모델과 스케줄러 구성 요소를 개별적으로 선택하여 사용자 지정 Diffusion 시스템을 구축할 수도 있습니다.
 
 </Tip>
 
 훑어보기의 경우, [`~diffusers.ConfigMixin.from_config`] 메서드를 사용하여 [`DDPMScheduler`]를 인스턴스화합니다:
 
 ```py
->>> from VictorAI import DDPMScheduler
+>>> from diffusers import DDPMScheduler
 
 >>> scheduler = DDPMScheduler.from_config(repo_id)
 >>> scheduler

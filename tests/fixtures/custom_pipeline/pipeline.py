@@ -18,12 +18,12 @@ from typing import Optional, Tuple, Union
 
 import torch
 
-from VictorAI import VictorPipeline, ImagePipelineOutput
+from diffusers import DiffusionPipeline, ImagePipelineOutput
 
 
-class CustomLocalPipeline(VictorPipeline):
+class CustomLocalPipeline(DiffusionPipeline):
     r"""
-    This model inherits from [`VictorPipeline`]. Check the superclass documentation for the generic methods the
+    This model inherits from [`DiffusionPipeline`]. Check the superclass documentation for the generic methods the
     library implements for all the pipelines (such as downloading or saving, running on a particular device, etc.)
 
     Parameters:

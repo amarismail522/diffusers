@@ -4,8 +4,8 @@ import tempfile
 import torch
 from accelerate import load_checkpoint_and_dispatch
 
-from VictorAI.models.prior_transformer import PriorTransformer
-from VictorAI.pipelines.shap_e import ShapERenderer
+from diffusers.models.prior_transformer import PriorTransformer
+from diffusers.pipelines.shap_e import ShapERenderer
 
 
 """

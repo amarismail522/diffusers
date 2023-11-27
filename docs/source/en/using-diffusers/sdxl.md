@@ -34,39 +34,39 @@ Before you begin, make sure you have the following libraries installed:
 We recommend installing the [invisible-watermark](https://pypi.org/project/invisible-watermark/) library to help identify images that are generated. If the invisible-watermark library is installed, it is used by default. To disable the watermarker:
 
 ```py
-pipeline = StableVictorXLPipeline.from_pretrained(..., add_watermarker=False)
+pipeline = StableDiffusionXLPipeline.from_pretrained(..., add_watermarker=False)
 ```
 
 </Tip>
 
 ## Load model checkpoints
 
-Model weights may be stored in separate subfolders on the Hub or locally, in which case, you should use the [`~StableVictorXLPipeline.from_pretrained`] method:
+Model weights may be stored in separate subfolders on the Hub or locally, in which case, you should use the [`~StableDiffusionXLPipeline.from_pretrained`] method:
 
 ```py
-from VictorAI import StableVictorXLPipeline, StableVictorXLImg2ImgPipeline
+from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
 import torch
 
-pipeline = StableVictorXLPipeline.from_pretrained(
+pipeline = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
-refiner = StableVictorXLImg2ImgPipeline.from_pretrained(
+refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-refiner-1.0", torch_dtype=torch.float16, use_safetensors=True, variant="fp16"
 ).to("cuda")
 ```
 
-You can also use the [`~StableVictorXLPipeline.from_single_file`] method to load a model checkpoint stored in a single file format (`.ckpt` or `.safetensors`) from the Hub or locally:
+You can also use the [`~StableDiffusionXLPipeline.from_single_file`] method to load a model checkpoint stored in a single file format (`.ckpt` or `.safetensors`) from the Hub or locally:
 
 ```py
-from VictorAI import StableVictorXLPipeline, StableVictorXLImg2ImgPipeline
+from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
 import torch
 
-pipeline = StableVictorXLPipeline.from_single_file(
+pipeline = StableDiffusionXLPipeline.from_single_file(
     "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/blob/main/sd_xl_base_1.0.safetensors", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
-refiner = StableVictorXLImg2ImgPipeline.from_single_file(
+refiner = StableDiffusionXLImg2ImgPipeline.from_single_file(
     "https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/blob/main/sd_xl_refiner_1.0.safetensors", torch_dtype=torch.float16, use_safetensors=True, variant="fp16"
 ).to("cuda")
 ```
@@ -76,7 +76,7 @@ refiner = StableVictorXLImg2ImgPipeline.from_single_file(
 For text-to-image, pass a text prompt. By default, SDXL generates a 1024x1024 image for the best results. You can try setting the `height` and `width` parameters to 768x768 or 512x512, but anything below 512x512 is not likely to work.
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline_text2image = AutoPipelineForText2Image.from_pretrained(
@@ -97,8 +97,8 @@ image
 For image-to-image, SDXL works especially well with image sizes between 768x768 and 1024x1024. Pass an initial image, and a text prompt to condition the image with:
 
 ```py
-from VictorAI import AutoPipelineForImage2Image
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import AutoPipelineForImage2Image
+from diffusers.utils import load_image, make_image_grid
 
 # use from_pipe to avoid consuming additional memory when loading a checkpoint
 pipeline = AutoPipelineForImage2Image.from_pipe(pipeline_text2image).to("cuda")
@@ -119,8 +119,8 @@ make_image_grid([init_image, image], rows=1, cols=2)
 For inpainting, you'll need the original image and a mask of what you want to replace in the original image. Create a prompt to describe what you want to replace the masked area with.
 
 ```py
-from VictorAI import AutoPipelineForInpainting
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import AutoPipelineForInpainting
+from diffusers.utils import load_image, make_image_grid
 
 # use from_pipe to avoid consuming additional memory when loading a checkpoint
 pipeline = AutoPipelineForInpainting.from_pipe(pipeline_text2image).to("cuda")
@@ -154,14 +154,14 @@ When you use the base and refiner model together to generate an image, this is k
 As an ensemble of expert denoisers, the base model serves as the expert during the high-noise diffusion stage and the refiner model serves as the expert during the low-noise diffusion stage. Load the base and refiner model:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-base = VictorPipeline.from_pretrained(
+base = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
-refiner = VictorPipeline.from_pretrained(
+refiner = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-refiner-1.0",
     text_encoder_2=base.text_encoder_2,
     vae=base.vae,
@@ -171,7 +171,7 @@ refiner = VictorPipeline.from_pretrained(
 ).to("cuda")
 ```
 
-To use this approach, you need to define the number of timesteps for each model to run through their respective stages. For the base model, this is controlled by the [`denoising_end`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableVictorXLPipeline.__call__.denoising_end) parameter and for the refiner model, it is controlled by the [`denoising_start`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableVictorXLImg2ImgPipeline.__call__.denoising_start) parameter.
+To use this approach, you need to define the number of timesteps for each model to run through their respective stages. For the base model, this is controlled by the [`denoising_end`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLPipeline.__call__.denoising_end) parameter and for the refiner model, it is controlled by the [`denoising_start`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLImg2ImgPipeline.__call__.denoising_start) parameter.
 
 <Tip>
 
@@ -210,18 +210,18 @@ image
   </div>
 </div>
 
-The refiner model can also be used for inpainting in the [`StableVictorXLInpaintPipeline`]:
+The refiner model can also be used for inpainting in the [`StableDiffusionXLInpaintPipeline`]:
 
 ```py
-from VictorAI import StableVictorXLInpaintPipeline
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import StableDiffusionXLInpaintPipeline
+from diffusers.utils import load_image, make_image_grid
 import torch
 
-base = StableVictorXLInpaintPipeline.from_pretrained(
+base = StableDiffusionXLInpaintPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
-refiner = StableVictorXLInpaintPipeline.from_pretrained(
+refiner = StableDiffusionXLInpaintPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-refiner-1.0",
     text_encoder_2=base.text_encoder_2,
     vae=base.vae,
@@ -267,14 +267,14 @@ SDXL gets a boost in image quality by using the refiner model to add additional 
 Load the base and refiner models:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-base = VictorPipeline.from_pretrained(
+base = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
-refiner = VictorPipeline.from_pretrained(
+refiner = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-refiner-1.0",
     text_encoder_2=base.text_encoder_2,
     vae=base.vae,
@@ -309,7 +309,7 @@ image = refiner(prompt=prompt, image=image[None, :]).images[0]
   </div>
 </div>
 
-For inpainting, load the base and the refiner model in the [`StableVictorXLInpaintPipeline`], remove the `denoising_end` and `denoising_start` parameters, and choose a smaller number of inference steps for the refiner.
+For inpainting, load the base and the refiner model in the [`StableDiffusionXLInpaintPipeline`], remove the `denoising_end` and `denoising_start` parameters, and choose a smaller number of inference steps for the refiner.
 
 ## Micro-conditioning
 
@@ -317,7 +317,7 @@ SDXL training involves several additional conditioning techniques, which are ref
 
 <Tip>
 
-You can use both micro-conditioning and negative micro-conditioning parameters thanks to classifier-free guidance. They are available in the [`StableVictorXLPipeline`], [`StableVictorXLImg2ImgPipeline`], [`StableVictorXLInpaintPipeline`], and [`StableVictorXLControlNetPipeline`].
+You can use both micro-conditioning and negative micro-conditioning parameters thanks to classifier-free guidance. They are available in the [`StableDiffusionXLPipeline`], [`StableDiffusionXLImg2ImgPipeline`], [`StableDiffusionXLInpaintPipeline`], and [`StableDiffusionXLControlNetPipeline`].
 
 </Tip>
 
@@ -325,17 +325,17 @@ You can use both micro-conditioning and negative micro-conditioning parameters t
 
 There are two types of size conditioning:
 
-- [`original_size`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableVictorXLPipeline.__call__.original_size) conditioning comes from upscaled images in the training batch (because it would be wasteful to discard the smaller images which make up almost 40% of the total training data). This way, SDXL learns that upscaling artifacts are not supposed to be present in high-resolution images. During inference, you can use `original_size` to indicate the original image resolution. Using the default value of `(1024, 1024)` produces higher-quality images that resemble the 1024x1024 images in the dataset. If you choose to use a lower resolution, such as `(256, 256)`, the model still generates 1024x1024 images, but they'll look like the low resolution images (simpler patterns, blurring) in the dataset.
+- [`original_size`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLPipeline.__call__.original_size) conditioning comes from upscaled images in the training batch (because it would be wasteful to discard the smaller images which make up almost 40% of the total training data). This way, SDXL learns that upscaling artifacts are not supposed to be present in high-resolution images. During inference, you can use `original_size` to indicate the original image resolution. Using the default value of `(1024, 1024)` produces higher-quality images that resemble the 1024x1024 images in the dataset. If you choose to use a lower resolution, such as `(256, 256)`, the model still generates 1024x1024 images, but they'll look like the low resolution images (simpler patterns, blurring) in the dataset.
 
-- [`target_size`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableVictorXLPipeline.__call__.target_size) conditioning comes from finetuning SDXL to support different image aspect ratios. During inference, if you use the default value of `(1024, 1024)`, you'll get an image that resembles the composition of square images in the dataset. We recommend using the same value for `target_size` and `original_size`, but feel free to experiment with other options!
+- [`target_size`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLPipeline.__call__.target_size) conditioning comes from finetuning SDXL to support different image aspect ratios. During inference, if you use the default value of `(1024, 1024)`, you'll get an image that resembles the composition of square images in the dataset. We recommend using the same value for `target_size` and `original_size`, but feel free to experiment with other options!
 
 🤗 Diffusers also lets you specify negative conditions about an image's size to steer generation away from certain image resolutions:
 
 ```py
-from VictorAI import StableVictorXLPipeline
+from diffusers import StableDiffusionXLPipeline
 import torch
 
-pipe = StableVictorXLPipeline.from_pretrained(
+pipe = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
@@ -357,10 +357,10 @@ image = pipe(
 Images generated by previous Stable Diffusion models may sometimes appear to be cropped. This is because images are actually cropped during training so that all the images in a batch have the same size. By conditioning on crop coordinates, SDXL *learns* that no cropping - coordinates `(0, 0)` - usually correlates with centered subjects and complete faces (this is the default value in 🤗 Diffusers). You can experiment with different coordinates if you want to generate off-centered compositions!
 
 ```py
-from VictorAI import StableVictorXLPipeline
+from diffusers import StableDiffusionXLPipeline
 import torch
 
-pipeline = StableVictorXLPipeline.from_pretrained(
+pipeline = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
@@ -376,10 +376,10 @@ image
 You can also specify negative cropping coordinates to steer generation away from certain cropping parameters:
 
 ```py
-from VictorAI import StableVictorXLPipeline
+from diffusers import StableDiffusionXLPipeline
 import torch
 
-pipe = StableVictorXLPipeline.from_pretrained(
+pipe = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
@@ -398,10 +398,10 @@ image
 SDXL uses two text-encoders, so it is possible to pass a different prompt to each text-encoder, which can [improve quality](https://github.com/huggingface/diffusers/issues/4004#issuecomment-1627764201). Pass your original prompt to `prompt` and the second prompt to `prompt_2` (use `negative_prompt` and `negative_prompt_2` if you're using negative prompts):
 
 ```py
-from VictorAI import StableVictorXLPipeline
+from diffusers import StableDiffusionXLPipeline
 import torch
 
-pipeline = StableVictorXLPipeline.from_pretrained(
+pipeline = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
 ).to("cuda")
 
@@ -423,7 +423,7 @@ The dual text-encoders also support textual inversion embeddings that need to be
 
 SDXL is a large model, and you may need to optimize memory to get it to run on your hardware. Here are some tips to save memory and speed up inference.
 
-1. Offload the model to the CPU with [`~StableVictorXLPipeline.enable_model_cpu_offload`] for out-of-memory errors:
+1. Offload the model to the CPU with [`~StableDiffusionXLPipeline.enable_model_cpu_offload`] for out-of-memory errors:
 
 ```diff
 - base.to("cuda")

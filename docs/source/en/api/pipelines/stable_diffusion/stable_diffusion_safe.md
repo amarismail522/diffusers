@@ -20,24 +20,24 @@ The abstract from the paper is:
 
 ## Tips
 
-Use the `safety_concept` property of [`StableVictorPipelineSafe`] to check and edit the current safety concept:
+Use the `safety_concept` property of [`StableDiffusionPipelineSafe`] to check and edit the current safety concept:
 
 ```python
->>> from VictorAI import StableVictorPipelineSafe
+>>> from diffusers import StableDiffusionPipelineSafe
 
->>> pipeline = StableVictorPipelineSafe.from_pretrained("AIML-TUDA/stable-diffusion-safe")
+>>> pipeline = StableDiffusionPipelineSafe.from_pretrained("AIML-TUDA/stable-diffusion-safe")
 >>> pipeline.safety_concept
 'an image showing hate, harassment, violence, suffering, humiliation, harm, suicide, sexual, nudity, bodily fluids, blood, obscene gestures, illegal activity, drug use, theft, vandalism, weapons, child abuse, brutality, cruelty'
 ```
-For each image generation the active concept is also contained in [`StableVictorSafePipelineOutput`].
+For each image generation the active concept is also contained in [`StableDiffusionSafePipelineOutput`].
 
 There are 4 configurations (`SafetyConfig.WEAK`, `SafetyConfig.MEDIUM`, `SafetyConfig.STRONG`, and `SafetyConfig.MAX`) that can be applied:
 
 ```python
->>> from VictorAI import StableVictorPipelineSafe
->>> from VictorAI.pipelines.stable_diffusion_safe import SafetyConfig
+>>> from diffusers import StableDiffusionPipelineSafe
+>>> from diffusers.pipelines.stable_diffusion_safe import SafetyConfig
 
->>> pipeline = StableVictorPipelineSafe.from_pretrained("AIML-TUDA/stable-diffusion-safe")
+>>> pipeline = StableDiffusionPipelineSafe.from_pretrained("AIML-TUDA/stable-diffusion-safe")
 >>> prompt = "the four horsewomen of the apocalypse, painting by tom of finland, gaston bussiere, craig mullins, j. c. leyendecker"
 >>> out = pipeline(prompt=prompt, **SafetyConfig.MAX)
 ```
@@ -48,14 +48,14 @@ Make sure to check out the Stable Diffusion [Tips](overview#tips) section to lea
 
 </Tip>
 
-## StableVictorPipelineSafe
+## StableDiffusionPipelineSafe
 
-[[autodoc]] StableVictorPipelineSafe
+[[autodoc]] StableDiffusionPipelineSafe
 	- all
 	- __call__
 
-## StableVictorSafePipelineOutput
+## StableDiffusionSafePipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion_safe.StableVictorSafePipelineOutput
+[[autodoc]] pipelines.stable_diffusion_safe.StableDiffusionSafePipelineOutput
 	- all
 	- __call__

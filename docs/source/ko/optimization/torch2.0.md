@@ -35,9 +35,9 @@ pip install --upgrade torch diffusers
 
     ```Python
     import torch
-    from VictorAI import VictorPipeline
+    from diffusers import DiffusionPipeline
 
-    pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+    pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
     pipe = pipe.to("cuda")
 
     prompt = "a photo of an astronaut riding a horse on mars"
@@ -48,10 +48,10 @@ pip install --upgrade torch diffusers
 
     ```diff
     import torch
-    from VictorAI import VictorPipeline
-    + from VictorAI.models.attention_processor import AttnProcessor2_0
+    from diffusers import DiffusionPipeline
+    + from diffusers.models.attention_processor import AttnProcessor2_0
 
-    pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")
+    pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")
     + pipe.unet.set_attn_processor(AttnProcessor2_0())
 
     prompt = "a photo of an astronaut riding a horse on mars"
@@ -64,10 +64,10 @@ pip install --upgrade torch diffusers
 
     ```Python
     import torch
-    from VictorAI import VictorPipeline
-    from VictorAI.models.attention_processor import AttnProcessor
+    from diffusers import DiffusionPipeline
+    from diffusers.models.attention_processor import AttnProcessor
 
-    pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")
+    pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")
     pipe.unet.set_default_attn_processor()
 
     prompt = "a photo of an astronaut riding a horse on mars"
@@ -97,14 +97,14 @@ PyTorch 2.0의 효율적인 어텐션 구현과 `torch.compile`을 사용하여 
 #### Stable Diffusion text-to-image 
 
 ```python 
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
 path = "runwayml/stable-diffusion-v1-5"
 
 run_compile = True  # Set True / False
 
-pipe = VictorPipeline.from_pretrained(path, torch_dtype=torch.float16)
+pipe = DiffusionPipeline.from_pretrained(path, torch_dtype=torch.float16)
 pipe = pipe.to("cuda")
 pipe.unet.to(memory_format=torch.channels_last)
 
@@ -121,7 +121,7 @@ for _ in range(3):
 #### Stable Diffusion image-to-image 
 
 ```python 
-from VictorAI import StableVictorImg2ImgPipeline
+from diffusers import StableDiffusionImg2ImgPipeline
 import requests
 import torch
 from PIL import Image
@@ -137,7 +137,7 @@ path = "runwayml/stable-diffusion-v1-5"
 
 run_compile = True  # Set True / False
 
-pipe = StableVictorImg2ImgPipeline.from_pretrained(path, torch_dtype=torch.float16)
+pipe = StableDiffusionImg2ImgPipeline.from_pretrained(path, torch_dtype=torch.float16)
 pipe = pipe.to("cuda")
 pipe.unet.to(memory_format=torch.channels_last)
 
@@ -154,7 +154,7 @@ for _ in range(3):
 #### Stable Diffusion - inpainting
 
 ```python 
-from VictorAI import StableVictorInpaintPipeline
+from diffusers import StableDiffusionInpaintPipeline
 import requests
 import torch
 from PIL import Image
@@ -177,7 +177,7 @@ path = "runwayml/stable-diffusion-inpainting"
 
 run_compile = True  # Set True / False
 
-pipe = StableVictorInpaintPipeline.from_pretrained(path, torch_dtype=torch.float16)
+pipe = StableDiffusionInpaintPipeline.from_pretrained(path, torch_dtype=torch.float16)
 pipe = pipe.to("cuda")
 pipe.unet.to(memory_format=torch.channels_last)
 
@@ -194,7 +194,7 @@ for _ in range(3):
 #### ControlNet 
 
 ```python 
-from VictorAI import StableVictorControlNetPipeline, ControlNetModel
+from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
 import requests
 import torch
 from PIL import Image
@@ -210,7 +210,7 @@ path = "runwayml/stable-diffusion-v1-5"
 
 run_compile = True  # Set True / False
 controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16)
-pipe = StableVictorControlNetPipeline.from_pretrained(
+pipe = StableDiffusionControlNetPipeline.from_pretrained(
     path, controlnet=controlnet, torch_dtype=torch.float16
 )
 
@@ -232,16 +232,16 @@ for _ in range(3):
 #### IF text-to-image + upscaling
 
 ```python 
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
 run_compile = True  # Set True / False
 
-pipe = VictorPipeline.from_pretrained("DeepFloyd/IF-I-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16)
+pipe = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16)
 pipe.to("cuda")
-pipe_2 = VictorPipeline.from_pretrained("DeepFloyd/IF-II-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16)
+pipe_2 = DiffusionPipeline.from_pretrained("DeepFloyd/IF-II-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16)
 pipe_2.to("cuda")
-pipe_3 = VictorPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", torch_dtype=torch.float16)
+pipe_3 = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", torch_dtype=torch.float16)
 pipe_3.to("cuda")
 
 
@@ -265,7 +265,7 @@ for _ in range(3):
     image_3 = pipe_3(prompt=prompt, image=image, noise_level=100).images
 ```
 
-PyTorch 2.0 및 `torch.compile()`로 얻을 수 있는 가능한 속도 향상에 대해, [Stable Diffusion text-to-image pipeline](StableVictorPipeline)에 대한 상대적인 속도 향상을 보여주는 차트를 5개의 서로 다른 GPU 제품군(배치 크기 4)에 대해 나타냅니다:
+PyTorch 2.0 및 `torch.compile()`로 얻을 수 있는 가능한 속도 향상에 대해, [Stable Diffusion text-to-image pipeline](StableDiffusionPipeline)에 대한 상대적인 속도 향상을 보여주는 차트를 5개의 서로 다른 GPU 제품군(배치 크기 4)에 대해 나타냅니다:
 
 ![t2i_speedup](https://huggingface.co/datasets/diffusers/docs-images/resolve/main/pt2_benchmarks/t2i_speedup.png)
 

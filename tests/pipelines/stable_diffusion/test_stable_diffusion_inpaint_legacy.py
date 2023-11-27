@@ -22,18 +22,18 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
     DPMSolverMultistepScheduler,
     LMSDiscreteScheduler,
     PNDMScheduler,
-    StableVictorInpaintPipelineLegacy,
+    StableDiffusionInpaintPipelineLegacy,
     UNet2DConditionModel,
     UNet2DModel,
     VQModel,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -49,7 +49,7 @@ from VictorAI.utils.testing_utils import (
 enable_full_determinism()
 
 
-class StableVictorInpaintLegacyPipelineFastTests(unittest.TestCase):
+class StableDiffusionInpaintLegacyPipelineFastTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -179,7 +179,7 @@ class StableVictorInpaintLegacyPipelineFastTests(unittest.TestCase):
         mask_image = Image.fromarray(np.uint8(image + 4)).convert("RGB").resize((32, 32))
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableVictorInpaintPipelineLegacy(
+        sd_pipe = StableDiffusionInpaintPipelineLegacy(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -240,7 +240,7 @@ class StableVictorInpaintLegacyPipelineFastTests(unittest.TestCase):
         init_masks_tens = init_images_tens + 4
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableVictorInpaintPipelineLegacy(
+        sd_pipe = StableDiffusionInpaintPipelineLegacy(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -288,7 +288,7 @@ class StableVictorInpaintLegacyPipelineFastTests(unittest.TestCase):
         mask_image = Image.fromarray(np.uint8(image + 4)).convert("RGB").resize((32, 32))
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableVictorInpaintPipelineLegacy(
+        sd_pipe = StableDiffusionInpaintPipelineLegacy(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -335,7 +335,7 @@ class StableVictorInpaintLegacyPipelineFastTests(unittest.TestCase):
         mask_image = Image.fromarray(np.uint8(image + 4)).convert("RGB").resize((32, 32))
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableVictorInpaintPipelineLegacy(
+        sd_pipe = StableDiffusionInpaintPipelineLegacy(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -401,7 +401,7 @@ class StableVictorInpaintLegacyPipelineFastTests(unittest.TestCase):
 
 @slow
 @require_torch_gpu
-class StableVictorInpaintLegacyPipelineSlowTests(unittest.TestCase):
+class StableDiffusionInpaintLegacyPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -430,7 +430,7 @@ class StableVictorInpaintLegacyPipelineSlowTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_inpaint_legacy_pndm(self):
-        pipe = StableVictorInpaintPipelineLegacy.from_pretrained(
+        pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None
         )
         pipe.to(torch_device)
@@ -447,7 +447,7 @@ class StableVictorInpaintLegacyPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 3e-3
 
     def test_stable_diffusion_inpaint_legacy_batched(self):
-        pipe = StableVictorInpaintPipelineLegacy.from_pretrained(
+        pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None
         )
         pipe.to(torch_device)
@@ -481,7 +481,7 @@ class StableVictorInpaintLegacyPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice_1 - image_slice_1).max() < 3e-3
 
     def test_stable_diffusion_inpaint_legacy_k_lms(self):
-        pipe = StableVictorInpaintPipelineLegacy.from_pretrained(
+        pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None
         )
         pipe.scheduler = LMSDiscreteScheduler.from_config(pipe.scheduler.config)
@@ -522,7 +522,7 @@ class StableVictorInpaintLegacyPipelineSlowTests(unittest.TestCase):
 
         callback_fn.has_been_called = False
 
-        pipe = StableVictorInpaintPipelineLegacy.from_pretrained(
+        pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -537,7 +537,7 @@ class StableVictorInpaintLegacyPipelineSlowTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class StableVictorInpaintLegacyPipelineNightlyTests(unittest.TestCase):
+class StableDiffusionInpaintLegacyPipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -566,7 +566,7 @@ class StableVictorInpaintLegacyPipelineNightlyTests(unittest.TestCase):
         return inputs
 
     def test_inpaint_pndm(self):
-        sd_pipe = StableVictorInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -581,7 +581,7 @@ class StableVictorInpaintLegacyPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_inpaint_ddim(self):
-        sd_pipe = StableVictorInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.scheduler = DDIMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -597,7 +597,7 @@ class StableVictorInpaintLegacyPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_inpaint_lms(self):
-        sd_pipe = StableVictorInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.scheduler = LMSDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -613,7 +613,7 @@ class StableVictorInpaintLegacyPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_inpaint_dpm(self):
-        sd_pipe = StableVictorInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableDiffusionInpaintPipelineLegacy.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.scheduler = DPMSolverMultistepScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)

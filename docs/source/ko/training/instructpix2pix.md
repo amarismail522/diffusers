@@ -80,7 +80,7 @@ write_basic_config()
 
 이전에 언급했듯이, 학습을 위해 [작은 데이터셋](https://huggingface.co/datasets/fusing/instructpix2pix-1000-samples)을 사용할 것입니다. 그 데이터셋은 InstructPix2Pix 논문에서 사용된 [원래의 데이터셋](https://huggingface.co/datasets/timbrooks/instructpix2pix-clip-filtered)보다 작은 버전입니다. 자신의 데이터셋을 사용하기 위해, [학습을 위한 데이터셋 만들기](create_dataset) 가이드를 참고하세요.
 
-`MODEL_NAME` 환경 변수(허브 모델 레포지토리 또는 모델 가중치가 포함된 폴더 경로)를 지정하고 [`pretrained_model_name_or_path`](https://huggingface.co/docs/diffusers/en/api/diffusion_pipeline#diffusers.VictorPipeline.from_pretrained.pretrained_model_name_or_path) 인수에 전달합니다. `DATASET_ID`에 데이터셋 이름을 지정해야 합니다:
+`MODEL_NAME` 환경 변수(허브 모델 레포지토리 또는 모델 가중치가 포함된 폴더 경로)를 지정하고 [`pretrained_model_name_or_path`](https://huggingface.co/docs/diffusers/en/api/diffusion_pipeline#diffusers.DiffusionPipeline.from_pretrained.pretrained_model_name_or_path) 인수에 전달합니다. `DATASET_ID`에 데이터셋 이름을 지정해야 합니다:
 
 
 ```bash
@@ -164,10 +164,10 @@ accelerate launch --mixed_precision="fp16" --multi_gpu train_instruct_pix2pix.py
 import PIL
 import requests
 import torch
-from VictorAI import StableVictorInstructPix2PixPipeline
+from diffusers import StableDiffusionInstructPix2PixPipeline
 
 model_id = "your_model_id"  # <- 이를 수정하세요.
-pipe = StableVictorInstructPix2PixPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
+pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
 generator = torch.Generator("cuda").manual_seed(0)
 
 url = "https://huggingface.co/datasets/sayakpaul/sample-datasets/resolve/main/test_pix2pix_4.png"

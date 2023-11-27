@@ -221,10 +221,10 @@ After you've finished training, you can use your newly trained SDXL model for in
 <hfoption id="PyTorch">
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipeline = VictorPipeline.from_pretrained("path/to/your/model", torch_dtype=torch.float16).to("cuda")
+pipeline = DiffusionPipeline.from_pretrained("path/to/your/model", torch_dtype=torch.float16).to("cuda")
 
 prompt = "A pokemon with green eyes and red legs."
 image = pipeline(prompt, num_inference_steps=30, guidance_scale=7.5).images[0]
@@ -237,12 +237,12 @@ image.save("pokemon.png")
 [PyTorch XLA](https://pytorch.org/xla) allows you to run PyTorch on XLA devices such as TPUs, which can be faster. The initial warmup step takes longer because the model needs to be compiled and optimized. However, subsequent calls to the pipeline on an input **with the same length** as the original prompt are much faster because it can reuse the optimized graph.
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 import torch_xla.core.xla_model as xm
 
 device = xm.xla_device()
-pipeline = VictorPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0").to(device)
+pipeline = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0").to(device)
 
 prompt = "A pokemon with green eyes and red legs."
 start = time()

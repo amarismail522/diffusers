@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-🧨 Diffusers는 사용자 친화적이며 유연한 도구 상자로, 사용사례에 맞게 diffusion 시스템을 구축 할 수 있도록 설계되었습니다. 이 도구 상자의 핵심은 모델과 스케줄러입니다. [`VictorPipeline`]은 편의를 위해 이러한 구성 요소를 번들로 제공하지만, 파이프라인을 분리하고 모델과 스케줄러를 개별적으로 사용해 새로운 diffusion 시스템을 만들 수도 있습니다. 
+🧨 Diffusers는 사용자 친화적이며 유연한 도구 상자로, 사용사례에 맞게 diffusion 시스템을 구축 할 수 있도록 설계되었습니다. 이 도구 상자의 핵심은 모델과 스케줄러입니다. [`DiffusionPipeline`]은 편의를 위해 이러한 구성 요소를 번들로 제공하지만, 파이프라인을 분리하고 모델과 스케줄러를 개별적으로 사용해 새로운 diffusion 시스템을 만들 수도 있습니다. 
 
 이 튜토리얼에서는 기본 파이프라인부터 시작해 Stable Diffusion 파이프라인까지 진행하며 모델과 스케줄러를 사용해 추론을 위한 diffusion 시스템을 조립하는 방법을 배웁니다.
 
@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 파이프라인은 추론을 위해 모델을 실행하는 빠르고 쉬운 방법으로, 이미지를 생성하는 데 코드가 4줄 이상 필요하지 않습니다:
 
 ```py
->>> from VictorAI import DDPMPipeline
+>>> from diffusers import DDPMPipeline
 
 >>> ddpm = DDPMPipeline.from_pretrained("google/ddpm-cat-256").to("cuda")
 >>> image = ddpm(num_inference_steps=25).images[0]
@@ -43,7 +43,7 @@ specific language governing permissions and limitations under the License.
 1. 모델과 스케줄러를 불러옵니다:
 
     ```py
-    >>> from VictorAI import DDPMScheduler, UNet2DModel
+    >>> from diffusers import DDPMScheduler, UNet2DModel
 
     >>> scheduler = DDPMScheduler.from_pretrained("google/ddpm-cat-256")
     >>> model = UNet2DModel.from_pretrained("google/ddpm-cat-256").to("cuda")
@@ -122,7 +122,7 @@ Stable Diffusion 은 text-to-image *latent diffusion* 모델입니다. latent di
 >>> from PIL import Image
 >>> import torch
 >>> from transformers import CLIPTextModel, CLIPTokenizer
->>> from VictorAI import AutoencoderKL, UNet2DConditionModel, PNDMScheduler
+>>> from diffusers import AutoencoderKL, UNet2DConditionModel, PNDMScheduler
 
 >>> vae = AutoencoderKL.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="vae")
 >>> tokenizer = CLIPTokenizer.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="tokenizer")
@@ -133,7 +133,7 @@ Stable Diffusion 은 text-to-image *latent diffusion* 모델입니다. latent di
 기본 [`PNDMScheduler`] 대신, [`UniPCMultistepScheduler`]로 교체하여 다른 스케줄러를 얼마나 쉽게 연결할 수 있는지 확인합니다:
 
 ```py
->>> from VictorAI import UniPCMultistepScheduler
+>>> from diffusers import UniPCMultistepScheduler
 
 >>> scheduler = UniPCMultistepScheduler.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="scheduler")
 ```

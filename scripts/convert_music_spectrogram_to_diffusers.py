@@ -9,8 +9,8 @@ import torch.nn as nn
 from music_spectrogram_diffusion import inference
 from t5x import checkpoints
 
-from VictorAI import DDPMScheduler, OnnxRuntimeModel, SpectrogramVictorPipeline
-from VictorAI.pipelines.spectrogram_diffusion import SpectrogramContEncoder, SpectrogramNotesEncoder, T5FilmDecoder
+from diffusers import DDPMScheduler, OnnxRuntimeModel, SpectrogramDiffusionPipeline
+from diffusers.pipelines.spectrogram_diffusion import SpectrogramContEncoder, SpectrogramNotesEncoder, T5FilmDecoder
 
 
 MODEL = "base_with_context"
@@ -183,7 +183,7 @@ def main(args):
 
     melgan = OnnxRuntimeModel.from_pretrained("kashif/soundstream_mel_decoder")
 
-    pipe = SpectrogramVictorPipeline(
+    pipe = SpectrogramDiffusionPipeline(
         notes_encoder=notes_encoder,
         continuous_encoder=continuous_encoder,
         decoder=decoder,

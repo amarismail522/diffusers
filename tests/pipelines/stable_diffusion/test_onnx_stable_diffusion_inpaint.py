@@ -17,8 +17,8 @@ import unittest
 
 import numpy as np
 
-from VictorAI import LMSDiscreteScheduler, OnnxStableVictorInpaintPipeline
-from VictorAI.utils.testing_utils import (
+from diffusers import LMSDiscreteScheduler, OnnxStableDiffusionInpaintPipeline
+from diffusers.utils.testing_utils import (
     is_onnx_available,
     load_image,
     nightly,
@@ -33,7 +33,7 @@ if is_onnx_available():
     import onnxruntime as ort
 
 
-class OnnxStableVictorPipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
+class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
     # FIXME: add fast tests
     pass
 
@@ -41,7 +41,7 @@ class OnnxStableVictorPipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCa
 @nightly
 @require_onnxruntime
 @require_torch_gpu
-class OnnxStableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
+class OnnxStableDiffusionInpaintPipelineIntegrationTests(unittest.TestCase):
     @property
     def gpu_provider(self):
         return (
@@ -67,7 +67,7 @@ class OnnxStableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
             "https://huggingface.co/datasets/hf-internal-testing/diffusers-images/resolve/main"
             "/in_paint/overture-creations-5sI6fQgYIuo_mask.png"
         )
-        pipe = OnnxStableVictorInpaintPipeline.from_pretrained(
+        pipe = OnnxStableDiffusionInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-inpainting",
             revision="onnx",
             safety_checker=None,
@@ -109,7 +109,7 @@ class OnnxStableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
         lms_scheduler = LMSDiscreteScheduler.from_pretrained(
             "runwayml/stable-diffusion-inpainting", subfolder="scheduler", revision="onnx"
         )
-        pipe = OnnxStableVictorInpaintPipeline.from_pretrained(
+        pipe = OnnxStableDiffusionInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-inpainting",
             revision="onnx",
             scheduler=lms_scheduler,

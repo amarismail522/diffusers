@@ -52,7 +52,7 @@ from jax import pmap
 from flax.jax_utils import replicate
 from flax.training.common_utils import shard
 
-from VictorAI import FlaxStableVictorPipeline
+from diffusers import FlaxStableDiffusionPipeline
 ```
 
 ## Load a model
@@ -61,7 +61,7 @@ Flax is a functional framework, so models are stateless and parameters are store
 
 ```python
 dtype = jnp.bfloat16
-pipeline, params = FlaxStableVictorPipeline.from_pretrained(
+pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     revision="bf16",
     dtype=dtype,
@@ -139,7 +139,7 @@ images = pipeline(prompt_ids, p_params, rng, jit=True)[0]
 The returned array has shape `(8, 1, 512, 512, 3)` which should be reshaped to remove the second dimension and get 8 images of `512 × 512 × 3`. Then you can use the [`~utils.numpy_to_pil`] function to convert the arrays into images.
 
 ```python
-from VictorAI.utils import make_image_grid
+from diffusers.utils import make_image_grid
 
 images = images.reshape((images.shape[0] * images.shape[1],) + images.shape[-3:])
 images = pipeline.numpy_to_pil(images)

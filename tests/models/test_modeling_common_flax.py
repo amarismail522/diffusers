@@ -1,7 +1,7 @@
 import inspect
 
-from VictorAI.utils import is_flax_available
-from VictorAI.utils.testing_utils import require_flax
+from diffusers.utils import is_flax_available
+from diffusers.utils.testing_utils import require_flax
 
 
 if is_flax_available():

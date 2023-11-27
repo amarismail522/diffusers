@@ -14,14 +14,14 @@ from transformers import (
     GPT2Tokenizer,
 )
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DPMSolverMultistepScheduler,
     UniDiffuserModel,
     UniDiffuserPipeline,
     UniDiffuserTextDecoder,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -31,7 +31,7 @@ from VictorAI.utils.testing_utils import (
     run_test_in_subprocess,
     torch_device,
 )
-from VictorAI.utils.torch_utils import randn_tensor
+from diffusers.utils.torch_utils import randn_tensor
 
 from ..pipeline_params import (
     IMAGE_TO_IMAGE_IMAGE_PARAMS,

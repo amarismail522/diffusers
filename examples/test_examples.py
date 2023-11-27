@@ -26,7 +26,7 @@ from typing import List
 import safetensors
 from accelerate.utils import write_basic_config
 
-from VictorAI import VictorPipeline, UNet2DConditionModel
+from diffusers import DiffusionPipeline, UNet2DConditionModel
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -203,7 +203,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
             run_command(self._launch_args + initial_run_args)
 
             # check can run the original fully trained output pipeline
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(instance_prompt, num_inference_steps=2)
 
             # check checkpoint directories exist
@@ -212,7 +212,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             # check can run an intermediate checkpoint
             unet = UNet2DConditionModel.from_pretrained(tmpdir, subfolder="checkpoint-2/unet")
-            pipe = VictorPipeline.from_pretrained(pretrained_model_name_or_path, unet=unet, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(pretrained_model_name_or_path, unet=unet, safety_checker=None)
             pipe(instance_prompt, num_inference_steps=2)
 
             # Remove checkpoint 2 so that we can check only later checkpoints exist after resuming
@@ -242,7 +242,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
             run_command(self._launch_args + resume_run_args)
 
             # check can run new fully trained pipeline
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(instance_prompt, num_inference_steps=2)
 
             # check old checkpoints do not exist
@@ -445,7 +445,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + test_args)
 
-            pipe = VictorPipeline.from_pretrained(pipeline_path)
+            pipe = DiffusionPipeline.from_pretrained(pipeline_path)
             pipe.load_lora_weights(tmpdir)
             pipe("a prompt", num_inference_steps=2)
 
@@ -481,7 +481,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + test_args)
 
-            pipe = VictorPipeline.from_pretrained(pipeline_path)
+            pipe = DiffusionPipeline.from_pretrained(pipeline_path)
             pipe.load_lora_weights(tmpdir)
             pipe("a prompt", num_inference_steps=2)
 
@@ -571,7 +571,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             # check checkpoint directories exist
@@ -582,7 +582,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             # check can run an intermediate checkpoint
             unet = UNet2DConditionModel.from_pretrained(tmpdir, subfolder="checkpoint-2/unet")
-            pipe = VictorPipeline.from_pretrained(pretrained_model_name_or_path, unet=unet, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(pretrained_model_name_or_path, unet=unet, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             # Remove checkpoint 2 so that we can check only later checkpoints exist after resuming
@@ -613,7 +613,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
             run_command(self._launch_args + resume_run_args)
 
             # check can run new fully trained pipeline
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             self.assertEqual(
@@ -657,7 +657,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             # check checkpoint directories exist
@@ -668,7 +668,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             # check can run an intermediate checkpoint
             unet = UNet2DConditionModel.from_pretrained(tmpdir, subfolder="checkpoint-2/unet")
-            pipe = VictorPipeline.from_pretrained(pretrained_model_name_or_path, unet=unet, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(pretrained_model_name_or_path, unet=unet, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             # Remove checkpoint 2 so that we can check only later checkpoints exist after resuming
@@ -700,7 +700,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
             run_command(self._launch_args + resume_run_args)
 
             # check can run new fully trained pipeline
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             self.assertEqual(
@@ -745,7 +745,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             # check checkpoint directories exist
@@ -785,7 +785,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             # check checkpoint directories exist
@@ -820,7 +820,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + resume_run_args)
 
-            pipe = VictorPipeline.from_pretrained(tmpdir, safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, safety_checker=None)
             pipe(prompt, num_inference_steps=2)
 
             # check checkpoint directories exist
@@ -886,7 +886,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(
+            pipe = DiffusionPipeline.from_pretrained(
                 "hf-internal-testing/tiny-stable-diffusion-pipe", safety_checker=None
             )
             pipe.load_lora_weights(tmpdir)
@@ -928,7 +928,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(pipeline_path)
+            pipe = DiffusionPipeline.from_pretrained(pipeline_path)
             pipe.load_lora_weights(tmpdir)
             pipe(prompt, num_inference_steps=2)
 
@@ -969,7 +969,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(pipeline_path)
+            pipe = DiffusionPipeline.from_pretrained(pipeline_path)
             pipe.load_lora_weights(tmpdir)
             pipe(prompt, num_inference_steps=2)
 
@@ -1011,7 +1011,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + initial_run_args)
 
-            pipe = VictorPipeline.from_pretrained(
+            pipe = DiffusionPipeline.from_pretrained(
                 "hf-internal-testing/tiny-stable-diffusion-pipe", safety_checker=None
             )
             pipe.load_lora_weights(tmpdir)
@@ -1050,7 +1050,7 @@ class ExamplesTestsAccelerate(unittest.TestCase):
 
             run_command(self._launch_args + resume_run_args)
 
-            pipe = VictorPipeline.from_pretrained(
+            pipe = DiffusionPipeline.from_pretrained(
                 "hf-internal-testing/tiny-stable-diffusion-pipe", safety_checker=None
             )
             pipe.load_lora_weights(tmpdir)

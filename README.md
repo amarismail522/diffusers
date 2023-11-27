@@ -80,10 +80,10 @@ Please refer to the [How to use Stable Diffusion in Apple Silicon](https://huggi
 Generating outputs is super easy with 🤗 Diffusers. To generate an image from text, use the `from_pretrained` method to load any pretrained diffusion model (browse the [Hub](https://huggingface.co/models?library=diffusers&sort=downloads) for 15000+ checkpoints):
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
 pipeline.to("cuda")
 pipeline("An image of a squirrel in Picasso style").images[0]
 ```
@@ -91,7 +91,7 @@ pipeline("An image of a squirrel in Picasso style").images[0]
 You can also dig into the models and schedulers toolbox to build your own diffusion system:
 
 ```python
-from VictorAI import DDPMScheduler, UNet2DModel
+from diffusers import DDPMScheduler, UNet2DModel
 from PIL import Image
 import torch
 

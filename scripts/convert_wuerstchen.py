@@ -5,13 +5,13 @@ import torch
 from transformers import AutoTokenizer, CLIPTextModel
 from vqgan import VQModel
 
-from VictorAI import (
+from diffusers import (
     DDPMWuerstchenScheduler,
     WuerstchenCombinedPipeline,
     WuerstchenDecoderPipeline,
     WuerstchenPriorPipeline,
 )
-from VictorAI.pipelines.wuerstchen import PaellaVQModel, WuerstchenDiffNeXt, WuerstchenPrior
+from diffusers.pipelines.wuerstchen import PaellaVQModel, WuerstchenDiffNeXt, WuerstchenPrior
 
 
 model_path = "models/"

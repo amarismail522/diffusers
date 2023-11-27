@@ -20,16 +20,16 @@ import numpy as np
 import torch
 from parameterized import parameterized
 
-from VictorAI import (
+from diffusers import (
     AsymmetricAutoencoderKL,
     AutoencoderKL,
     AutoencoderTiny,
     ConsistencyDecoderVAE,
-    StableVictorPipeline,
+    StableDiffusionPipeline,
 )
-from VictorAI.utils.import_utils import is_xformers_available
-from VictorAI.utils.loading_utils import load_image
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.import_utils import is_xformers_available
+from diffusers.utils.loading_utils import load_image
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_hf_numpy,
@@ -38,7 +38,7 @@ from VictorAI.utils.testing_utils import (
     torch_all_close,
     torch_device,
 )
-from VictorAI.utils.torch_utils import randn_tensor
+from diffusers.utils.torch_utils import randn_tensor
 
 from .test_modeling_common import ModelTesterMixin, UNetTesterMixin
 
@@ -860,7 +860,7 @@ class ConsistencyDecoderVAEIntegrationTests(unittest.TestCase):
 
     def test_sd(self):
         vae = ConsistencyDecoderVAE.from_pretrained("openai/consistency-decoder")  # TODO - update
-        pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", vae=vae, safety_checker=None)
+        pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", vae=vae, safety_checker=None)
         pipe.to(torch_device)
 
         out = pipe(
@@ -903,7 +903,7 @@ class ConsistencyDecoderVAEIntegrationTests(unittest.TestCase):
         vae = ConsistencyDecoderVAE.from_pretrained(
             "openai/consistency-decoder", torch_dtype=torch.float16
         )  # TODO - update
-        pipe = StableVictorPipeline.from_pretrained(
+        pipe = StableDiffusionPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, vae=vae, safety_checker=None
         )
         pipe.to(torch_device)

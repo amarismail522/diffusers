@@ -2,7 +2,7 @@ import argparse
 import os
 import torch
 from torch import autocast
-from VictorAI import StableVictorPipeline, DDIMScheduler
+from diffusers import StableDiffusionPipeline, DDIMScheduler
 from PIL import Image
 
 def main():
@@ -26,7 +26,7 @@ def main():
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    pipe = StableVictorPipeline.from_pretrained(model_path, safety_checker=None, torch_dtype=torch.float16).to("cuda")
+    pipe = StableDiffusionPipeline.from_pretrained(model_path, safety_checker=None, torch_dtype=torch.float16).to("cuda")
     pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
     pipe.enable_xformers_memory_efficient_attention()
     g_cuda = None

@@ -24,7 +24,7 @@ Stable Diffusion 모델들은 학습 및 저장된 프레임워크와 다운로�
 
 ## PyTorch .ckpt
 
-체크포인트 또는 `.ckpt` 형식은 일반적으로 모델을 저장하는 데 사용됩니다. `.ckpt` 파일은 전체 모델을 포함하며 일반적으로 크기가 몇 GB입니다. `.ckpt` 파일을 [~StableVictorPipeline.from_ckpt] 메서드를 사용하여 직접 불러와서 사용할 수도 있지만, 일반적으로 두 가지 형식을 모두 사용할 수 있도록 `.ckpt` 파일을 🤗 Diffusers로 변환하는 것이 더 좋습니다.
+체크포인트 또는 `.ckpt` 형식은 일반적으로 모델을 저장하는 데 사용됩니다. `.ckpt` 파일은 전체 모델을 포함하며 일반적으로 크기가 몇 GB입니다. `.ckpt` 파일을 [~StableDiffusionPipeline.from_ckpt] 메서드를 사용하여 직접 불러와서 사용할 수도 있지만, 일반적으로 두 가지 형식을 모두 사용할 수 있도록 `.ckpt` 파일을 🤗 Diffusers로 변환하는 것이 더 좋습니다.
 
 `.ckpt` 파일을 변환하는 두 가지 옵션이 있습니다. Space를 사용하여 체크포인트를 변환하거나 스크립트를 사용하여 `.ckpt` 파일을 변환합니다.
 
@@ -89,7 +89,7 @@ git push origin pr/13:refs/pr/13
 
 [KerasCV](https://keras.io/keras_cv/)는 [Stable Diffusion](https://github.com/keras-team/keras-cv/blob/master/keras_cv/models/stable_diffusion)  v1 및 v2에 대한 학습을 지원합니다. 그러나 추론 및 배포를 위한 Stable Diffusion 모델 실험을 제한적으로 지원하는 반면, 🤗 Diffusers는 다양한 [noise schedulers](https://huggingface.co/docs/diffusers/using-diffusers/schedulers), [flash attention](https://huggingface.co/docs/diffusers/optimization/xformers), and [other optimization techniques](https://huggingface.co/docs/diffusers/optimization/fp16) 등 이러한 목적을 위한 보다 완벽한 기능을 갖추고 있습니다.
 
-[Convert KerasCV](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) Space 변환은 `.pb` 또는 `.h5`을 PyTorch로 변환한 다음, 추론할 수 있도록 [`StableVictorPipeline`] 으로 감싸서 준비합니다. 변환된 체크포인트는 Hugging Face Hub의 리포지토리에 저장됩니다.
+[Convert KerasCV](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) Space 변환은 `.pb` 또는 `.h5`을 PyTorch로 변환한 다음, 추론할 수 있도록 [`StableDiffusionPipeline`] 으로 감싸서 준비합니다. 변환된 체크포인트는 Hugging Face Hub의 리포지토리에 저장됩니다.
 
 예제로, textual-inversion으로 학습된 `[sayakpaul/textual-inversion-kerasio](https://huggingface.co/sayakpaul/textual-inversion-kerasio/tree/main)` 체크포인트를 변환해 보겠습니다. 이것은 특수 토큰  `<my-funny-cat>`을 사용하여 고양이로 이미지를 개인화합니다.
 
@@ -105,17 +105,17 @@ KerasCV Space 변환에서는 다음을 입력할 수 있습니다:
 코드를 사용하여 추론을 실행하려면 모델 카드의 오른쪽 상단 모서리에 있는 **Use in Diffusers**  버튼을 클릭하여 예시 코드를 복사하여 붙여넣습니다:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipeline = VictorPipeline.from_pretrained("sayakpaul/textual-inversion-cat-kerascv_sd_diffusers_pipeline")
+pipeline = DiffusionPipeline.from_pretrained("sayakpaul/textual-inversion-cat-kerascv_sd_diffusers_pipeline")
 ```
 
 그러면 다음과 같은 이미지를 생성할 수 있습니다:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipeline = VictorPipeline.from_pretrained("sayakpaul/textual-inversion-cat-kerascv_sd_diffusers_pipeline")
+pipeline = DiffusionPipeline.from_pretrained("sayakpaul/textual-inversion-cat-kerascv_sd_diffusers_pipeline")
 pipeline.to("cuda")
 
 placeholder_token = "<my-funny-cat-token>"
@@ -130,10 +130,10 @@ image = pipeline(prompt, num_inference_steps=50).images[0]
 🤗 Diffusers는 [`~loaders.LoraLoaderMixin.load_lora_weights`]:를 사용하여 A1111 LoRA 체크포인트 불러오기를 지원합니다:
 
 ```py
-from VictorAI import VictorPipeline, UniPCMultistepScheduler
+from diffusers import DiffusionPipeline, UniPCMultistepScheduler
 import torch
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     "andite/anything-v4.0", torch_dtype=torch.float16, safety_checker=None
 ).to("cuda")
 pipeline.scheduler = UniPCMultistepScheduler.from_config(pipeline.scheduler.config)

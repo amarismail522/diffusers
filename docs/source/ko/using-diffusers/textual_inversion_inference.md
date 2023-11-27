@@ -2,7 +2,7 @@
 
 [[open-in-colab]]
 
-[`StableVictorPipeline`]은  textual-inversion을 지원하는데, 이는 몇 개의 샘플 이미지만으로 stable diffusion과 같은 모델이 새로운 컨셉을 학습할 수 있도록 하는 기법입니다. 이를 통해 생성된 이미지를 더 잘 제어하고 특정 컨셉에 맞게 모델을 조정할 수 있습니다. 커뮤니티에서 만들어진 컨셉들의 컬렉션은 [Stable Diffusion Conceptualizer](https://huggingface.co/spaces/sd-concepts-library/stable-diffusion-conceptualizer)를 통해 빠르게 사용해볼 수 있습니다.
+[`StableDiffusionPipeline`]은  textual-inversion을 지원하는데, 이는 몇 개의 샘플 이미지만으로 stable diffusion과 같은 모델이 새로운 컨셉을 학습할 수 있도록 하는 기법입니다. 이를 통해 생성된 이미지를 더 잘 제어하고 특정 컨셉에 맞게 모델을 조정할 수 있습니다. 커뮤니티에서 만들어진 컨셉들의 컬렉션은 [Stable Diffusion Conceptualizer](https://huggingface.co/spaces/sd-concepts-library/stable-diffusion-conceptualizer)를 통해 빠르게 사용해볼 수 있습니다.
 
 이 가이드에서는 Stable Diffusion Conceptualizer에서 사전학습한 컨셉을 사용하여 textual-inversion으로 추론을 실행하는 방법을 보여드립니다. textual-inversion으로 모델에 새로운 컨셉을 학습시키는 데 관심이 있으시다면,  [Textual Inversion](./training/text_inversion)  훈련 가이드를 참조하세요.
 
@@ -23,7 +23,7 @@ import torch
 import PIL
 from PIL import Image
 
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 from transformers import CLIPFeatureExtractor, CLIPTextModel, CLIPTokenizer
 
 
@@ -49,7 +49,7 @@ repo_id_embeds = "sd-concepts-library/cat-toy"
 이제 파이프라인을 로드하고 사전학습된 컨셉을 파이프라인에 전달할 수 있습니다:
 
 ```py
-pipeline = StableVictorPipeline.from_pretrained(pretrained_model_name_or_path, torch_dtype=torch.float16).to("cuda")
+pipeline = StableDiffusionPipeline.from_pretrained(pretrained_model_name_or_path, torch_dtype=torch.float16).to("cuda")
 
 pipeline.load_textual_inversion(repo_id_embeds)
 ```

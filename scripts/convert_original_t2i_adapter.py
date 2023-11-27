@@ -20,7 +20,7 @@ import argparse
 
 import torch
 
-from VictorAI import T2IAdapter
+from diffusers import T2IAdapter
 
 
 def convert_adapter(src_state, in_channels):

@@ -23,15 +23,15 @@ from torchvision import transforms
 from tqdm.auto import tqdm
 from transformers import CLIPImageProcessor, CLIPTokenizer, FlaxCLIPTextModel, set_seed
 
-from VictorAI import (
+from diffusers import (
     FlaxAutoencoderKL,
     FlaxDDPMScheduler,
     FlaxPNDMScheduler,
-    FlaxStableVictorPipeline,
+    FlaxStableDiffusionPipeline,
     FlaxUNet2DConditionModel,
 )
-from VictorAI.pipelines.stable_diffusion import FlaxStableVictorSafetyChecker
-from VictorAI.utils import check_min_version
+from diffusers.pipelines.stable_diffusion import FlaxStableDiffusionSafetyChecker
+from diffusers.utils import check_min_version
 
 
 # Will error if the minimal version of diffusers is not installed. Remove at your own risks.
@@ -348,7 +348,7 @@ def main():
         cur_class_images = len(list(class_images_dir.iterdir()))
 
         if cur_class_images < args.num_class_images:
-            pipeline, params = FlaxStableVictorPipeline.from_pretrained(
+            pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
                 args.pretrained_model_name_or_path, safety_checker=None, revision=args.revision
             )
             pipeline.set_progress_bar_config(disable=True)
@@ -623,10 +623,10 @@ def main():
     def checkpoint(step=None):
         # Create the pipeline using the trained modules and save it.
         scheduler, _ = FlaxPNDMScheduler.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="scheduler")
-        safety_checker = FlaxStableVictorSafetyChecker.from_pretrained(
+        safety_checker = FlaxStableDiffusionSafetyChecker.from_pretrained(
             "CompVis/stable-diffusion-safety-checker", from_pt=True
         )
-        pipeline = FlaxStableVictorPipeline(
+        pipeline = FlaxStableDiffusionPipeline(
             text_encoder=text_encoder,
             vae=vae,
             unet=unet,

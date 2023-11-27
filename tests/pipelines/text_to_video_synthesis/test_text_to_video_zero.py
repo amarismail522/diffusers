@@ -17,8 +17,8 @@ import unittest
 
 import torch
 
-from VictorAI import DDIMScheduler, TextToVideoZeroPipeline
-from VictorAI.utils.testing_utils import load_pt, nightly, require_torch_gpu
+from diffusers import DDIMScheduler, TextToVideoZeroPipeline
+from diffusers.utils.testing_utils import load_pt, nightly, require_torch_gpu
 
 from ..test_pipelines_common import assert_mean_pixel_difference
 

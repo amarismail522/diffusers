@@ -29,15 +29,15 @@ Let's first install all the required libraries.
 Now, let's load a pipeline with a SDXL checkpoint:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
 pipe_id = "stabilityai/stable-diffusion-xl-base-1.0"
-pipe = VictorPipeline.from_pretrained(pipe_id, torch_dtype=torch.float16).to("cuda")
+pipe = DiffusionPipeline.from_pretrained(pipe_id, torch_dtype=torch.float16).to("cuda")
 ```
 
 
-Next, load a LoRA checkpoint with the [`~diffusers.loaders.StableVictorXLLoraLoaderMixin.load_lora_weights`] method.
+Next, load a LoRA checkpoint with the [`~diffusers.loaders.StableDiffusionXLLoraLoaderMixin.load_lora_weights`] method.
 
 With the 🤗 PEFT integration, you can assign a specific `adapter_name` to the checkpoint, which let's you easily switch between different LoRA checkpoints. Let's call this adapter `"toy"`.
 

@@ -22,13 +22,13 @@ This guide will show you how to use the Stable Diffusion and Stable Diffusion XL
 
 ## Stable Diffusion
 
-To load and run inference, use the [`~optimum.onnxruntime.ORTStableVictorPipeline`]. If you want to load a PyTorch model and convert it to the ONNX format on-the-fly, set `export=True`:
+To load and run inference, use the [`~optimum.onnxruntime.ORTStableDiffusionPipeline`]. If you want to load a PyTorch model and convert it to the ONNX format on-the-fly, set `export=True`:
 
 ```python
-from optimum.onnxruntime import ORTStableVictorPipeline
+from optimum.onnxruntime import ORTStableDiffusionPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipeline = ORTStableVictorPipeline.from_pretrained(model_id, export=True)
+pipeline = ORTStableDiffusionPipeline.from_pretrained(model_id, export=True)
 prompt = "sailing ship in storm by Leonardo da Vinci"
 image = pipeline(prompt).images[0]
 pipeline.save_pretrained("./onnx-stable-diffusion-v1-5")
@@ -50,10 +50,10 @@ optimum-cli export onnx --model runwayml/stable-diffusion-v1-5 sd_v15_onnx/
 Then to perform inference (you don't have to specify `export=True` again):
 
 ```python
-from optimum.onnxruntime import ORTStableVictorPipeline
+from optimum.onnxruntime import ORTStableDiffusionPipeline
 
 model_id = "sd_v15_onnx"
-pipeline = ORTStableVictorPipeline.from_pretrained(model_id)
+pipeline = ORTStableDiffusionPipeline.from_pretrained(model_id)
 prompt = "sailing ship in storm by Leonardo da Vinci"
 image = pipeline(prompt).images[0]
 ```
@@ -66,13 +66,13 @@ You can find more examples in 🤗 Optimum [documentation](https://huggingface.c
 
 ## Stable Diffusion XL
 
-To load and run inference with SDXL, use the [`~optimum.onnxruntime.ORTStableVictorXLPipeline`]:
+To load and run inference with SDXL, use the [`~optimum.onnxruntime.ORTStableDiffusionXLPipeline`]:
 
 ```python
-from optimum.onnxruntime import ORTStableVictorXLPipeline
+from optimum.onnxruntime import ORTStableDiffusionXLPipeline
 
 model_id = "stabilityai/stable-diffusion-xl-base-1.0"
-pipeline = ORTStableVictorXLPipeline.from_pretrained(model_id)
+pipeline = ORTStableDiffusionXLPipeline.from_pretrained(model_id)
 prompt = "sailing ship in storm by Leonardo da Vinci"
 image = pipeline(prompt).images[0]
 ```

@@ -21,19 +21,19 @@ import numpy as np
 import torch
 from transformers import XLMRobertaTokenizer
 
-from VictorAI import (
+from diffusers import (
     AltDiffusionImg2ImgPipeline,
     AutoencoderKL,
     PNDMScheduler,
     UNet2DConditionModel,
 )
-from VictorAI.image_processor import VaeImageProcessor
-from VictorAI.pipelines.alt_diffusion.modeling_roberta_series import (
+from diffusers.image_processor import VaeImageProcessor
+from diffusers.pipelines.alt_diffusion.modeling_roberta_series import (
     RobertaSeriesConfig,
     RobertaSeriesModelWithTransformation,
 )
-from VictorAI.utils import load_image
-from VictorAI.utils.testing_utils import (
+from diffusers.utils import load_image
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_numpy,

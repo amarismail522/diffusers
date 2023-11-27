@@ -3,7 +3,7 @@ import unittest
 import torch
 from torch import nn
 
-from VictorAI.models.activations import get_activation
+from diffusers.models.activations import get_activation
 
 
 class ActivationsTests(unittest.TestCase):

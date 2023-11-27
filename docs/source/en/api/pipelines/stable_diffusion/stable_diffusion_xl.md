@@ -36,20 +36,20 @@ Check out the [Stability AI](https://huggingface.co/stabilityai) Hub organizatio
 
 </Tip>
 
-## StableVictorXLPipeline
+## StableDiffusionXLPipeline
 
-[[autodoc]] StableVictorXLPipeline
+[[autodoc]] StableDiffusionXLPipeline
 	- all
 	- __call__
 
-## StableVictorXLImg2ImgPipeline
+## StableDiffusionXLImg2ImgPipeline
 
-[[autodoc]] StableVictorXLImg2ImgPipeline
+[[autodoc]] StableDiffusionXLImg2ImgPipeline
 	- all
 	- __call__
 
-## StableVictorXLInpaintPipeline
+## StableDiffusionXLInpaintPipeline
 
-[[autodoc]] StableVictorXLInpaintPipeline
+[[autodoc]] StableDiffusionXLInpaintPipeline
 	- all
 	- __call__

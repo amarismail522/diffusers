@@ -9,14 +9,14 @@ from transformers import (
     CLIPVisionModelWithProjection,
 )
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
-    StableVictorGLIGENPipeline,
-    StableVictorGLIGENTextImagePipeline,
+    StableDiffusionGLIGENPipeline,
+    StableDiffusionGLIGENTextImagePipeline,
     UNet2DConditionModel,
 )
-from VictorAI.pipelines.stable_diffusion.convert_from_ckpt import (
+from diffusers.pipelines.stable_diffusion.convert_from_ckpt import (
     assign_to_checkpoint,
     conv_attn_to_linear,
     protected,
@@ -28,8 +28,8 @@ from VictorAI.pipelines.stable_diffusion.convert_from_ckpt import (
     textenc_conversion_map,
     textenc_pattern,
 )
-from VictorAI.utils import is_omegaconf_available
-from VictorAI.utils.import_utils import BACKENDS_MAPPING
+from diffusers.utils import is_omegaconf_available
+from diffusers.utils.import_utils import BACKENDS_MAPPING
 
 
 def convert_open_clip_checkpoint(checkpoint):
@@ -506,7 +506,7 @@ def convert_gligen_to_diffusers(
         image_encoder = CLIPVisionModelWithProjection.from_pretrained("openai/clip-vit-large-patch14")
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
 
-        pipe = StableVictorGLIGENTextImagePipeline(
+        pipe = StableDiffusionGLIGENTextImagePipeline(
             vae=vae,
             text_encoder=text_encoder,
             tokenizer=tokenizer,
@@ -518,7 +518,7 @@ def convert_gligen_to_diffusers(
             feature_extractor=None,
         )
     elif attention_type == "gated":
-        pipe = StableVictorGLIGENPipeline(
+        pipe = StableDiffusionGLIGENPipeline(
             vae=vae,
             text_encoder=text_encoder,
             tokenizer=tokenizer,

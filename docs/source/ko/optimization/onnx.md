@@ -25,14 +25,14 @@ pip install optimum["onnxruntime"]
 
 ## Stable Diffusion 추론
 
-아래 코드는 ONNX 런타임을 사용하는 방법을 보여줍니다. `StableVictorPipeline` 대신 `OnnxStableVictorPipeline`을 사용해야 합니다. 
+아래 코드는 ONNX 런타임을 사용하는 방법을 보여줍니다. `StableDiffusionPipeline` 대신 `OnnxStableDiffusionPipeline`을 사용해야 합니다. 
 PyTorch 모델을 불러오고 즉시 ONNX 형식으로 변환하려는 경우 `export=True`로 설정합니다.
 
 ```python
-from optimum.onnxruntime import ORTStableVictorPipeline
+from optimum.onnxruntime import ORTStableDiffusionPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipe = ORTStableVictorPipeline.from_pretrained(model_id, export=True)
+pipe = ORTStableDiffusionPipeline.from_pretrained(model_id, export=True)
 prompt = "a photo of an astronaut riding a horse on mars"
 images = pipe(prompt).images[0]
 pipe.save_pretrained("./onnx-stable-diffusion-v1-5")
@@ -48,10 +48,10 @@ optimum-cli export onnx --model runwayml/stable-diffusion-v1-5 sd_v15_onnx/
 그 다음 추론을 수행합니다:
 
 ```python 
-from optimum.onnxruntime import ORTStableVictorPipeline
+from optimum.onnxruntime import ORTStableDiffusionPipeline
 
 model_id = "sd_v15_onnx"
-pipe = ORTStableVictorPipeline.from_pretrained(model_id)
+pipe = ORTStableDiffusionPipeline.from_pretrained(model_id)
 prompt = "a photo of an astronaut riding a horse on mars"
 images = pipe(prompt).images[0]
 ```

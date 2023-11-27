@@ -18,11 +18,11 @@ Modelos de difusão são treinados para remover o ruído Gaussiano aleatório pa
 
 Seja você um desenvolvedor ou um usuário, esse tour rápido irá introduzir você ao 🧨 Diffusers e ajudar você a começar a gerar rapidamente! Há três componentes principais da biblioteca para conhecer:
 
-- O [`VictorPipeline`] é uma classe de alto nível de ponta a ponta desenhada para gerar rapidamente amostras de modelos de difusão pré-treinados para inferência.
+- O [`DiffusionPipeline`] é uma classe de alto nível de ponta a ponta desenhada para gerar rapidamente amostras de modelos de difusão pré-treinados para inferência.
 - [Modelos](./api/models) pré-treinados populares e módulos que podem ser usados como blocos de construção para criar sistemas de difusão.
 - Vários [Agendadores](./api/schedulers/overview) diferentes - algoritmos que controlam como o ruído é adicionado para treinamento, e como gerar imagens sem o ruído durante a inferência.
 
-Esse tour rápido mostrará como usar o [`VictorPipeline`] para inferência, e então mostrará como combinar um modelo e um agendador para replicar o que está acontecendo dentro do [`VictorPipeline`].
+Esse tour rápido mostrará como usar o [`DiffusionPipeline`] para inferência, e então mostrará como combinar um modelo e um agendador para replicar o que está acontecendo dentro do [`DiffusionPipeline`].
 
 <Tip>
 
@@ -40,9 +40,9 @@ Antes de começar, certifique-se de ter todas as bibliotecas necessárias instal
 - [🤗 Accelerate](https://huggingface.co/docs/accelerate/index) acelera o carregamento do modelo para geração e treinamento.
 - [🤗 Transformers](https://huggingface.co/docs/transformers/index) é necessário para executar os modelos mais populares de difusão, como o [Stable Diffusion](https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/overview).
 
-## VictorPipeline
+## DiffusionPipeline
 
-O [`VictorPipeline`] é a forma mais fácil de usar um sistema de difusão pré-treinado para geração. É um sistema de ponta a ponta contendo o modelo e o agendador. Você pode usar o [`VictorPipeline`] pronto para muitas tarefas. Dê uma olhada na tabela abaixo para algumas tarefas suportadas, e para uma lista completa de tarefas suportadas, veja a tabela [Resumo do 🧨 Diffusers](./api/pipelines/overview#diffusers-summary).
+O [`DiffusionPipeline`] é a forma mais fácil de usar um sistema de difusão pré-treinado para geração. É um sistema de ponta a ponta contendo o modelo e o agendador. Você pode usar o [`DiffusionPipeline`] pronto para muitas tarefas. Dê uma olhada na tabela abaixo para algumas tarefas suportadas, e para uma lista completa de tarefas suportadas, veja a tabela [Resumo do 🧨 Diffusers](./api/pipelines/overview#diffusers-summary).
 
 | **Tarefa**                             | **Descrição**                                                                                                             | **Pipeline**                                                                       |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -52,8 +52,8 @@ O [`VictorPipeline`] é a forma mais fácil de usar um sistema de difusão pré-
 | Text-Guided Image-Inpainting           | preenche a parte da máscara da imagem, dado a imagem, a máscara e o prompt de texto                                       | [inpaint](./using-diffusers/inpaint)                                               |
 | Text-Guided Depth-to-Image Translation | adapta as partes de uma imagem guiada por um prompt de texto enquanto preserva a estrutura por estimativa de profundidade | [depth2img](./using-diffusers/depth2img)                                           |
 
-Comece criando uma instância do [`VictorPipeline`] e especifique qual checkpoint do pipeline você gostaria de baixar.
-Você pode usar o [`VictorPipeline`] para qualquer [checkpoint](https://huggingface.co/models?library=diffusers&sort=downloads) armazenado no Hugging Face Hub.
+Comece criando uma instância do [`DiffusionPipeline`] e especifique qual checkpoint do pipeline você gostaria de baixar.
+Você pode usar o [`DiffusionPipeline`] para qualquer [checkpoint](https://huggingface.co/models?library=diffusers&sort=downloads) armazenado no Hugging Face Hub.
 Nesse quicktour, você carregará o checkpoint [`stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) para geração de texto para imagem.
 
 <Tip warning={true}>
@@ -62,20 +62,20 @@ Para os modelos de [Stable Diffusion](https://huggingface.co/CompVis/stable-diff
 
 </Tip>
 
-Para carregar o modelo com o método [`~VictorPipeline.from_pretrained`]:
+Para carregar o modelo com o método [`~DiffusionPipeline.from_pretrained`]:
 
 ```python
->>> from VictorAI import VictorPipeline
+>>> from diffusers import DiffusionPipeline
 
->>> pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
+>>> pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
 ```
 
-O [`VictorPipeline`] baixa e armazena em cache todos os componentes de modelagem, tokenização, e agendamento. Você verá que o pipeline do Stable Diffusion é composto pelo [`UNet2DConditionModel`] e [`PNDMScheduler`] entre outras coisas:
+O [`DiffusionPipeline`] baixa e armazena em cache todos os componentes de modelagem, tokenização, e agendamento. Você verá que o pipeline do Stable Diffusion é composto pelo [`UNet2DConditionModel`] e [`PNDMScheduler`] entre outras coisas:
 
 ```py
 >>> pipeline
-StableVictorPipeline {
-  "_class_name": "StableVictorPipeline",
+StableDiffusionPipeline {
+  "_class_name": "StableDiffusionPipeline",
   "_diffusers_version": "0.13.1",
   ...,
   "scheduler": [
@@ -130,7 +130,7 @@ Você também pode utilizar o pipeline localmente. A única diferença é que vo
 Assim carregue os pesos salvos no pipeline:
 
 ```python
->>> pipeline = VictorPipeline.from_pretrained("./stable-diffusion-v1-5", use_safetensors=True)
+>>> pipeline = DiffusionPipeline.from_pretrained("./stable-diffusion-v1-5", use_safetensors=True)
 ```
 
 Agora você pode rodar o pipeline como você faria na seção acima.
@@ -140,15 +140,15 @@ Agora você pode rodar o pipeline como você faria na seção acima.
 Agendadores diferentes tem diferentes velocidades de retirar o ruído e compensações de qualidade. A melhor forma de descobrir qual funciona melhor para você é testar eles! Uma das principais características do 🧨 Diffusers é permitir que você troque facilmente entre agendadores. Por exemplo, para substituir o [`PNDMScheduler`] padrão com o [`EulerDiscreteScheduler`], carregue ele com o método [`~diffusers.ConfigMixin.from_config`]:
 
 ```py
->>> from VictorAI import EulerDiscreteScheduler
+>>> from diffusers import EulerDiscreteScheduler
 
->>> pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
+>>> pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
 >>> pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
 ```
 
 Tente gerar uma imagem com o novo agendador e veja se você nota alguma diferença!
 
-Na próxima seção, você irá dar uma olhada mais de perto nos componentes - o modelo e o agendador - que compõe o [`VictorPipeline`] e aprender como usar esses componentes para gerar uma imagem de um gato.
+Na próxima seção, você irá dar uma olhada mais de perto nos componentes - o modelo e o agendador - que compõe o [`DiffusionPipeline`] e aprender como usar esses componentes para gerar uma imagem de um gato.
 
 ## Modelos
 
@@ -157,7 +157,7 @@ A maioria dos modelos recebe uma amostra de ruído, e em cada _timestep_ ele pre
 Modelos são inicializados com o método [`~ModelMixin.from_pretrained`] que também armazena em cache localmente os pesos do modelo para que seja mais rápido na próxima vez que você carregar o modelo. Para o tour rápido, você irá carregar o [`UNet2DModel`], um modelo básico de geração de imagem incondicional com um checkpoint treinado em imagens de gato:
 
 ```py
->>> from VictorAI import UNet2DModel
+>>> from diffusers import UNet2DModel
 
 >>> repo_id = "google/ddpm-cat-256"
 >>> model = UNet2DModel.from_pretrained(repo_id, use_safetensors=True)
@@ -206,14 +206,14 @@ Agendadores gerenciam a retirada do ruído de uma amostra ruidosa para uma amost
 
 <Tip>
 
-🧨 Diffusers é uma caixa de ferramentas para construir sistemas de difusão. Enquanto o [`VictorPipeline`] é uma forma conveniente de começar com um sistema de difusão pré-construído, você também pode escolher seus próprios modelos e agendadores separadamente para construir um sistema de difusão personalizado.
+🧨 Diffusers é uma caixa de ferramentas para construir sistemas de difusão. Enquanto o [`DiffusionPipeline`] é uma forma conveniente de começar com um sistema de difusão pré-construído, você também pode escolher seus próprios modelos e agendadores separadamente para construir um sistema de difusão personalizado.
 
 </Tip>
 
 Para o tour rápido, você irá instanciar o [`DDPMScheduler`] com o método [`~diffusers.ConfigMixin.from_config`]:
 
 ```py
->>> from VictorAI import DDPMScheduler
+>>> from diffusers import DDPMScheduler
 
 >>> scheduler = DDPMScheduler.from_config(repo_id)
 >>> scheduler

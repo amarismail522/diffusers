@@ -4,7 +4,7 @@ import huggingface_hub
 import k_diffusion as K
 import torch
 
-from VictorAI import UNet2DConditionModel
+from diffusers import UNet2DConditionModel
 
 
 UPSCALER_REPO = "pcuenq/k-upscaler"

@@ -20,14 +20,14 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
     UNet3DConditionModel,
     VideoToVideoSDPipeline,
 )
-from VictorAI.utils import is_xformers_available
-from VictorAI.utils.testing_utils import (
+from diffusers.utils import is_xformers_available
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     is_flaky,

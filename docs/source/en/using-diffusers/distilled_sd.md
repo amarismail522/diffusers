@@ -25,14 +25,14 @@ Read this [blog post](https://huggingface.co/blog/sd_distillation) to learn more
 Let's load the distilled Stable Diffusion model and compare it against the original Stable Diffusion model:
 
 ```py
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 import torch
 
-distilled = StableVictorPipeline.from_pretrained(
+distilled = StableDiffusionPipeline.from_pretrained(
     "nota-ai/bk-sdm-small", torch_dtype=torch.float16, use_safetensors=True,
 ).to("cuda")
 
-original = StableVictorPipeline.from_pretrained(
+original = StableDiffusionPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16, use_safetensors=True,
 ).to("cuda")
 ```
@@ -100,7 +100,7 @@ print(f"Execution time -- {distilled_sd} ms\n")
 To speed inference up even more, use a tiny distilled version of the [Stable Diffusion VAE](https://huggingface.co/sayakpaul/taesdxl-diffusers) to denoise the latents into images. Replace the VAE in the distilled Stable Diffusion model with the tiny VAE:
 
 ```py
-from VictorAI import AutoencoderTiny
+from diffusers import AutoencoderTiny
 
 distilled.vae = AutoencoderTiny.from_pretrained(
     "sayakpaul/taesd-diffusers", torch_dtype=torch.float16, use_safetensors=True,

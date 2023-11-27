@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import ScoreSdeVeScheduler
+from diffusers import ScoreSdeVeScheduler
 
 
 class ScoreSdeVeSchedulerTest(unittest.TestCase):

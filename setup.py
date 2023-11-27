@@ -64,10 +64,10 @@ To create the package for PyPI.
    pip install -i https://testpypi.python.org/pypi diffusers
 
    Check you can run the following commands:
-   python -c "from VictorAI import __version__; print(__version__)"
-   python -c "from VictorAI import VictorPipeline; pipe = VictorPipeline.from_pretrained('fusing/unet-ldm-dummy-update'); pipe()"
-   python -c "from VictorAI import VictorPipeline; pipe = VictorPipeline.from_pretrained('hf-internal-testing/tiny-stable-diffusion-pipe', safety_checker=None); pipe('ah suh du')"
-   python -c "from VictorAI import *"
+   python -c "from diffusers import __version__; print(__version__)"
+   python -c "from diffusers import DiffusionPipeline; pipe = DiffusionPipeline.from_pretrained('fusing/unet-ldm-dummy-update'); pipe()"
+   python -c "from diffusers import DiffusionPipeline; pipe = DiffusionPipeline.from_pretrained('hf-internal-testing/tiny-stable-diffusion-pipe', safety_checker=None); pipe('ah suh du')"
+   python -c "from diffusers import *"
 
 9. Upload the final version to the actual PyPI:
    twine upload dist/* -r pypi
@@ -143,7 +143,7 @@ deps = {b: a for a, b in (re.findall(r"^(([^!=<>~]+)(?:[!=<>~].*)?$)", x)[0] for
 # since we save this data in src/diffusers/dependency_versions_table.py it can be easily accessed from
 # anywhere. If you need to quickly access the data from this table in a shell, you can do so easily with:
 #
-# python -c 'import sys; from VictorAI.dependency_versions_table import deps; \
+# python -c 'import sys; from diffusers.dependency_versions_table import deps; \
 # print(" ".join([deps[x] for x in sys.argv[1:]]))' tokenizers datasets
 #
 # Just pass the desired package names to that script as it's shown with 2 packages above.
@@ -152,7 +152,7 @@ deps = {b: a for a, b in (re.findall(r"^(([^!=<>~]+)(?:[!=<>~].*)?$)", x)[0] for
 #
 # You can then feed this for example to `pip`:
 #
-# pip install -U $(python -c 'import sys; from VictorAI.dependency_versions_table import deps; \
+# pip install -U $(python -c 'import sys; from diffusers.dependency_versions_table import deps; \
 # print(" ".join([deps[x] for x in sys.argv[1:]]))' tokenizers datasets)
 #
 
@@ -173,7 +173,7 @@ class DepsTableUpdateCommand(Command):
         (
             "dep-table-update",
             None,
-            "updates src/VictorAI/dependency_versions_table.py",
+            "updates src/diffusers/dependency_versions_table.py",
         ),
     ]
 
@@ -194,7 +194,7 @@ class DepsTableUpdateCommand(Command):
             "}",
             "",
         ]
-        target = "src/VictorAI/dependency_versions_table.py"
+        target = "src/diffusers/dependency_versions_table.py"
         print(f"updating {target}")
         with open(target, "w", encoding="utf-8", newline="\n") as f:
             f.write("\n".join(content))
@@ -248,9 +248,9 @@ install_requires = [
 version_range_max = max(sys.version_info[1], 10) + 1
 
 setup(
-    name="VictorAI",
+    name="diffusers",
     version="0.24.0.dev0",  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
-    description="State-of-the-art VictorAI in PyTorch and JAX.",
+    description="State-of-the-art diffusion in PyTorch and JAX.",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     keywords="deep learning diffusion jax pytorch stable diffusion audioldm",
@@ -260,12 +260,12 @@ setup(
     url="https://github.com/huggingface/diffusers",
     package_dir={"": "src"},
     packages=find_packages("src"),
-    package_data={"VictorAI": ["py.typed"]},
+    package_data={"diffusers": ["py.typed"]},
     include_package_data=True,
     python_requires=">=3.8.0",
     install_requires=list(install_requires),
     extras_require=extras,
-    entry_points={"console_scripts": ["VictorAI-cli=VictorAI.commands.VictorAI_cli:main"]},
+    entry_points={"console_scripts": ["diffusers-cli=diffusers.commands.diffusers_cli:main"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",

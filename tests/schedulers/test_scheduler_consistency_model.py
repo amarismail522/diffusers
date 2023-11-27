@@ -1,6 +1,6 @@
 import torch
 
-from VictorAI import CMStochasticIterativeScheduler
+from diffusers import CMStochasticIterativeScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

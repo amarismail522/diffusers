@@ -17,8 +17,8 @@ import unittest
 
 import torch
 
-from VictorAI import UNet1DModel
-from VictorAI.utils.testing_utils import floats_tensor, slow, torch_device
+from diffusers import UNet1DModel
+from diffusers.utils.testing_utils import floats_tensor, slow, torch_device
 
 from .test_modeling_common import ModelTesterMixin, UNetTesterMixin
 

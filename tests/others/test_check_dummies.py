@@ -60,10 +60,10 @@ class CheckDummiesTester(unittest.TestCase):
         # Likewise, we can't assert on the exact content of a key
         self.assertIn("UNet2DModel", objects["torch"])
         self.assertIn("FlaxUNet2DConditionModel", objects["flax"])
-        self.assertIn("StableVictorPipeline", objects["torch_and_transformers"])
-        self.assertIn("FlaxStableVictorPipeline", objects["flax_and_transformers"])
+        self.assertIn("StableDiffusionPipeline", objects["torch_and_transformers"])
+        self.assertIn("FlaxStableDiffusionPipeline", objects["flax_and_transformers"])
         self.assertIn("LMSDiscreteScheduler", objects["torch_and_scipy"])
-        self.assertIn("OnnxStableVictorPipeline", objects["torch_and_transformers_and_onnx"])
+        self.assertIn("OnnxStableDiffusionPipeline", objects["torch_and_transformers_and_onnx"])
 
     def test_create_dummy_object(self):
         dummy_constant = create_dummy_object("CONSTANT", "'torch'")

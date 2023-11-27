@@ -19,9 +19,9 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import DDIMScheduler, LDMSuperResolutionPipeline, UNet2DModel, VQModel
-from VictorAI.utils import PIL_INTERPOLATION
-from VictorAI.utils.testing_utils import (
+from diffusers import DDIMScheduler, LDMSuperResolutionPipeline, UNet2DModel, VQModel
+from diffusers.utils import PIL_INTERPOLATION
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,

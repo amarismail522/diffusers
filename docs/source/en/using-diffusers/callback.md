@@ -41,9 +41,9 @@ Now, you can pass the callback function to the `callback_on_step_end` parameter 
 
 ```py
 import torch
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 
-pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
 pipe = pipe.to("cuda")
 
 prompt = "a photo of an astronaut riding a horse on mars"

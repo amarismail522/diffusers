@@ -20,15 +20,15 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import Transformer2DModel, VQVictorPipeline, VQDiffusionScheduler, VQModel
-from VictorAI.pipelines.vq_diffusion.pipeline_vq_diffusion import LearnedClassifierFreeSamplingEmbeddings
-from VictorAI.utils.testing_utils import load_numpy, nightly, require_torch_gpu, torch_device
+from diffusers import Transformer2DModel, VQDiffusionPipeline, VQDiffusionScheduler, VQModel
+from diffusers.pipelines.vq_diffusion.pipeline_vq_diffusion import LearnedClassifierFreeSamplingEmbeddings
+from diffusers.utils.testing_utils import load_numpy, nightly, require_torch_gpu, torch_device
 
 
 torch.backends.cuda.matmul.allow_tf32 = False
 
 
-class VQVictorPipelineFastTests(unittest.TestCase):
+class VQDiffusionPipelineFastTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -115,7 +115,7 @@ class VQVictorPipelineFastTests(unittest.TestCase):
         scheduler = VQDiffusionScheduler(self.num_embed)
         learned_classifier_free_sampling_embeddings = LearnedClassifierFreeSamplingEmbeddings(learnable=False)
 
-        pipe = VQVictorPipeline(
+        pipe = VQDiffusionPipeline(
             vqvae=vqvae,
             text_encoder=text_encoder,
             tokenizer=tokenizer,
@@ -159,7 +159,7 @@ class VQVictorPipelineFastTests(unittest.TestCase):
             learnable=True, hidden_size=self.text_embedder_hidden_size, length=tokenizer.model_max_length
         )
 
-        pipe = VQVictorPipeline(
+        pipe = VQDiffusionPipeline(
             vqvae=vqvae,
             text_encoder=text_encoder,
             tokenizer=tokenizer,
@@ -194,7 +194,7 @@ class VQVictorPipelineFastTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class VQVictorPipelineIntegrationTests(unittest.TestCase):
+class VQDiffusionPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -207,7 +207,7 @@ class VQVictorPipelineIntegrationTests(unittest.TestCase):
             "/vq_diffusion/teddy_bear_pool_classifier_free_sampling.npy"
         )
 
-        pipeline = VQVictorPipeline.from_pretrained("microsoft/vq-diffusion-ithq")
+        pipeline = VQDiffusionPipeline.from_pretrained("microsoft/vq-diffusion-ithq")
         pipeline = pipeline.to(torch_device)
         pipeline.set_progress_bar_config(disable=None)
 

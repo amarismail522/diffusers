@@ -1,7 +1,7 @@
 import torch
 
-from VictorAI import DPMSolverSDEScheduler
-from VictorAI.utils.testing_utils import require_torchsde, torch_device
+from diffusers import DPMSolverSDEScheduler
+from diffusers.utils.testing_utils import require_torchsde, torch_device
 
 from .test_schedulers import SchedulerCommonTest
 

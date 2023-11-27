@@ -40,7 +40,7 @@ This guide shows how to perform inference with LCM-LoRAs for
 - AnimateDiff
 
 Before going through this guide, we'll take a look at the general workflow for performing inference with LCM-LoRAs.
-LCM-LoRAs are similar to other Stable Diffusion LoRAs so they can be used with any [`VictorPipeline`] that supports LoRAs.
+LCM-LoRAs are similar to other Stable Diffusion LoRAs so they can be used with any [`DiffusionPipeline`] that supports LoRAs.
 
 - Load the task specific pipeline and model.
 - Set the scheduler to [`LCMScheduler`].
@@ -58,13 +58,13 @@ pip install -U peft
 
 ## Text-to-image
 
-You'll use the [`StableVictorXLPipeline`] with the scheduler: [`LCMScheduler`] and then load the LCM-LoRA. Together with the LCM-LoRA and the scheduler, the pipeline enables a fast inference workflow overcoming the slow iterative nature of diffusion models.
+You'll use the [`StableDiffusionXLPipeline`] with the scheduler: [`LCMScheduler`] and then load the LCM-LoRA. Together with the LCM-LoRA and the scheduler, the pipeline enables a fast inference workflow overcoming the slow iterative nature of diffusion models.
 
 ```python
 import torch
-from VictorAI import VictorPipeline, LCMScheduler
+from diffusers import DiffusionPipeline, LCMScheduler
 
-pipe = VictorPipeline.from_pretrained(
+pipe = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
     variant="fp16",
     torch_dtype=torch.float16
@@ -101,9 +101,9 @@ You can also use guidance with LCM-LoRA, but due to the nature of training the m
 As mentioned above, the LCM-LoRA can be applied to any fine-tuned version of the model without having to distill them separately. Let's look at how we can perform inference with a fine-tuned model. In this example, we'll use the [animagine-xl](https://huggingface.co/Linaqruf/animagine-xl) model, which is a fine-tuned version of the SDXL model for generating anime.
 
 ```python
-from VictorAI import VictorPipeline, LCMScheduler
+from diffusers import DiffusionPipeline, LCMScheduler
 
-pipe = VictorPipeline.from_pretrained(
+pipe = DiffusionPipeline.from_pretrained(
     "Linaqruf/animagine-xl",
     variant="fp16",
     torch_dtype=torch.float16
@@ -132,8 +132,8 @@ LCM-LoRA can be applied to image-to-image tasks too. Let's look at how we can pe
 
 ```python
 import torch
-from VictorAI import AutoPipelineForImage2Image, LCMScheduler
-from VictorAI.utils import make_image_grid, load_image
+from diffusers import AutoPipelineForImage2Image, LCMScheduler
+from diffusers.utils import make_image_grid, load_image
 
 pipe = AutoPipelineForImage2Image.from_pretrained(
     "Lykon/dreamshaper-7",
@@ -182,9 +182,9 @@ To learn more about how to combine LoRAs, refer to [this guide](https://huggingf
 
 ```python
 import torch
-from VictorAI import VictorPipeline, LCMScheduler
+from diffusers import DiffusionPipeline, LCMScheduler
 
-pipe = VictorPipeline.from_pretrained(
+pipe = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
     variant="fp16",
     torch_dtype=torch.float16
@@ -222,8 +222,8 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from VictorAI import StableVictorControlNetPipeline, ControlNetModel, LCMScheduler
-from VictorAI.utils import load_image
+from diffusers import StableDiffusionControlNetPipeline, ControlNetModel, LCMScheduler
+from diffusers.utils import load_image
 
 image = load_image(
     "https://hf.co/datasets/huggingface/documentation-images/resolve/main/diffusers/input_image_vermeer.png"
@@ -240,7 +240,7 @@ image = np.concatenate([image, image, image], axis=2)
 canny_image = Image.fromarray(image)
 
 controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16)
-pipe = StableVictorControlNetPipeline.from_pretrained(
+pipe = StableDiffusionControlNetPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     controlnet=controlnet,
     torch_dtype=torch.float16,
@@ -284,8 +284,8 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from VictorAI import StableVictorXLAdapterPipeline, T2IAdapter, LCMScheduler
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import StableDiffusionXLAdapterPipeline, T2IAdapter, LCMScheduler
+from diffusers.utils import load_image, make_image_grid
 
 # Prepare image
 # Detect the canny map in low resolution to avoid high-frequency details
@@ -306,7 +306,7 @@ canny_image = Image.fromarray(image).resize((1024, 1024))
 # load adapter
 adapter = T2IAdapter.from_pretrained("TencentARC/t2i-adapter-canny-sdxl-1.0", torch_dtype=torch.float16, varient="fp16").to("cuda")
 
-pipe = StableVictorXLAdapterPipeline.from_pretrained(
+pipe = StableDiffusionXLAdapterPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", 
     adapter=adapter,
     torch_dtype=torch.float16,
@@ -345,8 +345,8 @@ LCM-LoRA can be used for inpainting as well.
 
 ```python
 import torch
-from VictorAI import AutoPipelineForInpainting, LCMScheduler
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import AutoPipelineForInpainting, LCMScheduler
+from diffusers.utils import load_image, make_image_grid
 
 pipe = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting",
@@ -388,8 +388,8 @@ LCM-LoRA can be used to speed up the process significantly, as you just need to 
 
 ```python
 import torch
-from VictorAI import MotionAdapter, AnimateDiffPipeline, DDIMScheduler, LCMScheduler
-from VictorAI.utils import export_to_gif
+from diffusers import MotionAdapter, AnimateDiffPipeline, DDIMScheduler, LCMScheduler
+from diffusers.utils import export_to_gif
 
 adapter = MotionAdapter.from_pretrained("diffusers/animatediff-motion-adapter-v1-5")
 pipe = AnimateDiffPipeline.from_pretrained(

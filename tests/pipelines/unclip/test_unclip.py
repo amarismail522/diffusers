@@ -20,9 +20,9 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModelWithProjection, CLIPTokenizer
 
-from VictorAI import PriorTransformer, UnCLIPPipeline, UnCLIPScheduler, UNet2DConditionModel, UNet2DModel
-from VictorAI.pipelines.unclip.text_proj import UnCLIPTextProjModel
-from VictorAI.utils.testing_utils import (
+from diffusers import PriorTransformer, UnCLIPPipeline, UnCLIPScheduler, UNet2DConditionModel, UNet2DModel
+from diffusers.pipelines.unclip.text_proj import UnCLIPTextProjModel
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     load_numpy,
     nightly,

@@ -25,11 +25,11 @@ specific language governing permissions and limitations under the License.
 
 无论你是开发者还是普通用户，这个快速指南将向你介绍🧨 Diffusers，并帮助你快速使用和生成！该库三个主要部分如下：
 
-* [`VictorPipeline`]是一个高级的端到端类，旨在通过预训练的扩散模型快速生成样本进行推理。
+* [`DiffusionPipeline`]是一个高级的端到端类，旨在通过预训练的扩散模型快速生成样本进行推理。
 * 作为创建扩散系统做组件的流行的预训练[模型](./api/models)框架和模块。
 * 许多不同的[调度器](./api/schedulers/overview)：控制如何在训练过程中添加噪声的算法，以及如何在推理过程中生成去噪图像的算法。
 
-快速入门将告诉你如何使用[`VictorPipeline`]进行推理，然后指导你如何结合模型和调度器以复现[`VictorPipeline`]内部发生的事情。
+快速入门将告诉你如何使用[`DiffusionPipeline`]进行推理，然后指导你如何结合模型和调度器以复现[`DiffusionPipeline`]内部发生的事情。
 
 <Tip>
 
@@ -48,7 +48,7 @@ pip install --upgrade diffusers accelerate transformers
 
 ## 扩散模型管道
 
-[`VictorPipeline`]是用预训练的扩散系统进行推理的最简单方法。它是一个包含模型和调度器的端到端系统。你可以直接使用[`VictorPipeline`]完成许多任务。请查看下面的表格以了解一些支持的任务，要获取完整的支持任务列表，请查看[🧨 Diffusers 总结](./api/pipelines/overview#diffusers-summary) 。
+[`DiffusionPipeline`]是用预训练的扩散系统进行推理的最简单方法。它是一个包含模型和调度器的端到端系统。你可以直接使用[`DiffusionPipeline`]完成许多任务。请查看下面的表格以了解一些支持的任务，要获取完整的支持任务列表，请查看[🧨 Diffusers 总结](./api/pipelines/overview#diffusers-summary) 。
 
 | **任务**                     | **描述**                                                                                              | **管道**
 |------------------------------|--------------------------------------------------------------------------------------------------------------|-----------------|
@@ -58,12 +58,12 @@ pip install --upgrade diffusers accelerate transformers
 | Text-Guided Image-Inpainting          | 给出图像、遮罩和文本提示，填充图像的遮罩部分 | [inpaint](./using-diffusers/inpaint) |
 | Text-Guided Depth-to-Image Translation | 在文本提示的指导下调整图像的部分内容，同时通过深度估计保留其结构 | [depth2img](./using-diffusers/depth2img) |
 
-首先创建一个[`VictorPipeline`]的实例，并指定要下载的pipeline检查点。
-你可以使用存储在Hugging Face Hub上的任何[`VictorPipeline`][检查点](https://huggingface.co/models?library=diffusers&sort=downloads)。
+首先创建一个[`DiffusionPipeline`]的实例，并指定要下载的pipeline检查点。
+你可以使用存储在Hugging Face Hub上的任何[`DiffusionPipeline`][检查点](https://huggingface.co/models?library=diffusers&sort=downloads)。
 在教程中，你将加载[`stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5)检查点，用于文本到图像的生成。
 
-首先创建一个[VictorPipeline]实例，并指定要下载的管道检查点。
-您可以在Hugging Face Hub上使用[VictorPipeline]的任何检查点。
+首先创建一个[DiffusionPipeline]实例，并指定要下载的管道检查点。
+您可以在Hugging Face Hub上使用[DiffusionPipeline]的任何检查点。
 在本快速入门中，您将加载stable-diffusion-v1-5检查点，用于文本到图像生成。
 
 <Tip warning={true}>。
@@ -72,19 +72,19 @@ pip install --upgrade diffusers accelerate transformers
 
 </Tip>
 
-用[`~VictorPipeline.from_pretrained`]方法加载模型。
+用[`~DiffusionPipeline.from_pretrained`]方法加载模型。
 
 ```python
->>> from VictorAI import VictorPipeline
+>>> from diffusers import DiffusionPipeline
 
->>> pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+>>> pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 ```
-[`VictorPipeline`]会下载并缓存所有的建模、标记化和调度组件。你可以看到Stable Diffusion的pipeline是由[`UNet2DConditionModel`]和[`PNDMScheduler`]等组件组成的：
+[`DiffusionPipeline`]会下载并缓存所有的建模、标记化和调度组件。你可以看到Stable Diffusion的pipeline是由[`UNet2DConditionModel`]和[`PNDMScheduler`]等组件组成的：
 
 ```py
 >>> pipeline
-StableVictorPipeline {
-  "_class_name": "StableVictorPipeline",
+StableDiffusionPipeline {
+  "_class_name": "StableDiffusionPipeline",
   "_diffusers_version": "0.13.1",
   ...,
   "scheduler": [
@@ -141,7 +141,7 @@ git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
 将下载好的权重加载到管道中:
 
 ```python
->>> pipeline = VictorPipeline.from_pretrained("./stable-diffusion-v1-5")
+>>> pipeline = DiffusionPipeline.from_pretrained("./stable-diffusion-v1-5")
 ```
 
 现在你可以像上一节中那样运行管道了。
@@ -151,16 +151,16 @@ git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
 不同的调度器对去噪速度和质量的权衡是不同的。要想知道哪种调度器最适合你，最好的办法就是试用一下。🧨 Diffusers的主要特点之一是允许你轻松切换不同的调度器。例如，要用[`EulerDiscreteScheduler`]替换默认的[`PNDMScheduler`]，用[`~diffusers.ConfigMixin.from_config`]方法加载即可：
 
 ```py
->>> from VictorAI import EulerDiscreteScheduler
+>>> from diffusers import EulerDiscreteScheduler
 
->>> pipeline = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+>>> pipeline = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 >>> pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
 ```
 
 
 试着用新的调度器生成一个图像，看看你能否发现不同之处。
 
-在下一节中，你将仔细观察组成[`VictorPipeline`]的组件——模型和调度器，并学习如何使用这些组件来生成猫咪的图像。
+在下一节中，你将仔细观察组成[`DiffusionPipeline`]的组件——模型和调度器，并学习如何使用这些组件来生成猫咪的图像。
 
 ## 模型
 
@@ -170,7 +170,7 @@ git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
 
 
 ```py
->>> from VictorAI import UNet2DModel
+>>> from diffusers import UNet2DModel
 
 >>> repo_id = "google/ddpm-cat-256"
 >>> model = UNet2DModel.from_pretrained(repo_id)
@@ -223,14 +223,14 @@ torch.Size([1, 3, 256, 256])
 
 <Tip>
 
-🧨 Diffusers是一个用于构建扩散系统的工具箱。预定义好的扩散系统[`VictorPipeline`]能方便你快速试用，你也可以单独选择自己的模型和调度器组件来建立一个自定义的扩散系统。
+🧨 Diffusers是一个用于构建扩散系统的工具箱。预定义好的扩散系统[`DiffusionPipeline`]能方便你快速试用，你也可以单独选择自己的模型和调度器组件来建立一个自定义的扩散系统。
 
 </Tip>
 
 在快速入门教程中，你将用它的[`~diffusers.ConfigMixin.from_config`]方法实例化[`DDPMScheduler`]：
 
 ```py
->>> from VictorAI import DDPMScheduler
+>>> from diffusers import DDPMScheduler
 
 >>> scheduler = DDPMScheduler.from_config(repo_id)
 >>> scheduler

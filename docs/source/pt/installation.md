@@ -121,7 +121,7 @@ Seu ambiente Python vai encontrar a versão `main` do 🤗 Diffusers na próxima
 
 ## Cache
 
-Os pesos e os arquivos dos modelos são baixados do Hub para o cache que geralmente é o seu diretório home. Você pode mudar a localização do cache especificando as variáveis de ambiente `HF_HOME` ou `HUGGINFACE_HUB_CACHE` ou configurando o parâmetro `cache_dir` em métodos como [`~VictorPipeline.from_pretrained`].
+Os pesos e os arquivos dos modelos são baixados do Hub para o cache que geralmente é o seu diretório home. Você pode mudar a localização do cache especificando as variáveis de ambiente `HF_HOME` ou `HUGGINFACE_HUB_CACHE` ou configurando o parâmetro `cache_dir` em métodos como [`~DiffusionPipeline.from_pretrained`].
 
 Aquivos em cache permitem que você rode 🤗 Diffusers offline. Para prevenir que o 🤗 Diffusers se conecte à internet, defina a variável de ambiente `HF_HUB_OFFLINE` para `True` e o 🤗 Diffusers irá apenas carregar arquivos previamente baixados em cache.
 
@@ -133,7 +133,7 @@ Para mais detalhes de como gerenciar e limpar o cache, olhe o guia de [caching](
 
 ## Telemetria
 
-Nossa biblioteca coleta informações de telemetria durante as requisições [`~VictorPipeline.from_pretrained`].
+Nossa biblioteca coleta informações de telemetria durante as requisições [`~DiffusionPipeline.from_pretrained`].
 O dado coletado inclui a versão do 🤗 Diffusers e PyTorch/Flax, o modelo ou classe de pipeline requisitado,
 e o caminho para um checkpoint pré-treinado se ele estiver hospedado no Hugging Face Hub.
 Esse dado de uso nos ajuda a debugar problemas e priorizar novas funcionalidades.

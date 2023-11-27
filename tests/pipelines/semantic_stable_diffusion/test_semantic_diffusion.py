@@ -22,9 +22,9 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import AutoencoderKL, DDIMScheduler, LMSDiscreteScheduler, PNDMScheduler, UNet2DConditionModel
-from VictorAI.pipelines.semantic_stable_diffusion import SemanticStableVictorPipeline as StableVictorPipeline
-from VictorAI.utils.testing_utils import (
+from diffusers import AutoencoderKL, DDIMScheduler, LMSDiscreteScheduler, PNDMScheduler, UNet2DConditionModel
+from diffusers.pipelines.semantic_stable_diffusion import SemanticStableDiffusionPipeline as StableDiffusionPipeline
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     nightly,
@@ -36,7 +36,7 @@ from VictorAI.utils.testing_utils import (
 enable_full_determinism()
 
 
-class SafeVictorPipelineFastTests(unittest.TestCase):
+class SafeDiffusionPipelineFastTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -127,7 +127,7 @@ class SafeVictorPipelineFastTests(unittest.TestCase):
         tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableVictorPipeline(
+        sd_pipe = StableDiffusionPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -173,7 +173,7 @@ class SafeVictorPipelineFastTests(unittest.TestCase):
         tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableVictorPipeline(
+        sd_pipe = StableDiffusionPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -211,10 +211,10 @@ class SafeVictorPipelineFastTests(unittest.TestCase):
         assert np.abs(image_from_tuple_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_semantic_diffusion_no_safety_checker(self):
-        pipe = StableVictorPipeline.from_pretrained(
+        pipe = StableDiffusionPipeline.from_pretrained(
             "hf-internal-testing/tiny-stable-diffusion-lms-pipe", safety_checker=None
         )
-        assert isinstance(pipe, StableVictorPipeline)
+        assert isinstance(pipe, StableDiffusionPipeline)
         assert isinstance(pipe.scheduler, LMSDiscreteScheduler)
         assert pipe.safety_checker is None
 
@@ -224,7 +224,7 @@ class SafeVictorPipelineFastTests(unittest.TestCase):
         # check that there's no error when saving a pipeline with one of the models being None
         with tempfile.TemporaryDirectory() as tmpdirname:
             pipe.save_pretrained(tmpdirname)
-            pipe = StableVictorPipeline.from_pretrained(tmpdirname)
+            pipe = StableDiffusionPipeline.from_pretrained(tmpdirname)
 
         # sanity check that the pipeline still works
         assert pipe.safety_checker is None
@@ -246,7 +246,7 @@ class SafeVictorPipelineFastTests(unittest.TestCase):
         bert = bert.half()
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableVictorPipeline(
+        sd_pipe = StableDiffusionPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -266,7 +266,7 @@ class SafeVictorPipelineFastTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class SemanticVictorPipelineIntegrationTests(unittest.TestCase):
+class SemanticDiffusionPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -275,7 +275,7 @@ class SemanticVictorPipelineIntegrationTests(unittest.TestCase):
 
     def test_positive_guidance(self):
         torch_device = "cuda"
-        pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -358,7 +358,7 @@ class SemanticVictorPipelineIntegrationTests(unittest.TestCase):
 
     def test_negative_guidance(self):
         torch_device = "cuda"
-        pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -441,7 +441,7 @@ class SemanticVictorPipelineIntegrationTests(unittest.TestCase):
 
     def test_multi_cond_guidance(self):
         torch_device = "cuda"
-        pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -524,7 +524,7 @@ class SemanticVictorPipelineIntegrationTests(unittest.TestCase):
 
     def test_guidance_fp16(self):
         torch_device = "cuda"
-        pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+        pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 

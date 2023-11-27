@@ -19,7 +19,7 @@ import numpy as np
 import PIL.Image
 import torch
 
-from VictorAI.image_processor import VaeImageProcessor
+from diffusers.image_processor import VaeImageProcessor
 
 
 class ImageProcessorTest(unittest.TestCase):

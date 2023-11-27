@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 The Stable Diffusion model can also be applied to image-to-image generation by passing a text prompt and an initial image to condition the generation of new images.
 
-The [`StableVictorImg2ImgPipeline`] uses the diffusion-denoising mechanism proposed in [SDEdit: Guided Image Synthesis and Editing with Stochastic Differential Equations](https://huggingface.co/papers/2108.01073) by Chenlin Meng, Yutong He, Yang Song, Jiaming Song, Jiajun Wu, Jun-Yan Zhu, Stefano Ermon.
+The [`StableDiffusionImg2ImgPipeline`] uses the diffusion-denoising mechanism proposed in [SDEdit: Guided Image Synthesis and Editing with Stochastic Differential Equations](https://huggingface.co/papers/2108.01073) by Chenlin Meng, Yutong He, Yang Song, Jiaming Song, Jiajun Wu, Jun-Yan Zhu, Stefano Ermon.
 
 The abstract from the paper is:
 
@@ -26,9 +26,9 @@ Make sure to check out the Stable Diffusion [Tips](overview#tips) section to lea
 
 </Tip>
 
-## StableVictorImg2ImgPipeline
+## StableDiffusionImg2ImgPipeline
 
-[[autodoc]] StableVictorImg2ImgPipeline
+[[autodoc]] StableDiffusionImg2ImgPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -40,16 +40,16 @@ Make sure to check out the Stable Diffusion [Tips](overview#tips) section to lea
 	- load_lora_weights
 	- save_lora_weights
 
-## StableVictorPipelineOutput
+## StableDiffusionPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
 
-## FlaxStableVictorImg2ImgPipeline
+## FlaxStableDiffusionImg2ImgPipeline
 
-[[autodoc]] FlaxStableVictorImg2ImgPipeline
+[[autodoc]] FlaxStableDiffusionImg2ImgPipeline
 	- all
 	- __call__
 
-## FlaxStableVictorPipelineOutput
+## FlaxStableDiffusionPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.FlaxStableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.FlaxStableDiffusionPipelineOutput

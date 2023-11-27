@@ -28,7 +28,7 @@ from transformers import (
     SpeechT5HifiGanConfig,
 )
 
-from VictorAI import (
+from diffusers import (
     AudioLDMPipeline,
     AutoencoderKL,
     DDIMScheduler,
@@ -36,8 +36,8 @@ from VictorAI import (
     PNDMScheduler,
     UNet2DConditionModel,
 )
-from VictorAI.utils import is_xformers_available
-from VictorAI.utils.testing_utils import enable_full_determinism, nightly, torch_device
+from diffusers.utils import is_xformers_available
+from diffusers.utils.testing_utils import enable_full_determinism, nightly, torch_device
 
 from ..pipeline_params import TEXT_TO_AUDIO_BATCH_PARAMS, TEXT_TO_AUDIO_PARAMS
 from ..test_pipelines_common import PipelineTesterMixin

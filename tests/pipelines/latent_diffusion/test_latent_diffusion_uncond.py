@@ -19,8 +19,8 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel
 
-from VictorAI import DDIMScheduler, LDMPipeline, UNet2DModel, VQModel
-from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch, torch_device
+from diffusers import DDIMScheduler, LDMPipeline, UNet2DModel, VQModel
+from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch, torch_device
 
 
 enable_full_determinism()

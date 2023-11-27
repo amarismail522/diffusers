@@ -5,19 +5,19 @@ import numpy as np
 import torch
 from torch.backends.cuda import sdp_kernel
 
-from VictorAI import (
+from diffusers import (
     CMStochasticIterativeScheduler,
     ConsistencyModelPipeline,
     UNet2DModel,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     nightly,
     require_torch_2,
     require_torch_gpu,
     torch_device,
 )
-from VictorAI.utils.torch_utils import randn_tensor
+from diffusers.utils.torch_utils import randn_tensor
 
 from ..pipeline_params import UNCONDITIONAL_IMAGE_GENERATION_BATCH_PARAMS, UNCONDITIONAL_IMAGE_GENERATION_PARAMS
 from ..test_pipelines_common import PipelineTesterMixin

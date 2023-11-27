@@ -14,17 +14,17 @@ specific language governing permissions and limitations under the License.
 
 Token Merging (introduced in [Token Merging: Your ViT But Faster](https://arxiv.org/abs/2210.09461))은 트랜스포머 기반 네트워크의 forward pass에서 중복 토큰이나 패치를 점진적으로 병합하는 방식으로 작동합니다. 이를 통해 기반 네트워크의 추론 지연 시간을 단축할 수 있습니다.
 
-Token Merging(ToMe)이 출시된 후, 저자들은 [Fast Stable Diffusion을 위한 토큰 병합](https://arxiv.org/abs/2303.17604)을 발표하여 Stable Diffusion과 더 잘 호환되는 ToMe 버전을 소개했습니다. ToMe를 사용하면 [`VictorPipeline`]의 추론 지연 시간을 부드럽게 단축할 수 있습니다. 이 문서에서는 ToMe를 [`StableVictorPipeline`]에 적용하는 방법, 예상되는 속도 향상, [`StableVictorPipeline`]에서 ToMe를 사용할 때의 질적 측면에 대해 설명합니다.
+Token Merging(ToMe)이 출시된 후, 저자들은 [Fast Stable Diffusion을 위한 토큰 병합](https://arxiv.org/abs/2303.17604)을 발표하여 Stable Diffusion과 더 잘 호환되는 ToMe 버전을 소개했습니다. ToMe를 사용하면 [`DiffusionPipeline`]의 추론 지연 시간을 부드럽게 단축할 수 있습니다. 이 문서에서는 ToMe를 [`StableDiffusionPipeline`]에 적용하는 방법, 예상되는 속도 향상, [`StableDiffusionPipeline`]에서 ToMe를 사용할 때의 질적 측면에 대해 설명합니다.
 
 ## ToMe 사용하기
 
-ToMe의 저자들은 [`tomesd`](https://github.com/dbolya/tomesd)라는 편리한 Python 라이브러리를 공개했는데, 이 라이브러리를 이용하면 [`VictorPipeline`]에 ToMe를 다음과 같이 적용할 수 있습니다:
+ToMe의 저자들은 [`tomesd`](https://github.com/dbolya/tomesd)라는 편리한 Python 라이브러리를 공개했는데, 이 라이브러리를 이용하면 [`DiffusionPipeline`]에 ToMe를 다음과 같이 적용할 수 있습니다:
 
 ```diff
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 import tomesd
 
-pipeline = StableVictorPipeline.from_pretrained(
+pipeline = StableDiffusionPipeline.from_pretrained(
       "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16
 ).to("cuda")
 + tomesd.apply_patch(pipeline, ratio=0.5)
@@ -36,10 +36,10 @@ image = pipeline("a photo of an astronaut riding a horse on mars").images[0]
 
 `tomesd.apply_patch()`는 파이프라인 추론 속도와 생성된 토큰의 품질 사이의 균형을 맞출 수 있도록 [여러 개의 인자](https://github.com/dbolya/tomesd#usage)를 노출합니다. 이러한 인수 중 가장 중요한 것은 `ratio(비율)`입니다. `ratio`은 forward pass 중에 병합될 토큰의 수를 제어합니다. `tomesd`에 대한 자세한 내용은 해당 리포지토리(https://github.com/dbolya/tomesd) 및 [논문](https://arxiv.org/abs/2303.17604)을 참고하시기 바랍니다.
 
-## `StableVictorPipeline`으로 `tomesd` 벤치마킹하기
+## `StableDiffusionPipeline`으로 `tomesd` 벤치마킹하기
 
-We benchmarked the impact of using `tomesd` on [`StableVictorPipeline`] along with [xformers](https://huggingface.co/docs/diffusers/optimization/xformers) across different image resolutions. We used A100 and V100 as our test GPU devices with the following development environment (with Python 3.8.5):
-다양한 이미지 해상도에서 [xformers](https://huggingface.co/docs/diffusers/optimization/xformers)를 적용한 상태에서, [`StableVictorPipeline`]에 `tomesd`를 사용했을 때의 영향을 벤치마킹했습니다. 테스트 GPU 장치로 A100과 V100을 사용했으며 개발 환경은 다음과 같습니다(Python 3.8.5 사용):
+We benchmarked the impact of using `tomesd` on [`StableDiffusionPipeline`] along with [xformers](https://huggingface.co/docs/diffusers/optimization/xformers) across different image resolutions. We used A100 and V100 as our test GPU devices with the following development environment (with Python 3.8.5):
+다양한 이미지 해상도에서 [xformers](https://huggingface.co/docs/diffusers/optimization/xformers)를 적용한 상태에서, [`StableDiffusionPipeline`]에 `tomesd`를 사용했을 때의 영향을 벤치마킹했습니다. 테스트 GPU 장치로 A100과 V100을 사용했으며 개발 환경은 다음과 같습니다(Python 3.8.5 사용):
 
 ```bash
 - `diffusers` version: 0.15.1
@@ -104,15 +104,15 @@ We benchmarked the impact of using `tomesd` on [`StableVictorPipeline`] along wi
 
 As reported in [the paper](https://arxiv.org/abs/2303.17604), ToMe can preserve the quality of the generated images to a great extent while speeding up inference. By increasing the `ratio`, it is possible to further speed up inference, but that might come at the cost of a deterioration in the image quality. 
 
-To test the quality of the generated samples using our setup, we sampled a few prompts from the “Parti Prompts” (introduced in [Parti](https://parti.research.google/)) and performed inference with the [`StableVictorPipeline`] in the following settings:
+To test the quality of the generated samples using our setup, we sampled a few prompts from the “Parti Prompts” (introduced in [Parti](https://parti.research.google/)) and performed inference with the [`StableDiffusionPipeline`] in the following settings:
 
 [논문](https://arxiv.org/abs/2303.17604)에 보고된 바와 같이, ToMe는 생성된 이미지의 품질을 상당 부분 보존하면서 추론 속도를 높일 수 있습니다. `ratio`을 높이면 추론 속도를 더 높일 수 있지만, 이미지 품질이 저하될 수 있습니다. 
 
-해당 설정을 사용하여 생성된 샘플의 품질을 테스트하기 위해, "Parti 프롬프트"([Parti](https://parti.research.google/)에서 소개)에서 몇 가지 프롬프트를 샘플링하고 다음 설정에서 [`StableVictorPipeline`]을 사용하여 추론을 수행했습니다:
+해당 설정을 사용하여 생성된 샘플의 품질을 테스트하기 위해, "Parti 프롬프트"([Parti](https://parti.research.google/)에서 소개)에서 몇 가지 프롬프트를 샘플링하고 다음 설정에서 [`StableDiffusionPipeline`]을 사용하여 추론을 수행했습니다:
 
-- Vanilla [`StableVictorPipeline`]
-- [`StableVictorPipeline`] + ToMe
-- [`StableVictorPipeline`] + ToMe + xformers
+- Vanilla [`StableDiffusionPipeline`]
+- [`StableDiffusionPipeline`] + ToMe
+- [`StableDiffusionPipeline`] + ToMe + xformers
 
 생성된 샘플의 품질이 크게 저하되는 것을 발견하지 못했습니다. 다음은 샘플입니다: 
 

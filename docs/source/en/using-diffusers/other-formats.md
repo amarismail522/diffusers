@@ -26,7 +26,7 @@ This guide will show you how to convert other Stable Diffusion formats to be com
 
 ## PyTorch .ckpt
 
-The checkpoint - or `.ckpt` - format is commonly used to store and save models. The `.ckpt` file contains the entire model and is typically several GBs in size. While you can load and use a `.ckpt` file directly with the [`~StableVictorPipeline.from_single_file`] method, it is generally better to convert the `.ckpt` file to 🤗 Diffusers so both formats are available.
+The checkpoint - or `.ckpt` - format is commonly used to store and save models. The `.ckpt` file contains the entire model and is typically several GBs in size. While you can load and use a `.ckpt` file directly with the [`~StableDiffusionPipeline.from_single_file`] method, it is generally better to convert the `.ckpt` file to 🤗 Diffusers so both formats are available.
 
 There are two options for converting a `.ckpt` file: use a Space to convert the checkpoint or convert the `.ckpt` file with a script.
 
@@ -93,7 +93,7 @@ git push origin pr/13:refs/pr/13
 [KerasCV](https://keras.io/keras_cv/) supports training for [Stable Diffusion](https://github.com/keras-team/keras-cv/blob/master/keras_cv/models/stable_diffusion) v1 and v2. However, it offers limited support for experimenting with Stable Diffusion models for inference and deployment whereas 🤗 Diffusers has a more complete set of features for this purpose, such as different [noise schedulers](https://huggingface.co/docs/diffusers/using-diffusers/schedulers), [flash attention](https://huggingface.co/docs/diffusers/optimization/xformers), and [other
 optimization techniques](https://huggingface.co/docs/diffusers/optimization/fp16).
 
-The [Convert KerasCV](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) Space converts `.pb` or `.h5` files to PyTorch, and then wraps them in a [`StableVictorPipeline`] so it is ready for inference. The converted checkpoint is stored in a repository on the Hugging Face Hub.
+The [Convert KerasCV](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) Space converts `.pb` or `.h5` files to PyTorch, and then wraps them in a [`StableDiffusionPipeline`] so it is ready for inference. The converted checkpoint is stored in a repository on the Hugging Face Hub.
 
 For this example, let's convert the [`sayakpaul/textual-inversion-kerasio`](https://huggingface.co/sayakpaul/textual-inversion-kerasio/tree/main) checkpoint which was trained with Textual Inversion. It uses the special token `<my-funny-cat>` to personalize images with cats.
 
@@ -109,9 +109,9 @@ Click the **Submit** button to automatically convert the KerasCV checkpoint! Onc
 If you prefer to run inference with code, click on the **Use in Diffusers** button in the upper right corner of the model card to copy and paste the code snippet:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     "sayakpaul/textual-inversion-cat-kerascv_sd_diffusers_pipeline", use_safetensors=True
 )
 ```
@@ -119,9 +119,9 @@ pipeline = VictorPipeline.from_pretrained(
 Then, you can generate an image like:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     "sayakpaul/textual-inversion-cat-kerascv_sd_diffusers_pipeline", use_safetensors=True
 )
 pipeline.to("cuda")
@@ -136,10 +136,10 @@ image = pipeline(prompt, num_inference_steps=50).images[0]
 [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) (A1111) is a popular web UI for Stable Diffusion that supports model sharing platforms like [Civitai](https://civitai.com/). Models trained with the Low-Rank Adaptation (LoRA) technique are especially popular because they're fast to train and have a much smaller file size than a fully finetuned model. 🤗 Diffusers supports loading A1111 LoRA checkpoints with [`~loaders.LoraLoaderMixin.load_lora_weights`]:
 
 ```py
-from VictorAI import StableVictorXLPipeline
+from diffusers import StableDiffusionXLPipeline
 import torch
 
-pipeline = StableVictorXLPipeline.from_pretrained(
+pipeline = StableDiffusionXLPipeline.from_pretrained(
     "Lykon/dreamshaper-xl-1-0", torch_dtype=torch.float16, variant="fp16"
 ).to("cuda")
 ```

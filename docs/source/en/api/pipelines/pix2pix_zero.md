@@ -40,7 +40,7 @@ the above example, a valid input prompt would be: "a high resolution painting of
 
 | Pipeline | Tasks | Demo
 |---|---|:---:|
-| [StableVictorPix2PixZeroPipeline](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_pix2pix_zero.py) | *Text-Based Image Editing* | [🤗 Space](https://huggingface.co/spaces/pix2pix-zero-library/pix2pix-zero-demo) |
+| [StableDiffusionPix2PixZeroPipeline](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_pix2pix_zero.py) | *Text-Based Image Editing* | [🤗 Space](https://huggingface.co/spaces/pix2pix-zero-library/pix2pix-zero-demo) |
 
 <!-- TODO: add Colab -->
 
@@ -52,7 +52,7 @@ the above example, a valid input prompt would be: "a high resolution painting of
 import requests
 import torch
 
-from VictorAI import DDIMScheduler, StableVictorPix2PixZeroPipeline
+from diffusers import DDIMScheduler, StableDiffusionPix2PixZeroPipeline
 
 
 def download(embedding_url, local_filepath):
@@ -62,7 +62,7 @@ def download(embedding_url, local_filepath):
 
 
 model_ckpt = "CompVis/stable-diffusion-v1-4"
-pipeline = StableVictorPix2PixZeroPipeline.from_pretrained(
+pipeline = StableDiffusionPix2PixZeroPipeline.from_pretrained(
     model_ckpt, conditions_input_image=False, torch_dtype=torch.float16
 )
 pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config)
@@ -98,14 +98,14 @@ First, let's load our pipeline:
 ```py
 import torch
 from transformers import BlipForConditionalGeneration, BlipProcessor
-from VictorAI import DDIMScheduler, DDIMInverseScheduler, StableVictorPix2PixZeroPipeline
+from diffusers import DDIMScheduler, DDIMInverseScheduler, StableDiffusionPix2PixZeroPipeline
 
 captioner_id = "Salesforce/blip-image-captioning-base"
 processor = BlipProcessor.from_pretrained(captioner_id)
 model = BlipForConditionalGeneration.from_pretrained(captioner_id, torch_dtype=torch.float16, low_cpu_mem_usage=True)
 
 sd_model_ckpt = "CompVis/stable-diffusion-v1-4"
-pipeline = StableVictorPix2PixZeroPipeline.from_pretrained(
+pipeline = StableDiffusionPix2PixZeroPipeline.from_pretrained(
     sd_model_ckpt,
     caption_generator=model,
     caption_processor=processor,
@@ -120,7 +120,7 @@ pipeline.enable_model_cpu_offload()
 Then, we load an input image for conditioning and obtain a suitable caption for it:
 
 ```py
-from VictorAI.utils import load_image
+from diffusers.utils import load_image
 
 img_url = "https://github.com/pix2pixzero/pix2pix-zero/raw/main/assets/test_images/cats/cat_6.png"
 raw_image = load_image(url).resize((512, 512))
@@ -223,9 +223,9 @@ We encourage you to play around with the different parameters supported by the
 Here, we need to use the same text encoder model used by the subsequent Stable Diffusion model.
 
 ```py
-from VictorAI import StableVictorPix2PixZeroPipeline
+from diffusers import StableDiffusionPix2PixZeroPipeline
 
-pipeline = StableVictorPix2PixZeroPipeline.from_pretrained(
+pipeline = StableDiffusionPix2PixZeroPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16
 )
 pipeline = pipeline.to("cuda")
@@ -263,7 +263,7 @@ And you're done! [Here](https://colab.research.google.com/drive/1tz2C1EdfZYAPlzX
 Now, you can use these embeddings directly while calling the pipeline:
 
 ```py
-from VictorAI import DDIMScheduler
+from diffusers import DDIMScheduler
 
 pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config)
 
@@ -283,7 +283,7 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## StableVictorPix2PixZeroPipeline
-[[autodoc]] StableVictorPix2PixZeroPipeline
+## StableDiffusionPix2PixZeroPipeline
+[[autodoc]] StableDiffusionPix2PixZeroPipeline
 	- __call__
 	- all

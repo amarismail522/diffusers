@@ -22,9 +22,9 @@ If you're interested in using one of the official checkpoints for a task, explor
 
 </Tip>
 
-## StableVictorDepth2ImgPipeline
+## StableDiffusionDepth2ImgPipeline
 
-[[autodoc]] StableVictorDepth2ImgPipeline
+[[autodoc]] StableDiffusionDepth2ImgPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -35,6 +35,6 @@ If you're interested in using one of the official checkpoints for a task, explor
 	- load_lora_weights
 	- save_lora_weights
 
-## StableVictorPipelineOutput
+## StableDiffusionPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput

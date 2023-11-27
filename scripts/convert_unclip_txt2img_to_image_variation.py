@@ -2,7 +2,7 @@ import argparse
 
 from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection
 
-from VictorAI import UnCLIPImageVariationPipeline, UnCLIPPipeline
+from diffusers import UnCLIPImageVariationPipeline, UnCLIPPipeline
 
 
 if __name__ == "__main__":

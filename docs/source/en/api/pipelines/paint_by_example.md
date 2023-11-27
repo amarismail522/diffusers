@@ -35,5 +35,5 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 	- all
 	- __call__
 
-## StableVictorPipelineOutput
-[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
+## StableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput

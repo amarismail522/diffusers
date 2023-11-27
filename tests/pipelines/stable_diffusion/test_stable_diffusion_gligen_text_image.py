@@ -26,16 +26,16 @@ from transformers import (
     CLIPVisionModelWithProjection,
 )
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
     EulerAncestralDiscreteScheduler,
-    StableVictorGLIGENTextImagePipeline,
+    StableDiffusionGLIGENTextImagePipeline,
     UNet2DConditionModel,
 )
-from VictorAI.pipelines.stable_diffusion import CLIPImageProjection
-from VictorAI.utils import load_image
-from VictorAI.utils.testing_utils import enable_full_determinism
+from diffusers.pipelines.stable_diffusion import CLIPImageProjection
+from diffusers.utils import load_image
+from diffusers.utils.testing_utils import enable_full_determinism
 
 from ..pipeline_params import (
     TEXT_TO_IMAGE_BATCH_PARAMS,
@@ -51,7 +51,7 @@ enable_full_determinism()
 class GligenTextImagePipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorGLIGENTextImagePipeline
+    pipeline_class = StableDiffusionGLIGENTextImagePipeline
     params = TEXT_TO_IMAGE_PARAMS | {"gligen_phrases", "gligen_images", "gligen_boxes"}
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -154,7 +154,7 @@ class GligenTextImagePipelineFastTests(
     def test_stable_diffusion_gligen_text_image_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorGLIGENTextImagePipeline(**components)
+        sd_pipe = StableDiffusionGLIGENTextImagePipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -170,7 +170,7 @@ class GligenTextImagePipelineFastTests(
     def test_stable_diffusion_gligen_k_euler_ancestral(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorGLIGENTextImagePipeline(**components)
+        sd_pipe = StableDiffusionGLIGENTextImagePipeline(**components)
         sd_pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)

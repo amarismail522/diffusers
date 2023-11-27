@@ -225,10 +225,10 @@ Once training is complete, you can use your newly trained model for inference:
 <hfoption id="PyTorch">
 
 ```py
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 import torch
 
-pipeline = StableVictorPipeline.from_pretrained("path/to/saved_model", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+pipeline = StableDiffusionPipeline.from_pretrained("path/to/saved_model", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 
 image = pipeline(prompt="yoda").images[0]
 image.save("yoda-pokemon.png")
@@ -242,9 +242,9 @@ import jax
 import numpy as np
 from flax.jax_utils import replicate
 from flax.training.common_utils import shard
-from VictorAI import FlaxStableVictorPipeline
+from diffusers import FlaxStableDiffusionPipeline
 
-pipeline, params = FlaxStableVictorPipeline.from_pretrained("path/to/saved_model", dtype=jax.numpy.bfloat16)
+pipeline, params = FlaxStableDiffusionPipeline.from_pretrained("path/to/saved_model", dtype=jax.numpy.bfloat16)
 
 prompt = "yoda pokemon"
 prng_seed = jax.random.PRNGKey(0)

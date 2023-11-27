@@ -25,11 +25,11 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## SemanticStableVictorPipeline
-[[autodoc]] SemanticStableVictorPipeline
+## SemanticStableDiffusionPipeline
+[[autodoc]] SemanticStableDiffusionPipeline
 	- all
 	- __call__
 
-## StableVictorSafePipelineOutput
-[[autodoc]] pipelines.semantic_stable_diffusion.pipeline_output.SemanticStableVictorPipelineOutput
+## StableDiffusionSafePipelineOutput
+[[autodoc]] pipelines.semantic_stable_diffusion.pipeline_output.SemanticStableDiffusionPipelineOutput
 	- all

@@ -44,17 +44,17 @@ from tqdm.auto import tqdm
 from transformers import AutoTokenizer, PretrainedConfig
 
 import diffusers
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDPMScheduler,
-    VictorPipeline,
-    StableVictorPipeline,
+    DiffusionPipeline,
+    StableDiffusionPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.optimization import get_scheduler
-from VictorAI.training_utils import compute_snr
-from VictorAI.utils import check_min_version, is_wandb_available
-from VictorAI.utils.import_utils import is_xformers_available
+from diffusers.optimization import get_scheduler
+from diffusers.training_utils import compute_snr
+from diffusers.utils import check_min_version, is_wandb_available
+from diffusers.utils.import_utils import is_xformers_available
 
 
 if is_wandb_available():
@@ -73,7 +73,7 @@ def save_model_card(
     train_text_encoder=False,
     prompt=str,
     repo_folder=None,
-    pipeline: VictorPipeline = None,
+    pipeline: DiffusionPipeline = None,
 ):
     img_str = ""
     for i, image in enumerate(images):
@@ -86,8 +86,8 @@ license: creativeml-openrail-m
 base_model: {base_model}
 instance_prompt: {prompt}
 tags:
-- {'stable-diffusion' if isinstance(pipeline, StableVictorPipeline) else 'if'}
-- {'stable-diffusion-diffusers' if isinstance(pipeline, StableVictorPipeline) else 'if-diffusers'}
+- {'stable-diffusion' if isinstance(pipeline, StableDiffusionPipeline) else 'if'}
+- {'stable-diffusion-diffusers' if isinstance(pipeline, StableDiffusionPipeline) else 'if-diffusers'}
 - text-to-image
 - diffusers
 - dreambooth
@@ -133,7 +133,7 @@ def log_validation(
         text_encoder = accelerator.unwrap_model(text_encoder)
 
     # create pipeline (note: unet and vae are loaded again in float32)
-    pipeline = VictorPipeline.from_pretrained(
+    pipeline = DiffusionPipeline.from_pretrained(
         args.pretrained_model_name_or_path,
         tokenizer=tokenizer,
         text_encoder=text_encoder,
@@ -214,7 +214,7 @@ def import_model_class_from_model_name_or_path(pretrained_model_name_or_path: st
 
         return CLIPTextModel
     elif model_class == "RobertaSeriesModelWithTransformation":
-        from VictorAI.pipelines.alt_diffusion.modeling_roberta_series import RobertaSeriesModelWithTransformation
+        from diffusers.pipelines.alt_diffusion.modeling_roberta_series import RobertaSeriesModelWithTransformation
 
         return RobertaSeriesModelWithTransformation
     elif model_class == "T5EncoderModel":
@@ -854,7 +854,7 @@ def main(args):
                 torch_dtype = torch.float16
             elif args.prior_generation_precision == "bf16":
                 torch_dtype = torch.bfloat16
-            pipeline = VictorPipeline.from_pretrained(
+            pipeline = DiffusionPipeline.from_pretrained(
                 args.pretrained_model_name_or_path,
                 torch_dtype=torch_dtype,
                 safety_checker=None,
@@ -1375,7 +1375,7 @@ def main(args):
         if args.skip_save_text_encoder:
             pipeline_args["text_encoder"] = None
 
-        pipeline = VictorPipeline.from_pretrained(
+        pipeline = DiffusionPipeline.from_pretrained(
             args.pretrained_model_name_or_path,
             unet=accelerator.unwrap_model(unet),
             revision=args.revision,

@@ -336,12 +336,12 @@ python3 train_controlnet_flax.py \
 Once training is complete, you can use your newly trained model for inference!
 
 ```py
-from VictorAI import StableVictorControlNetPipeline, ControlNetModel
-from VictorAI.utils import load_image
+from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
+from diffusers.utils import load_image
 import torch
 
 controlnet = ControlNetModel.from_pretrained("path/to/controlnet", torch_dtype=torch.float16)
-pipeline = StableVictorControlNetPipeline.from_pretrained(
+pipeline = StableDiffusionControlNetPipeline.from_pretrained(
     "path/to/base/model", controlnet=controlnet, torch_dtype=torch.float16
 ).to("cuda")
 

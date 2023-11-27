@@ -22,17 +22,17 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMScheduler,
     EulerAncestralDiscreteScheduler,
     LMSDiscreteScheduler,
     PNDMScheduler,
-    StableVictorInstructPix2PixPipeline,
+    StableDiffusionInstructPix2PixPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.image_processor import VaeImageProcessor
-from VictorAI.utils.testing_utils import (
+from diffusers.image_processor import VaeImageProcessor
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -53,10 +53,10 @@ from ..test_pipelines_common import PipelineKarrasSchedulerTesterMixin, Pipeline
 enable_full_determinism()
 
 
-class StableVictorInstructPix2PixPipelineFastTests(
+class StableDiffusionInstructPix2PixPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorInstructPix2PixPipeline
+    pipeline_class = StableDiffusionInstructPix2PixPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {"height", "width", "cross_attention_kwargs"}
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS
     image_params = IMAGE_TO_IMAGE_IMAGE_PARAMS
@@ -133,7 +133,7 @@ class StableVictorInstructPix2PixPipelineFastTests(
     def test_stable_diffusion_pix2pix_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorInstructPix2PixPipeline(**components)
+        sd_pipe = StableDiffusionInstructPix2PixPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -148,7 +148,7 @@ class StableVictorInstructPix2PixPipelineFastTests(
     def test_stable_diffusion_pix2pix_negative_prompt(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorInstructPix2PixPipeline(**components)
+        sd_pipe = StableDiffusionInstructPix2PixPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -166,7 +166,7 @@ class StableVictorInstructPix2PixPipelineFastTests(
     def test_stable_diffusion_pix2pix_multiple_init_images(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorInstructPix2PixPipeline(**components)
+        sd_pipe = StableDiffusionInstructPix2PixPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -193,7 +193,7 @@ class StableVictorInstructPix2PixPipelineFastTests(
         components["scheduler"] = EulerAncestralDiscreteScheduler(
             beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear"
         )
-        sd_pipe = StableVictorInstructPix2PixPipeline(**components)
+        sd_pipe = StableDiffusionInstructPix2PixPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -215,7 +215,7 @@ class StableVictorInstructPix2PixPipelineFastTests(
     # Overwrite the default test_latents_inputs because pix2pix encode the image differently
     def test_latents_input(self):
         components = self.get_dummy_components()
-        pipe = StableVictorInstructPix2PixPipeline(**components)
+        pipe = StableDiffusionInstructPix2PixPipeline(**components)
         pipe.image_processor = VaeImageProcessor(do_resize=False, do_normalize=False)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -265,7 +265,7 @@ class StableVictorInstructPix2PixPipelineFastTests(
 
 @slow
 @require_torch_gpu
-class StableVictorInstructPix2PixPipelineSlowTests(unittest.TestCase):
+class StableDiffusionInstructPix2PixPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -288,7 +288,7 @@ class StableVictorInstructPix2PixPipelineSlowTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_pix2pix_default(self):
-        pipe = StableVictorInstructPix2PixPipeline.from_pretrained(
+        pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
             "timbrooks/instruct-pix2pix", safety_checker=None
         )
         pipe.to(torch_device)
@@ -305,7 +305,7 @@ class StableVictorInstructPix2PixPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 1e-3
 
     def test_stable_diffusion_pix2pix_k_lms(self):
-        pipe = StableVictorInstructPix2PixPipeline.from_pretrained(
+        pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
             "timbrooks/instruct-pix2pix", safety_checker=None
         )
         pipe.scheduler = LMSDiscreteScheduler.from_config(pipe.scheduler.config)
@@ -323,7 +323,7 @@ class StableVictorInstructPix2PixPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 1e-3
 
     def test_stable_diffusion_pix2pix_ddim(self):
-        pipe = StableVictorInstructPix2PixPipeline.from_pretrained(
+        pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
             "timbrooks/instruct-pix2pix", safety_checker=None
         )
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
@@ -364,7 +364,7 @@ class StableVictorInstructPix2PixPipelineSlowTests(unittest.TestCase):
 
         callback_fn.has_been_called = False
 
-        pipe = StableVictorInstructPix2PixPipeline.from_pretrained(
+        pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
             "timbrooks/instruct-pix2pix", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -381,7 +381,7 @@ class StableVictorInstructPix2PixPipelineSlowTests(unittest.TestCase):
         torch.cuda.reset_max_memory_allocated()
         torch.cuda.reset_peak_memory_stats()
 
-        pipe = StableVictorInstructPix2PixPipeline.from_pretrained(
+        pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
             "timbrooks/instruct-pix2pix", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -402,7 +402,7 @@ class StableVictorInstructPix2PixPipelineSlowTests(unittest.TestCase):
         inputs["image"] = inputs["image"].resize((504, 504))
 
         model_id = "timbrooks/instruct-pix2pix"
-        pipe = StableVictorInstructPix2PixPipeline.from_pretrained(
+        pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
             model_id,
             safety_checker=None,
         )

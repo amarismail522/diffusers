@@ -22,14 +22,14 @@ import torch
 from PIL import Image
 from transformers import CLIPImageProcessor, CLIPVisionConfig, CLIPVisionModelWithProjection
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DPMSolverMultistepScheduler,
     PNDMScheduler,
-    StableVictorImageVariationPipeline,
+    StableDiffusionImageVariationPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -48,10 +48,10 @@ from ..test_pipelines_common import PipelineKarrasSchedulerTesterMixin, Pipeline
 enable_full_determinism()
 
 
-class StableVictorImageVariationPipelineFastTests(
+class StableDiffusionImageVariationPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorImageVariationPipeline
+    pipeline_class = StableDiffusionImageVariationPipeline
     params = IMAGE_VARIATION_PARAMS
     batch_params = IMAGE_VARIATION_BATCH_PARAMS
     image_params = frozenset([])
@@ -124,7 +124,7 @@ class StableVictorImageVariationPipelineFastTests(
     def test_stable_diffusion_img_variation_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorImageVariationPipeline(**components)
+        sd_pipe = StableDiffusionImageVariationPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -140,7 +140,7 @@ class StableVictorImageVariationPipelineFastTests(
     def test_stable_diffusion_img_variation_multiple_images(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorImageVariationPipeline(**components)
+        sd_pipe = StableDiffusionImageVariationPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -163,7 +163,7 @@ class StableVictorImageVariationPipelineFastTests(
 
 @slow
 @require_torch_gpu
-class StableVictorImageVariationPipelineSlowTests(unittest.TestCase):
+class StableDiffusionImageVariationPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -188,7 +188,7 @@ class StableVictorImageVariationPipelineSlowTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_img_variation_pipeline_default(self):
-        sd_pipe = StableVictorImageVariationPipeline.from_pretrained(
+        sd_pipe = StableDiffusionImageVariationPipeline.from_pretrained(
             "lambdalabs/sd-image-variations-diffusers", safety_checker=None
         )
         sd_pipe = sd_pipe.to(torch_device)
@@ -232,7 +232,7 @@ class StableVictorImageVariationPipelineSlowTests(unittest.TestCase):
 
         callback_fn.has_been_called = False
 
-        pipe = StableVictorImageVariationPipeline.from_pretrained(
+        pipe = StableDiffusionImageVariationPipeline.from_pretrained(
             "lambdalabs/sd-image-variations-diffusers",
             safety_checker=None,
             torch_dtype=torch.float16,
@@ -255,7 +255,7 @@ class StableVictorImageVariationPipelineSlowTests(unittest.TestCase):
         torch.cuda.reset_max_memory_allocated()
         torch.cuda.reset_peak_memory_stats()
 
-        pipe = StableVictorImageVariationPipeline.from_pretrained(
+        pipe = StableDiffusionImageVariationPipeline.from_pretrained(
             "lambdalabs/sd-image-variations-diffusers", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -273,7 +273,7 @@ class StableVictorImageVariationPipelineSlowTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class StableVictorImageVariationPipelineNightlyTests(unittest.TestCase):
+class StableDiffusionImageVariationPipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -298,7 +298,7 @@ class StableVictorImageVariationPipelineNightlyTests(unittest.TestCase):
         return inputs
 
     def test_img_variation_pndm(self):
-        sd_pipe = StableVictorImageVariationPipeline.from_pretrained("fusing/sd-image-variations-diffusers")
+        sd_pipe = StableDiffusionImageVariationPipeline.from_pretrained("fusing/sd-image-variations-diffusers")
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -313,7 +313,7 @@ class StableVictorImageVariationPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_img_variation_dpm(self):
-        sd_pipe = StableVictorImageVariationPipeline.from_pretrained("fusing/sd-image-variations-diffusers")
+        sd_pipe = StableDiffusionImageVariationPipeline.from_pretrained("fusing/sd-image-variations-diffusers")
         sd_pipe.scheduler = DPMSolverMultistepScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)

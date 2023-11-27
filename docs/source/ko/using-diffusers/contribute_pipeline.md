@@ -18,32 +18,32 @@ specific language governing permissions and limitations under the License.
 
 </Tip>
 
-커뮤니티 파이프라인을 사용하면 [`VictorPipeline`] 위에 원하는 추가 기능을 추가할 수 있습니다. `VictorPipeline` 위에 구축할 때의 가장 큰 장점은 누구나 인수를 하나만 추가하면 파이프라인을 로드하고 사용할 수 있어 커뮤니티가 매우 쉽게 접근할 수 있다는 것입니다.
+커뮤니티 파이프라인을 사용하면 [`DiffusionPipeline`] 위에 원하는 추가 기능을 추가할 수 있습니다. `DiffusionPipeline` 위에 구축할 때의 가장 큰 장점은 누구나 인수를 하나만 추가하면 파이프라인을 로드하고 사용할 수 있어 커뮤니티가 매우 쉽게 접근할 수 있다는 것입니다.
 
 이번 가이드에서는 커뮤니티 파이프라인을 생성하는 방법과 작동 원리를 설명합니다.
 간단하게 설명하기 위해 `UNet`이 단일 forward pass를 수행하고 스케줄러를 한 번 호출하는 "one-step" 파이프라인을 만들겠습니다.
 
 ## 파이프라인 초기화
 
-커뮤니티 파이프라인을 위한 `one_step_unet.py` 파일을 생성하는 것으로 시작합니다. 이 파일에서, Hub에서 모델 가중치와 스케줄러 구성을 로드할 수 있도록 [`VictorPipeline`]을 상속하는 파이프라인 클래스를 생성합니다. one-step 파이프라인에는 `UNet`과 스케줄러가 필요하므로 이를 `__init__` 함수에 인수로 추가해야합니다:
+커뮤니티 파이프라인을 위한 `one_step_unet.py` 파일을 생성하는 것으로 시작합니다. 이 파일에서, Hub에서 모델 가중치와 스케줄러 구성을 로드할 수 있도록 [`DiffusionPipeline`]을 상속하는 파이프라인 클래스를 생성합니다. one-step 파이프라인에는 `UNet`과 스케줄러가 필요하므로 이를 `__init__` 함수에 인수로 추가해야합니다:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
 
-class UnetSchedulerOneForwardPipeline(VictorPipeline):
+class UnetSchedulerOneForwardPipeline(DiffusionPipeline):
     def __init__(self, unet, scheduler):
         super().__init__()
 ```
 
-파이프라인과 그 구성요소(`unet` and `scheduler`)를 [`~VictorPipeline.save_pretrained`]으로 저장할 수 있도록 하려면 `register_modules` 함수에 추가하세요:
+파이프라인과 그 구성요소(`unet` and `scheduler`)를 [`~DiffusionPipeline.save_pretrained`]으로 저장할 수 있도록 하려면 `register_modules` 함수에 추가하세요:
 
 ```diff
-  from VictorAI import VictorPipeline
+  from diffusers import DiffusionPipeline
   import torch
 
-  class UnetSchedulerOneForwardPipeline(VictorPipeline):
+  class UnetSchedulerOneForwardPipeline(DiffusionPipeline):
       def __init__(self, unet, scheduler):
           super().__init__()
 
@@ -57,11 +57,11 @@ class UnetSchedulerOneForwardPipeline(VictorPipeline):
 Forward pass 에서는(`__call__`로 정의하는 것이 좋습니다) 원하는 기능을 추가할 수 있는 완전한 창작 자유가 있습니다. 우리의 놀라운 one-step 파이프라인의 경우, 임의의 이미지를 생성하고 `timestep=1`을 설정하여 `unet`과 `scheduler`를 한 번만 호출합니다:
 
 ```diff
-  from VictorAI import VictorPipeline
+  from diffusers import DiffusionPipeline
   import torch
 
 
-  class UnetSchedulerOneForwardPipeline(VictorPipeline):
+  class UnetSchedulerOneForwardPipeline(DiffusionPipeline):
       def __init__(self, unet, scheduler):
           super().__init__()
 
@@ -82,7 +82,7 @@ Forward pass 에서는(`__call__`로 정의하는 것이 좋습니다) 원하는
 끝났습니다! 🚀 이제 이 파이프라인에 `unet`과 `scheduler`를 전달하여 실행할 수 있습니다:
 
 ```python
-from VictorAI import DDPMScheduler, UNet2DModel
+from diffusers import DDPMScheduler, UNet2DModel
 
 scheduler = DDPMScheduler()
 unet = UNet2DModel()
@@ -107,18 +107,18 @@ output = pipeline()
 병합이 되면, `diffusers >= 0.4.0`이 설치된 사용자라면 누구나 `custom_pipeline` 인수에 지정하여 이 파이프라인을 마술처럼 🪄 사용할 수 있습니다:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipe = VictorPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipeline="one_step_unet")
+pipe = DiffusionPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipeline="one_step_unet")
 pipe()
 ```
 
 커뮤니티 파이프라인을 공유하는 또 다른 방법은 Hub 에서 선호하는 [모델 리포지토리](https://huggingface.co/docs/hub/models-uploading)에 직접  `one_step_unet.py` 파일을 업로드하는 것입니다. `one_step_unet.py` 파일을 지정하는 대신 모델 저장소 id를 `custom_pipeline` 인수에 전달하세요:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipeline = VictorPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipeline="stevhliu/one_step_unet")
+pipeline = DiffusionPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipeline="stevhliu/one_step_unet")
 ```
 
 다음 표에서 두 가지 공유 워크플로우를 비교하여 자신에게 가장 적합한 옵션을 결정하는 데 도움이 되는 정보를 확인하세요:
@@ -131,13 +131,13 @@ pipeline = VictorPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipel
 
 <Tip>
 
-💡 커뮤니티 파이프라인 파일에 원하는 패키지를 사용할 수 있습니다. 사용자가 패키지를 설치하기만 하면 모든 것이 정상적으로 작동합니다. 파이프라인이 자동으로 감지되므로 `VictorPipeline`에서 상속하는 파이프라인 클래스가 하나만 있는지 확인하세요.
+💡 커뮤니티 파이프라인 파일에 원하는 패키지를 사용할 수 있습니다. 사용자가 패키지를 설치하기만 하면 모든 것이 정상적으로 작동합니다. 파이프라인이 자동으로 감지되므로 `DiffusionPipeline`에서 상속하는 파이프라인 클래스가 하나만 있는지 확인하세요.
 
 </Tip>
 
 ## 커뮤니티 파이프라인은 어떻게 작동하나요?
 
-커뮤니티 파이프라인은 [`VictorPipeline`]을 상속하는 클래스입니다:
+커뮤니티 파이프라인은 [`DiffusionPipeline`]을 상속하는 클래스입니다:
 
 - [`custom_pipeline`] 인수로 로드할 수 있습니다.
 - 모델 가중치 및 스케줄러 구성은 [`pretrained_model_name_or_path`]에서 로드됩니다.
@@ -146,7 +146,7 @@ pipeline = VictorPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipel
 공식 저장소에서 모든 파이프라인 구성 요소 가중치를 로드할 수 없는 경우가 있습니다. 이 경우 다른 구성 요소는 파이프라인에 직접 전달해야 합니다:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 from transformers import CLIPFeatureExtractor, CLIPModel
 
 model_id = "CompVis/stable-diffusion-v1-4"
@@ -155,7 +155,7 @@ clip_model_id = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
 feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_id)
 clip_model = CLIPModel.from_pretrained(clip_model_id, torch_dtype=torch.float16)
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     model_id,
     custom_pipeline="clip_guided_stable_diffusion",
     clip_model=clip_model,
@@ -174,7 +174,7 @@ if custom_pipeline is not None:
     pipeline_class = get_class_from_dynamic_module(
         custom_pipeline, module_file=CUSTOM_PIPELINE_FILE_NAME, cache_dir=custom_pipeline
     )
-elif cls != VictorPipeline:
+elif cls != DiffusionPipeline:
     pipeline_class = cls
 else:
     diffusers_module = importlib.import_module(cls.__module__.split(".")[0])

@@ -22,18 +22,18 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     ControlNetModel,
     DDIMScheduler,
     EulerDiscreteScheduler,
     LCMScheduler,
-    StableVictorControlNetPipeline,
+    StableDiffusionControlNetPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
-from VictorAI.utils.import_utils import is_xformers_available
-from VictorAI.utils.testing_utils import (
+from diffusers.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
+from diffusers.utils.import_utils import is_xformers_available
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     load_image,
     load_numpy,
@@ -44,7 +44,7 @@ from VictorAI.utils.testing_utils import (
     slow,
     torch_device,
 )
-from VictorAI.utils.torch_utils import randn_tensor
+from diffusers.utils.torch_utils import randn_tensor
 
 from ..pipeline_params import (
     IMAGE_TO_IMAGE_IMAGE_PARAMS,
@@ -70,7 +70,7 @@ def _test_stable_diffusion_compile(in_queue, out_queue, timeout):
 
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.to("cuda")
@@ -111,7 +111,7 @@ def _test_stable_diffusion_compile(in_queue, out_queue, timeout):
 class ControlNetPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorControlNetPipeline
+    pipeline_class = StableDiffusionControlNetPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = IMAGE_TO_IMAGE_IMAGE_PARAMS
@@ -227,7 +227,7 @@ class ControlNetPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableVictorControlNetPipeline(**components)
+        sd_pipe = StableDiffusionControlNetPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -246,10 +246,10 @@ class ControlNetPipelineFastTests(
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
 
-class StableVictorMultiControlNetPipelineFastTests(
+class StableDiffusionMultiControlNetPipelineFastTests(
     PipelineTesterMixin, PipelineKarrasSchedulerTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorControlNetPipeline
+    pipeline_class = StableDiffusionControlNetPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = frozenset([])  # TO_DO: add image_params once refactored VaeImageProcessor.preprocess
@@ -435,10 +435,10 @@ class StableVictorMultiControlNetPipelineFastTests(
                 pass
 
 
-class StableVictorMultiControlNetOneModelPipelineFastTests(
+class StableDiffusionMultiControlNetOneModelPipelineFastTests(
     PipelineTesterMixin, PipelineKarrasSchedulerTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorControlNetPipeline
+    pipeline_class = StableDiffusionControlNetPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = frozenset([])  # TO_DO: add image_params once refactored VaeImageProcessor.preprocess
@@ -622,7 +622,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_canny(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -649,7 +649,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_depth(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-depth")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -676,7 +676,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_hed(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-hed")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -703,7 +703,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_mlsd(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-mlsd")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -730,7 +730,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_normal(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-normal")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -757,7 +757,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_openpose(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-openpose")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -784,7 +784,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_scribble(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-scribble")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -811,7 +811,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_seg(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-seg")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -842,7 +842,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
 
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-seg")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.set_progress_bar_config(disable=None)
@@ -868,7 +868,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_canny_guess_mode(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -900,7 +900,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_canny_guess_mode_euler(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
@@ -938,7 +938,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
     def test_v11_shuffle_global_pool_conditions(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11e_sd15_shuffle")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -968,14 +968,14 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
 
     def test_load_local(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_canny")
-        pipe_1 = StableVictorControlNetPipeline.from_pretrained(
+        pipe_1 = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
 
         controlnet = ControlNetModel.from_single_file(
             "https://huggingface.co/lllyasviel/ControlNet-v1-1/blob/main/control_v11p_sd15_canny.pth"
         )
-        pipe_2 = StableVictorControlNetPipeline.from_single_file(
+        pipe_2 = StableDiffusionControlNetPipeline.from_single_file(
             "https://huggingface.co/runwayml/stable-diffusion-v1-5/blob/main/v1-5-pruned-emaonly.safetensors",
             safety_checker=None,
             controlnet=controlnet,
@@ -1005,7 +1005,7 @@ class ControlNetPipelineSlowTests(unittest.TestCase):
 
 @slow
 @require_torch_gpu
-class StableVictorMultiControlNetPipelineSlowTests(unittest.TestCase):
+class StableDiffusionMultiControlNetPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -1015,7 +1015,7 @@ class StableVictorMultiControlNetPipelineSlowTests(unittest.TestCase):
         controlnet_canny = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny")
         controlnet_pose = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-openpose")
 
-        pipe = StableVictorControlNetPipeline.from_pretrained(
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=[controlnet_pose, controlnet_canny]
         )
         pipe.enable_model_cpu_offload()

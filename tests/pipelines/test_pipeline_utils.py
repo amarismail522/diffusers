@@ -1,6 +1,6 @@
 import unittest
 
-from VictorAI.pipelines.pipeline_utils import is_safetensors_compatible
+from diffusers.pipelines.pipeline_utils import is_safetensors_compatible
 
 
 class IsSafetensorsCompatibleTests(unittest.TestCase):

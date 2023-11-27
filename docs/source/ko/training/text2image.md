@@ -177,15 +177,15 @@ Text-to-image 모델 파인튜닝을 위해, 대규모 모델 학습을 가속�
 
 ## 추론
 
-허브의 모델 경로 또는 모델 이름을 [`StableVictorPipeline`]에 전달하여 추론을 위해 파인 튜닝된 모델을 불러올 수 있습니다:
+허브의 모델 경로 또는 모델 이름을 [`StableDiffusionPipeline`]에 전달하여 추론을 위해 파인 튜닝된 모델을 불러올 수 있습니다:
 
 <frameworkcontent>
 <pt>
 ```python
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 
 model_path = "path_to_saved_model"
-pipe = StableVictorPipeline.from_pretrained(model_path, torch_dtype=torch.float16)
+pipe = StableDiffusionPipeline.from_pretrained(model_path, torch_dtype=torch.float16)
 pipe.to("cuda")
 
 image = pipe(prompt="yoda").images[0]
@@ -198,10 +198,10 @@ import jax
 import numpy as np
 from flax.jax_utils import replicate
 from flax.training.common_utils import shard
-from VictorAI import FlaxStableVictorPipeline
+from diffusers import FlaxStableDiffusionPipeline
 
 model_path = "path_to_saved_model"
-pipe, params = FlaxStableVictorPipeline.from_pretrained(model_path, dtype=jax.numpy.bfloat16)
+pipe, params = FlaxStableDiffusionPipeline.from_pretrained(model_path, dtype=jax.numpy.bfloat16)
 
 prompt = "yoda pokemon"
 prng_seed = jax.random.PRNGKey(0)

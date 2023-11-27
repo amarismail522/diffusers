@@ -28,21 +28,21 @@ This model was contributed by the community contributor [HimariO](https://github
 
 | Pipeline | Tasks | Demo
 |---|---|:---:|
-| [StableVictorAdapterPipeline](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/t2i_adapter/pipeline_stable_diffusion_adapter.py) | *Text-to-Image Generation with T2I-Adapter Conditioning* | -
-| [StableVictorXLAdapterPipeline](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/t2i_adapter/pipeline_stable_diffusion_xl_adapter.py) | *Text-to-Image Generation with T2I-Adapter Conditioning on StableVictor-XL* | -
+| [StableDiffusionAdapterPipeline](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/t2i_adapter/pipeline_stable_diffusion_adapter.py) | *Text-to-Image Generation with T2I-Adapter Conditioning* | -
+| [StableDiffusionXLAdapterPipeline](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/t2i_adapter/pipeline_stable_diffusion_xl_adapter.py) | *Text-to-Image Generation with T2I-Adapter Conditioning on StableDiffusion-XL* | -
 
-## Usage example with the base model of StableVictor-1.4/1.5
+## Usage example with the base model of StableDiffusion-1.4/1.5
 
-In the following we give a simple example of how to use a *T2I-Adapter* checkpoint with Diffusers for inference based on StableVictor-1.4/1.5.
+In the following we give a simple example of how to use a *T2I-Adapter* checkpoint with Diffusers for inference based on StableDiffusion-1.4/1.5.
 All adapters use the same pipeline.
 
  1. Images are first converted into the appropriate *control image* format.
- 2. The *control image* and *prompt* are passed to the [`StableVictorAdapterPipeline`].
+ 2. The *control image* and *prompt* are passed to the [`StableDiffusionAdapterPipeline`].
 
 Let's have a look at a simple example using the [Color Adapter](https://huggingface.co/TencentARC/t2iadapter_color_sd14v1).
 
 ```python
-from VictorAI.utils import load_image, make_image_grid
+from diffusers.utils import load_image, make_image_grid
 
 image = load_image("https://huggingface.co/datasets/diffusers/docs-images/resolve/main/t2i-adapter/color_ref.png")
 ```
@@ -68,10 +68,10 @@ Next, create the adapter pipeline
 
 ```py
 import torch
-from VictorAI import StableVictorAdapterPipeline, T2IAdapter
+from diffusers import StableDiffusionAdapterPipeline, T2IAdapter
 
 adapter = T2IAdapter.from_pretrained("TencentARC/t2iadapter_color_sd14v1", torch_dtype=torch.float16)
-pipe = StableVictorAdapterPipeline.from_pretrained(
+pipe = StableDiffusionAdapterPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     adapter=adapter,
     torch_dtype=torch.float16,
@@ -95,18 +95,18 @@ make_image_grid([image, color_palette, out_image], rows=1, cols=3)
 
 ![img](https://huggingface.co/datasets/diffusers/docs-images/resolve/main/t2i-adapter/color_output.png)
 
-## Usage example with the base model of StableVictor-XL
+## Usage example with the base model of StableDiffusion-XL
 
-In the following we give a simple example of how to use a *T2I-Adapter* checkpoint with Diffusers for inference based on StableVictor-XL.
+In the following we give a simple example of how to use a *T2I-Adapter* checkpoint with Diffusers for inference based on StableDiffusion-XL.
 All adapters use the same pipeline.
 
  1. Images are first downloaded into the appropriate *control image* format.
- 2. The *control image* and *prompt* are passed to the [`StableVictorXLAdapterPipeline`].
+ 2. The *control image* and *prompt* are passed to the [`StableDiffusionXLAdapterPipeline`].
 
 Let's have a look at a simple example using the [Sketch Adapter](https://huggingface.co/Adapter/t2iadapter/tree/main/sketch_sdxl_1.0).
 
 ```python
-from VictorAI.utils import load_image, make_image_grid
+from diffusers.utils import load_image, make_image_grid
 
 sketch_image = load_image("https://huggingface.co/Adapter/t2iadapter/resolve/main/sketch.png").convert("L")
 ```
@@ -117,9 +117,9 @@ Then, create the adapter pipeline
 
 ```py
 import torch
-from VictorAI import (
+from diffusers import (
     T2IAdapter,
-    StableVictorXLAdapterPipeline,
+    StableDiffusionXLAdapterPipeline,
     DDPMScheduler
 )
 
@@ -127,7 +127,7 @@ model_id = "stabilityai/stable-diffusion-xl-base-1.0"
 adapter = T2IAdapter.from_pretrained("Adapter/t2iadapter", subfolder="sketch_sdxl_1.0", torch_dtype=torch.float16, adapter_type="full_adapter_xl")
 scheduler = DDPMScheduler.from_pretrained(model_id, subfolder="scheduler")
 
-pipe = StableVictorXLAdapterPipeline.from_pretrained(
+pipe = StableDiffusionXLAdapterPipeline.from_pretrained(
     model_id, adapter=adapter, safety_checker=None, torch_dtype=torch.float16, variant="fp16", scheduler=scheduler
 )
 
@@ -182,7 +182,7 @@ Non-diffusers checkpoints can be found under [TencentARC/T2I-Adapter](https://hu
 Here we use the keypose adapter for the character posture and the depth adapter for creating the scene.
 
 ```py
-from VictorAI.utils import load_image, make_image_grid
+from diffusers.utils import load_image, make_image_grid
 
 cond_keypose = load_image(
     "https://huggingface.co/datasets/diffusers/docs-images/resolve/main/t2i-adapter/keypose_sample_input.png"
@@ -207,7 +207,7 @@ The two control images look as such:
 
 ```py
 import torch
-from VictorAI import StableVictorAdapterPipeline, MultiAdapter, T2IAdapter
+from diffusers import StableDiffusionAdapterPipeline, MultiAdapter, T2IAdapter
 
 adapters = MultiAdapter(
     [
@@ -217,7 +217,7 @@ adapters = MultiAdapter(
 )
 adapters = adapters.to(torch.float16)
 
-pipe = StableVictorAdapterPipeline.from_pretrained(
+pipe = StableDiffusionAdapterPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     torch_dtype=torch.float16,
     adapter=adapters,
@@ -236,8 +236,8 @@ T2I-Adapter is similar to [ControlNet](https://huggingface.co/docs/diffusers/mai
 T2I-Adapter uses a smaller auxiliary network which is only run once for the entire diffusion process.
 However, T2I-Adapter performs slightly worse than ControlNet.
 
-## StableVictorAdapterPipeline
-[[autodoc]] StableVictorAdapterPipeline
+## StableDiffusionAdapterPipeline
+[[autodoc]] StableDiffusionAdapterPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -247,8 +247,8 @@ However, T2I-Adapter performs slightly worse than ControlNet.
 	- enable_xformers_memory_efficient_attention
 	- disable_xformers_memory_efficient_attention
 
-## StableVictorXLAdapterPipeline
-[[autodoc]] StableVictorXLAdapterPipeline
+## StableDiffusionXLAdapterPipeline
+[[autodoc]] StableDiffusionXLAdapterPipeline
 	- all
 	- __call__
 	- enable_attention_slicing

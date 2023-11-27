@@ -16,9 +16,9 @@
 import gc
 import unittest
 
-from VictorAI import FlaxDPMSolverMultistepScheduler, FlaxStableVictorPipeline
-from VictorAI.utils import is_flax_available
-from VictorAI.utils.testing_utils import nightly, require_flax
+from diffusers import FlaxDPMSolverMultistepScheduler, FlaxStableDiffusionPipeline
+from diffusers.utils import is_flax_available
+from diffusers.utils.testing_utils import nightly, require_flax
 
 
 if is_flax_available():
@@ -30,14 +30,14 @@ if is_flax_available():
 
 @nightly
 @require_flax
-class FlaxStableVictor2PipelineIntegrationTests(unittest.TestCase):
+class FlaxStableDiffusion2PipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
         gc.collect()
 
     def test_stable_diffusion_flax(self):
-        sd_pipe, params = FlaxStableVictorPipeline.from_pretrained(
+        sd_pipe, params = FlaxStableDiffusionPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2",
             revision="bf16",
             dtype=jnp.bfloat16,
@@ -68,7 +68,7 @@ class FlaxStableVictor2PipelineIntegrationTests(unittest.TestCase):
 
 @nightly
 @require_flax
-class FlaxStableVictor2PipelineNightlyTests(unittest.TestCase):
+class FlaxStableDiffusion2PipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -77,7 +77,7 @@ class FlaxStableVictor2PipelineNightlyTests(unittest.TestCase):
     def test_stable_diffusion_dpm_flax(self):
         model_id = "stabilityai/stable-diffusion-2"
         scheduler, scheduler_params = FlaxDPMSolverMultistepScheduler.from_pretrained(model_id, subfolder="scheduler")
-        sd_pipe, params = FlaxStableVictorPipeline.from_pretrained(
+        sd_pipe, params = FlaxStableDiffusionPipeline.from_pretrained(
             model_id,
             scheduler=scheduler,
             revision="bf16",

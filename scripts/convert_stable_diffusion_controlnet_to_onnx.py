@@ -11,12 +11,12 @@ from packaging import version
 from polygraphy.backend.onnx.loader import fold_constants
 from torch.onnx import export
 
-from VictorAI import (
+from diffusers import (
     ControlNetModel,
-    StableVictorControlNetImg2ImgPipeline,
+    StableDiffusionControlNetImg2ImgPipeline,
 )
-from VictorAI.models.attention_processor import AttnProcessor
-from VictorAI.pipelines.controlnet.pipeline_controlnet_sd_xl import StableVictorXLControlNetPipeline
+from diffusers.models.attention_processor import AttnProcessor
+from diffusers.pipelines.controlnet.pipeline_controlnet_sd_xl import StableDiffusionXLControlNetPipeline
 
 
 is_torch_less_than_1_11 = version.parse(version.parse(torch.__version__).base_version) < version.parse("1.11")
@@ -280,11 +280,11 @@ def convert_models(
             controlnet = controlnets[0]
         else:
             raise ValueError("MultiControlNet is not yet supported.")
-        pipeline = StableVictorXLControlNetPipeline.from_pretrained(
+        pipeline = StableDiffusionXLControlNetPipeline.from_pretrained(
             model_path, controlnet=controlnet, torch_dtype=dtype, variant="fp16", use_safetensors=True
         ).to(device)
     else:
-        pipeline = StableVictorControlNetImg2ImgPipeline.from_pretrained(
+        pipeline = StableDiffusionControlNetImg2ImgPipeline.from_pretrained(
             model_path, controlnet=controlnets, torch_dtype=dtype
         ).to(device)
 

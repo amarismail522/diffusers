@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License.
 
 # 파이프라인, 모델, 스케줄러 불러오기
 
-기본적으로 diffusion 모델은 다양한 컴포넌트들(모델, 토크나이저, 스케줄러) 간의 복잡한 상호작용을 기반으로 동작합니다. 디퓨저스(Diffusers)는 이러한 diffusion 모델을 보다 쉽고 간편한 API로 제공하는 것을 목표로 설계되었습니다. [`VictorPipeline`]은 diffusion 모델이 갖는 복잡성을 하나의 파이프라인 API로 통합하고, 동시에 이를 구성하는 각각의 컴포넌트들을 태스크에 맞춰 유연하게 커스터마이징할 수 있도록 지원하고 있습니다.
+기본적으로 diffusion 모델은 다양한 컴포넌트들(모델, 토크나이저, 스케줄러) 간의 복잡한 상호작용을 기반으로 동작합니다. 디퓨저스(Diffusers)는 이러한 diffusion 모델을 보다 쉽고 간편한 API로 제공하는 것을 목표로 설계되었습니다. [`DiffusionPipeline`]은 diffusion 모델이 갖는 복잡성을 하나의 파이프라인 API로 통합하고, 동시에 이를 구성하는 각각의 컴포넌트들을 태스크에 맞춰 유연하게 커스터마이징할 수 있도록 지원하고 있습니다.
 
-diffusion 모델의 훈련과 추론에 필요한 모든 것은 [`VictorPipeline.from_pretrained`] 메서드를 통해 접근할 수 있습니다. (이 말의 의미는 다음 단락에서 보다 자세하게 다뤄보도록 하겠습니다.)
+diffusion 모델의 훈련과 추론에 필요한 모든 것은 [`DiffusionPipeline.from_pretrained`] 메서드를 통해 접근할 수 있습니다. (이 말의 의미는 다음 단락에서 보다 자세하게 다뤄보도록 하겠습니다.)
 
 이 문서에서는 설명할 내용은 다음과 같습니다.
 
@@ -32,35 +32,35 @@ diffusion 모델의 훈련과 추론에 필요한 모든 것은 [`VictorPipeline
 
 <Tip>
 
-💡 [`VictorPipeline`] 클래스가 동작하는 방식에 보다 자세한 내용이 궁금하다면,  [VictorPipeline explained](#VictorPipeline에-대해-알아보기) 섹션을 확인해보세요.
+💡 [`DiffusionPipeline`] 클래스가 동작하는 방식에 보다 자세한 내용이 궁금하다면,  [DiffusionPipeline explained](#diffusionpipeline에-대해-알아보기) 섹션을 확인해보세요.
 
 </Tip>
 
-[`VictorPipeline`] 클래스는 diffusion 모델을 [허브](https://huggingface.co/models?library=diffusers)로부터 불러오는 가장 심플하면서 보편적인 방식입니다. [`VictorPipeline.from_pretrained`] 메서드는 적합한 파이프라인 클래스를 자동으로 탐지하고, 필요한 구성요소(configuration)와 가중치(weight) 파일들을 다운로드하고 캐싱한 다음, 해당 파이프라인 인스턴스를 반환합니다.
+[`DiffusionPipeline`] 클래스는 diffusion 모델을 [허브](https://huggingface.co/models?library=diffusers)로부터 불러오는 가장 심플하면서 보편적인 방식입니다. [`DiffusionPipeline.from_pretrained`] 메서드는 적합한 파이프라인 클래스를 자동으로 탐지하고, 필요한 구성요소(configuration)와 가중치(weight) 파일들을 다운로드하고 캐싱한 다음, 해당 파이프라인 인스턴스를 반환합니다.
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipe = VictorPipeline.from_pretrained(repo_id)
+pipe = DiffusionPipeline.from_pretrained(repo_id)
 ```
 
-물론 [`VictorPipeline`] 클래스를 사용하지 않고, 명시적으로 직접 해당 파이프라인 클래스를 불러오는 것도 가능합니다. 아래 예시 코드는 위 예시와 동일한 인스턴스를 반환합니다. 
+물론 [`DiffusionPipeline`] 클래스를 사용하지 않고, 명시적으로 직접 해당 파이프라인 클래스를 불러오는 것도 가능합니다. 아래 예시 코드는 위 예시와 동일한 인스턴스를 반환합니다. 
 
 ```python
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipe = StableVictorPipeline.from_pretrained(repo_id)
+pipe = StableDiffusionPipeline.from_pretrained(repo_id)
 ```
 
 [CompVis/stable-diffusion-v1-4](https://huggingface.co/CompVis/stable-diffusion-v1-4)이나 [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) 같은 체크포인트들의 경우, 하나 이상의 다양한 태스크에 활용될 수 있습니다. (예를 들어 위의 두 체크포인트의 경우, text-to-image와 image-to-image에 모두 활용될 수 있습니다.)  만약 이러한 체크포인트들을 기본 설정 태스크가 아닌 다른 태스크에 활용하고자 한다면, 해당 태스크에 대응되는 파이프라인(task-specific pipeline)을 사용해야 합니다.
 
 ```python
-from VictorAI import StableVictorImg2ImgPipeline
+from diffusers import StableDiffusionImg2ImgPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipe = StableVictorImg2ImgPipeline.from_pretrained(repo_id)
+pipe = StableDiffusionImg2ImgPipeline.from_pretrained(repo_id)
 ```
 
 
@@ -74,16 +74,16 @@ git lfs install
 git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
 ```
 
-그런 다음 해당 로컬 경로를 [`~VictorPipeline.from_pretrained`] 메서드에 전달합니다.
+그런 다음 해당 로컬 경로를 [`~DiffusionPipeline.from_pretrained`] 메서드에 전달합니다.
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 repo_id = "./stable-diffusion-v1-5"
-stable_diffusion = VictorPipeline.from_pretrained(repo_id)
+stable_diffusion = DiffusionPipeline.from_pretrained(repo_id)
 ```
 
-위의 예시코드처럼 만약 `repo_id`가 로컬 패스(local path)라면, [`~VictorPipeline.from_pretrained`] 메서드는 이를 자동으로 감지하여 허브에서 파일을 다운로드하지 않습니다. 만약 로컬 디스크에 저장된 파이프라인 체크포인트가 최신 버전이 아닐 경우에도, 최신 버전을 다운로드하지 않고 기존 로컬 디스크에 저장된 체크포인트를 사용한다는 것을 의미합니다.
+위의 예시코드처럼 만약 `repo_id`가 로컬 패스(local path)라면, [`~DiffusionPipeline.from_pretrained`] 메서드는 이를 자동으로 감지하여 허브에서 파일을 다운로드하지 않습니다. 만약 로컬 디스크에 저장된 파이프라인 체크포인트가 최신 버전이 아닐 경우에도, 최신 버전을 다운로드하지 않고 기존 로컬 디스크에 저장된 체크포인트를 사용한다는 것을 의미합니다.
 
 
 
@@ -98,25 +98,25 @@ stable_diffusion = VictorPipeline.from_pretrained(repo_id)
 어떤 스케줄러들이 호환가능한지는 `compatibles` 속성을 통해 확인할 수 있습니다.
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion = VictorPipeline.from_pretrained(repo_id)
+stable_diffusion = DiffusionPipeline.from_pretrained(repo_id)
 stable_diffusion.scheduler.compatibles
 ```
 
 이번에는 [`SchedulerMixin.from_pretrained`] 메서드를 사용해서, 기존 기본 스케줄러였던 [`PNDMScheduler`]를 보다 우수한 성능의 [`EulerDiscreteScheduler`]로 바꿔봅시다. 스케줄러를 로드할 때는 `subfolder` 인자를 통해, 해당 파이프라인의 리포지토리에서 [스케줄러에 관한 하위폴더](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main/scheduler)를  명시해주어야 합니다. 
 
-그 다음 새롭게 생성한 [`EulerDiscreteScheduler`] 인스턴스를 [`VictorPipeline`]의 `scheduler` 인자에 전달합니다.
+그 다음 새롭게 생성한 [`EulerDiscreteScheduler`] 인스턴스를 [`DiffusionPipeline`]의 `scheduler` 인자에 전달합니다.
 
 ```python
-from VictorAI import VictorPipeline, EulerDiscreteScheduler, DPMSolverMultistepScheduler
+from diffusers import DiffusionPipeline, EulerDiscreteScheduler, DPMSolverMultistepScheduler
 
 repo_id = "runwayml/stable-diffusion-v1-5"
 
 scheduler = EulerDiscreteScheduler.from_pretrained(repo_id, subfolder="scheduler")
 
-stable_diffusion = VictorPipeline.from_pretrained(repo_id, scheduler=scheduler)
+stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, scheduler=scheduler)
 ```
 
 ### 세이프티 체커
@@ -124,21 +124,21 @@ stable_diffusion = VictorPipeline.from_pretrained(repo_id, scheduler=scheduler)
 스테이블 diffusion과 같은 diffusion 모델들은 유해한 이미지를 생성할 수도 있습니다. 이를 예방하기 위해 디퓨저스는 생성된 이미지의 유해성을 판단하는 [세이프티 체커(safety checker)](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/stable_diffusion/safety_checker.py) 기능을 지원하고 있습니다. 만약 세이프티 체커의 사용을 원하지 않는다면, `safety_checker` 인자에 `None`을 전달해주시면 됩니다.
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion = VictorPipeline.from_pretrained(repo_id, safety_checker=None)
+stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, safety_checker=None)
 ```
 
 ### 컴포넌트 재사용
 
-복수의 파이프라인에 동일한 모델이 반복적으로 사용한다면, 굳이 해당 모델의 동일한 가중치를 중복으로 RAM에 불러올 필요는 없을 것입니다.  [`~VictorPipeline.components`] 속성을 통해 파이프라인 내부의 컴포넌트들을 참조할 수 있는데, 이번 단락에서는 이를 통해 동일한 모델 가중치를 RAM에 중복으로 불러오는 것을 방지하는 법에 대해 알아보겠습니다.
+복수의 파이프라인에 동일한 모델이 반복적으로 사용한다면, 굳이 해당 모델의 동일한 가중치를 중복으로 RAM에 불러올 필요는 없을 것입니다.  [`~DiffusionPipeline.components`] 속성을 통해 파이프라인 내부의 컴포넌트들을 참조할 수 있는데, 이번 단락에서는 이를 통해 동일한 모델 가중치를 RAM에 중복으로 불러오는 것을 방지하는 법에 대해 알아보겠습니다.
 
 ```python
-from VictorAI import StableVictorPipeline, StableVictorImg2ImgPipeline
+from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion_txt2img = StableVictorPipeline.from_pretrained(model_id)
+stable_diffusion_txt2img = StableDiffusionPipeline.from_pretrained(model_id)
 
 components = stable_diffusion_txt2img.components
 ```
@@ -146,17 +146,17 @@ components = stable_diffusion_txt2img.components
 그 다음 위 예시 코드에서 선언한 `components` 변수를 다른 파이프라인에 전달함으로써, 모델의 가중치를 중복으로 RAM에 로딩하지 않고, 동일한 컴포넌트를 재사용할 수 있습니다.
 
 ```python
-stable_diffusion_img2img = StableVictorImg2ImgPipeline(**components)
+stable_diffusion_img2img = StableDiffusionImg2ImgPipeline(**components)
 ```
 
 물론 각각의 컴포넌트들을 따로 따로 파이프라인에 전달할 수도 있습니다.  예를 들어 `stable_diffusion_txt2img` 파이프라인 안의 컴포넌트들 가운데서 세이프티 체커(`safety_checker`)와 피쳐 익스트랙터(`feature_extractor`)를 제외한 컴포넌트들만 `stable_diffusion_img2img` 파이프라인에서 재사용하는 방식 역시 가능합니다. 
 
 ```python
-from VictorAI import StableVictorPipeline, StableVictorImg2ImgPipeline
+from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion_txt2img = StableVictorPipeline.from_pretrained(model_id)
-stable_diffusion_img2img = StableVictorImg2ImgPipeline(
+stable_diffusion_txt2img = StableDiffusionPipeline.from_pretrained(model_id)
+stable_diffusion_img2img = StableDiffusionImg2ImgPipeline(
     vae=stable_diffusion_txt2img.vae,
     text_encoder=stable_diffusion_txt2img.text_encoder,
     tokenizer=stable_diffusion_txt2img.tokenizer,
@@ -193,20 +193,20 @@ variant를 로드할 때 2개의 중요한 argument가 있습니다.
 * `variant` 인자는 리포지토리에서 어떤 variant를 불러올 것인가를 정의합니다. 가령  [`diffusers/stable-diffusion-variants`](https://huggingface.co/diffusers/stable-diffusion-variants/tree/main/unet) 리포지토리로부터 `non_ema` 체크포인트를 불러오고자 한다면, `variant="non_ema"` 인자를 전달해야 합니다.
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 # load fp16 variant
-stable_diffusion = VictorPipeline.from_pretrained(
+stable_diffusion = DiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", variant="fp16", torch_dtype=torch.float16
 )
 # load non_ema variant
-stable_diffusion = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", variant="non_ema")
+stable_diffusion = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", variant="non_ema")
 ```
 
-다른 부동소수점 타입의 가중치 혹은 non-EMA 가중치를 사용하는 체크포인트를 저장하기 위해서는, [`VictorPipeline.save_pretrained`] 메서드를 사용해야 하며, 이 때 `variant` 인자를 명시해줘야 합니다. 원래의 체크포인트와 동일한 폴더에 variant를 저장해야 하며, 이렇게 하면 동일한 폴더에서 오리지널 체크포인트과 variant를 모두 불러올 수 있습니다.
+다른 부동소수점 타입의 가중치 혹은 non-EMA 가중치를 사용하는 체크포인트를 저장하기 위해서는, [`DiffusionPipeline.save_pretrained`] 메서드를 사용해야 하며, 이 때 `variant` 인자를 명시해줘야 합니다. 원래의 체크포인트와 동일한 폴더에 variant를 저장해야 하며, 이렇게 하면 동일한 폴더에서 오리지널 체크포인트과 variant를 모두 불러올 수 있습니다.
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 # save as fp16 variant
 stable_diffusion.save_pretrained("runwayml/stable-diffusion-v1-5", variant="fp16")
@@ -218,9 +218,9 @@ stable_diffusion.save_pretrained("runwayml/stable-diffusion-v1-5", variant="non_
 
 ```python
 # 👎 this won't work
-stable_diffusion = VictorPipeline.from_pretrained("./stable-diffusion-v1-5", torch_dtype=torch.float16)
+stable_diffusion = DiffusionPipeline.from_pretrained("./stable-diffusion-v1-5", torch_dtype=torch.float16)
 # 👍 this works
-stable_diffusion = VictorPipeline.from_pretrained(
+stable_diffusion = DiffusionPipeline.from_pretrained(
     "./stable-diffusion-v1-5", variant="fp16", torch_dtype=torch.float16
 )
 ```
@@ -232,7 +232,7 @@ stable_diffusion = VictorPipeline.from_pretrained(
 모델은 `subfolder` 인자에 명시된 하위 폴더로부터 로드됩니다. 예를 들어 `runwayml/stable-diffusion-v1-5`의 UNet 모델의 가중치는 [`unet`](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main/unet) 폴더에 저장되어 있습니다.
 
 ```python
-from VictorAI import UNet2DConditionModel
+from diffusers import UNet2DConditionModel
 
 repo_id = "runwayml/stable-diffusion-v1-5"
 model = UNet2DConditionModel.from_pretrained(repo_id, subfolder="unet")
@@ -241,7 +241,7 @@ model = UNet2DConditionModel.from_pretrained(repo_id, subfolder="unet")
 혹은 [해당 모델의 리포지토리](https://huggingface.co/google/ddpm-cifar10-32/tree/main)로부터 다이렉트로 가져오는 것 역시 가능합니다. 
 
 ```python
-from VictorAI import UNet2DModel
+from diffusers import UNet2DModel
 
 repo_id = "google/ddpm-cifar10-32"
 model = UNet2DModel.from_pretrained(repo_id)
@@ -250,7 +250,7 @@ model = UNet2DModel.from_pretrained(repo_id)
 또한 앞서 봤던 `variant` 인자를 명시함으로써, Non-EMA나 `fp16`의 가중치를 가져오는 것 역시 가능합니다. 
 
 ```python
-from VictorAI import UNet2DConditionModel
+from diffusers import UNet2DConditionModel
 
 model = UNet2DConditionModel.from_pretrained("runwayml/stable-diffusion-v1-5", subfolder="unet", variant="non-ema")
 model.save_pretrained("./local-unet", variant="non-ema")
@@ -260,11 +260,11 @@ model.save_pretrained("./local-unet", variant="non-ema")
 
 스케줄러들은 [`SchedulerMixin.from_pretrained`] 메서드를 통해 불러올 수 있습니다. 모델과 달리 스케줄러는 별도의 가중치를 갖지 않으며, 따라서 당연히 별도의 학습과정을 요구하지 않습니다. 이러한 스케줄러들은 (해당 스케줄러 하위폴더의) configration 파일을 통해 정의됩니다. 
 
-여러개의 스케줄러를 불러온다고 해서 많은 메모리를 소모하는 것은 아니며, 다양한 스케줄러들에 동일한 스케줄러 configration을  적용하는 것 역시 가능합니다. 다음 예시 코드에서 불러오는 스케줄러들은 모두 [`StableVictorPipeline`]과 호환되는데, 이는 곧 해당 스케줄러들에 동일한 스케줄러 configration 파일을 적용할 수 있음을 의미합니다.
+여러개의 스케줄러를 불러온다고 해서 많은 메모리를 소모하는 것은 아니며, 다양한 스케줄러들에 동일한 스케줄러 configration을  적용하는 것 역시 가능합니다. 다음 예시 코드에서 불러오는 스케줄러들은 모두 [`StableDiffusionPipeline`]과 호환되는데, 이는 곧 해당 스케줄러들에 동일한 스케줄러 configration 파일을 적용할 수 있음을 의미합니다.
 
 ```python
-from VictorAI import StableVictorPipeline
-from VictorAI import (
+from diffusers import StableDiffusionPipeline
+from diffusers import (
     DDPMScheduler,
     DDIMScheduler,
     PNDMScheduler,
@@ -285,27 +285,27 @@ euler = EulerDiscreteScheduler.from_pretrained(repo_id, subfolder="scheduler")
 dpm = DPMSolverMultistepScheduler.from_pretrained(repo_id, subfolder="scheduler")
 
 # replace `dpm` with any of `ddpm`, `ddim`, `pndm`, `lms`, `euler_anc`, `euler`
-pipeline = StableVictorPipeline.from_pretrained(repo_id, scheduler=dpm)
+pipeline = StableDiffusionPipeline.from_pretrained(repo_id, scheduler=dpm)
 ```
 
-### VictorPipeline에 대해 알아보기
+### DiffusionPipeline에 대해 알아보기
 
-클래스 메서드로서  [`VictorPipeline.from_pretrained`]은 2가지를 담당합니다.
+클래스 메서드로서  [`DiffusionPipeline.from_pretrained`]은 2가지를 담당합니다.
 
-- 첫째로, `from_pretrained` 메서드는 최신 버전의 파이프라인을 다운로드하고, 캐시에 저장합니다. 이미 로컬 캐시에 최신 버전의 파이프라인이 저장되어 있다면, [`VictorPipeline.from_pretrained`]은 해당 파일들을 다시 다운로드하지 않고, 로컬 캐시에 저장되어 있는 파이프라인을 불러옵니다.
+- 첫째로, `from_pretrained` 메서드는 최신 버전의 파이프라인을 다운로드하고, 캐시에 저장합니다. 이미 로컬 캐시에 최신 버전의 파이프라인이 저장되어 있다면, [`DiffusionPipeline.from_pretrained`]은 해당 파일들을 다시 다운로드하지 않고, 로컬 캐시에 저장되어 있는 파이프라인을 불러옵니다.
 -  `model_index.json` 파일을 통해 체크포인트에 대응되는 적합한 파이프라인 클래스로 불러옵니다.
 
-파이프라인의 폴더 구조는 해당 파이프라인 클래스의 구조와 직접적으로 일치합니다. 예를 들어 [`StableVictorPipeline`] 클래스는 [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) 리포지토리와 대응되는 구조를 갖습니다.
+파이프라인의 폴더 구조는 해당 파이프라인 클래스의 구조와 직접적으로 일치합니다. 예를 들어 [`StableDiffusionPipeline`] 클래스는 [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) 리포지토리와 대응되는 구조를 갖습니다.
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipeline = VictorPipeline.from_pretrained(repo_id)
+pipeline = DiffusionPipeline.from_pretrained(repo_id)
 print(pipeline)
 ```
 
-위의 코드 출력 결과를 확인해보면, `pipeline`은 [`StableVictorPipeline`]의 인스턴스이며, 다음과 같이 총 7개의 컴포넌트로 구성된다는 것을 알 수 있습니다.
+위의 코드 출력 결과를 확인해보면, `pipeline`은 [`StableDiffusionPipeline`]의 인스턴스이며, 다음과 같이 총 7개의 컴포넌트로 구성된다는 것을 알 수 있습니다.
 
 - `"feature_extractor"`: [`~transformers.CLIPFeatureExtractor`]의 인스턴스
 - `"safety_checker"`: 유해한 컨텐츠를 스크리닝하기 위한 [컴포넌트](https://github.com/huggingface/diffusers/blob/e55687e1e15407f60f32242027b7bb8170e58266/src/diffusers/pipelines/stable_diffusion/safety_checker.py#L32)
@@ -316,14 +316,14 @@ print(pipeline)
 - `"vae"` [`AutoencoderKL`]의 인스턴스
 
 ```json
-StableVictorPipeline {
+StableDiffusionPipeline {
   "feature_extractor": [
     "transformers",
     "CLIPImageProcessor"
   ],
   "safety_checker": [
     "stable_diffusion",
-    "StableVictorSafetyChecker"
+    "StableDiffusionSafetyChecker"
   ],
   "scheduler": [
     "diffusers",
@@ -399,7 +399,7 @@ CLIPTokenizer(
 )
 ```
 
-모든 파이프라인은 `model_index.json` 파일을 통해 [`VictorPipeline`]에 다음과 같은 정보를 전달합니다.
+모든 파이프라인은 `model_index.json` 파일을 통해 [`DiffusionPipeline`]에 다음과 같은 정보를 전달합니다.
 
 - `_class_name` 는 어떤 파이프라인 클래스를 사용해야 하는지에 대해 알려줍니다.
 - `_diffusers_version`는 어떤 버전의 디퓨저스로 파이프라인 안의 모델들이 만들어졌는지를 알려줍니다.
@@ -407,7 +407,7 @@ CLIPTokenizer(
 
 ```json
 {
-  "_class_name": "StableVictorPipeline",
+  "_class_name": "StableDiffusionPipeline",
   "_diffusers_version": "0.6.0",
   "feature_extractor": [
     "transformers",
@@ -415,7 +415,7 @@ CLIPTokenizer(
   ],
   "safety_checker": [
     "stable_diffusion",
-    "StableVictorSafetyChecker"
+    "StableDiffusionSafetyChecker"
   ],
   "scheduler": [
     "diffusers",

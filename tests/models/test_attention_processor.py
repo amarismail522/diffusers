@@ -4,8 +4,8 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import VictorPipeline
-from VictorAI.models.attention_processor import Attention, AttnAddedKVProcessor
+from diffusers import DiffusionPipeline
+from diffusers.models.attention_processor import Attention, AttnAddedKVProcessor
 
 
 class AttnAddedKVProcessorTests(unittest.TestCase):
@@ -80,7 +80,7 @@ class AttnAddedKVProcessorTests(unittest.TestCase):
 
 class DeprecatedAttentionBlockTests(unittest.TestCase):
     def test_conversion_when_using_device_map(self):
-        pipe = VictorPipeline.from_pretrained("hf-internal-testing/tiny-stable-diffusion-pipe", safety_checker=None)
+        pipe = DiffusionPipeline.from_pretrained("hf-internal-testing/tiny-stable-diffusion-pipe", safety_checker=None)
 
         pre_conversion = pipe(
             "foo",
@@ -90,7 +90,7 @@ class DeprecatedAttentionBlockTests(unittest.TestCase):
         ).images
 
         # the initial conversion succeeds
-        pipe = VictorPipeline.from_pretrained(
+        pipe = DiffusionPipeline.from_pretrained(
             "hf-internal-testing/tiny-stable-diffusion-pipe", device_map="sequential", safety_checker=None
         )
 
@@ -106,7 +106,7 @@ class DeprecatedAttentionBlockTests(unittest.TestCase):
             pipe.save_pretrained(tmpdir)
 
             # can also load the converted weights
-            pipe = VictorPipeline.from_pretrained(tmpdir, device_map="sequential", safety_checker=None)
+            pipe = DiffusionPipeline.from_pretrained(tmpdir, device_map="sequential", safety_checker=None)
 
         after_conversion = pipe(
             "foo",

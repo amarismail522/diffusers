@@ -22,8 +22,8 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import AutoencoderKL, PNDMScheduler, StableVictorInpaintPipeline, UNet2DConditionModel
-from VictorAI.utils.testing_utils import (
+from diffusers import AutoencoderKL, PNDMScheduler, StableDiffusionInpaintPipeline, UNet2DConditionModel
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -44,10 +44,10 @@ from ..test_pipelines_common import PipelineKarrasSchedulerTesterMixin, Pipeline
 enable_full_determinism()
 
 
-class StableVictor2InpaintPipelineFastTests(
+class StableDiffusion2InpaintPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorInpaintPipeline
+    pipeline_class = StableDiffusionInpaintPipeline
     params = TEXT_GUIDED_IMAGE_INPAINTING_PARAMS
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS
     image_params = frozenset(
@@ -135,7 +135,7 @@ class StableVictor2InpaintPipelineFastTests(
     def test_stable_diffusion_inpaint(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorInpaintPipeline(**components)
+        sd_pipe = StableDiffusionInpaintPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -154,7 +154,7 @@ class StableVictor2InpaintPipelineFastTests(
 
 @slow
 @require_torch_gpu
-class StableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
+class StableDiffusionInpaintPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -175,7 +175,7 @@ class StableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
         )
 
         model_id = "stabilityai/stable-diffusion-2-inpainting"
-        pipe = StableVictorInpaintPipeline.from_pretrained(model_id, safety_checker=None)
+        pipe = StableDiffusionInpaintPipeline.from_pretrained(model_id, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -209,7 +209,7 @@ class StableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
         )
 
         model_id = "stabilityai/stable-diffusion-2-inpainting"
-        pipe = StableVictorInpaintPipeline.from_pretrained(
+        pipe = StableDiffusionInpaintPipeline.from_pretrained(
             model_id,
             torch_dtype=torch.float16,
             safety_checker=None,
@@ -248,7 +248,7 @@ class StableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
 
         model_id = "stabilityai/stable-diffusion-2-inpainting"
         pndm = PNDMScheduler.from_pretrained(model_id, subfolder="scheduler")
-        pipe = StableVictorInpaintPipeline.from_pretrained(
+        pipe = StableDiffusionInpaintPipeline.from_pretrained(
             model_id,
             safety_checker=None,
             scheduler=pndm,

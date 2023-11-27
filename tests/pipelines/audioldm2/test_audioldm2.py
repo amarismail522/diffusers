@@ -35,7 +35,7 @@ from transformers import (
     T5Tokenizer,
 )
 
-from VictorAI import (
+from diffusers import (
     AudioLDM2Pipeline,
     AudioLDM2ProjectionModel,
     AudioLDM2UNet2DConditionModel,
@@ -44,7 +44,7 @@ from VictorAI import (
     LMSDiscreteScheduler,
     PNDMScheduler,
 )
-from VictorAI.utils.testing_utils import enable_full_determinism, nightly, torch_device
+from diffusers.utils.testing_utils import enable_full_determinism, nightly, torch_device
 
 from ..pipeline_params import TEXT_TO_AUDIO_BATCH_PARAMS, TEXT_TO_AUDIO_PARAMS
 from ..test_pipelines_common import PipelineTesterMixin

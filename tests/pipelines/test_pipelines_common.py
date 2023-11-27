@@ -17,12 +17,12 @@ from huggingface_hub import delete_repo
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
 import diffusers
-from VictorAI import AutoencoderKL, DDIMScheduler, VictorPipeline, StableVictorPipeline, UNet2DConditionModel
-from VictorAI.image_processor import VaeImageProcessor
-from VictorAI.schedulers import KarrasDiffusionSchedulers
-from VictorAI.utils import logging
-from VictorAI.utils.import_utils import is_accelerate_available, is_accelerate_version, is_xformers_available
-from VictorAI.utils.testing_utils import (
+from diffusers import AutoencoderKL, DDIMScheduler, DiffusionPipeline, StableDiffusionPipeline, UNet2DConditionModel
+from diffusers.image_processor import VaeImageProcessor
+from diffusers.schedulers import KarrasDiffusionSchedulers
+from diffusers.utils import logging
+from diffusers.utils.import_utils import is_accelerate_available, is_accelerate_version, is_xformers_available
+from diffusers.utils.testing_utils import (
     CaptureLogger,
     require_torch,
     torch_device,
@@ -245,7 +245,7 @@ class PipelineTesterMixin:
         return generator
 
     @property
-    def pipeline_class(self) -> Union[Callable, VictorPipeline]:
+    def pipeline_class(self) -> Union[Callable, DiffusionPipeline]:
         raise NotImplementedError(
             "You need to set the attribute `pipeline_class = ClassNameOfPipeline` in the child test class. "
             "See existing pipeline tests for reference."
@@ -1049,7 +1049,7 @@ class PipelinePushToHubTester(unittest.TestCase):
 
     def test_push_to_hub(self):
         components = self.get_pipeline_components()
-        pipeline = StableVictorPipeline(**components)
+        pipeline = StableDiffusionPipeline(**components)
         pipeline.push_to_hub(self.repo_id, token=TOKEN)
 
         new_model = UNet2DConditionModel.from_pretrained(f"{USER}/{self.repo_id}", subfolder="unet")
@@ -1073,7 +1073,7 @@ class PipelinePushToHubTester(unittest.TestCase):
 
     def test_push_to_hub_in_organization(self):
         components = self.get_pipeline_components()
-        pipeline = StableVictorPipeline(**components)
+        pipeline = StableDiffusionPipeline(**components)
         pipeline.push_to_hub(self.org_repo_id, token=TOKEN)
 
         new_model = UNet2DConditionModel.from_pretrained(self.org_repo_id, subfolder="unet")
@@ -1244,7 +1244,7 @@ class SDXLOptionalComponentsTesterMixin:
 # This helper function is used to check that the image doesn't deviate on average more than 10 pixels from a
 # reference image.
 def assert_mean_pixel_difference(image, expected_image, expected_max_diff=10):
-    image = np.asarray(VictorPipeline.numpy_to_pil(image)[0], dtype=np.float32)
-    expected_image = np.asarray(VictorPipeline.numpy_to_pil(expected_image)[0], dtype=np.float32)
+    image = np.asarray(DiffusionPipeline.numpy_to_pil(image)[0], dtype=np.float32)
+    expected_image = np.asarray(DiffusionPipeline.numpy_to_pil(expected_image)[0], dtype=np.float32)
     avg_diff = np.abs(image - expected_image).mean()
     assert avg_diff < expected_max_diff, f"Error image deviates {avg_diff} pixels on average"

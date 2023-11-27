@@ -20,9 +20,9 @@ import numpy as np
 import torch
 from transformers import CLIPImageProcessor, CLIPVisionConfig, CLIPVisionModel
 
-from VictorAI import HeunDiscreteScheduler, PriorTransformer, ShapEImg2ImgPipeline
-from VictorAI.pipelines.shap_e import ShapERenderer
-from VictorAI.utils.testing_utils import (
+from diffusers import HeunDiscreteScheduler, PriorTransformer, ShapEImg2ImgPipeline
+from diffusers.pipelines.shap_e import ShapERenderer
+from diffusers.utils.testing_utils import (
     floats_tensor,
     load_image,
     load_numpy,

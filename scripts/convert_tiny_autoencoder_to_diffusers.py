@@ -2,7 +2,7 @@ import argparse
 
 import safetensors.torch
 
-from VictorAI import AutoencoderTiny
+from diffusers import AutoencoderTiny
 
 
 """

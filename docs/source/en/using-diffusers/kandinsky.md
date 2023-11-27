@@ -43,7 +43,7 @@ To use the Kandinsky models for any task, you always start by setting up the pri
 <hfoption id="Kandinsky 2.1">
 
 ```py
-from VictorAI import KandinskyPriorPipeline, KandinskyPipeline
+from diffusers import KandinskyPriorPipeline, KandinskyPipeline
 import torch
 
 prior_pipeline = KandinskyPriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1-prior", torch_dtype=torch.float16).to("cuda")
@@ -69,7 +69,7 @@ image
 <hfoption id="Kandinsky 2.2">
 
 ```py
-from VictorAI import KandinskyV22PriorPipeline, KandinskyV22Pipeline
+from diffusers import KandinskyV22PriorPipeline, KandinskyV22Pipeline
 import torch
 
 prior_pipeline = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", torch_dtype=torch.float16).to("cuda")
@@ -102,7 +102,7 @@ Use the [`AutoPipelineForText2Image`] to automatically call the combined pipelin
 <hfoption id="Kandinsky 2.1">
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16)
@@ -119,7 +119,7 @@ image
 <hfoption id="Kandinsky 2.2">
 
 ```py
-from VictorAI import AutoPipelineForText2Image
+from diffusers import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", torch_dtype=torch.float16)
@@ -144,7 +144,7 @@ For image-to-image, pass the initial image and text prompt to condition the imag
 
 ```py
 import torch
-from VictorAI import KandinskyImg2ImgPipeline, KandinskyPriorPipeline
+from diffusers import KandinskyImg2ImgPipeline, KandinskyPriorPipeline
 
 prior_pipeline = KandinskyPriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1-prior", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 pipeline = KandinskyImg2ImgPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
@@ -155,7 +155,7 @@ pipeline = KandinskyImg2ImgPipeline.from_pretrained("kandinsky-community/kandins
 
 ```py
 import torch
-from VictorAI import KandinskyV22Img2ImgPipeline, KandinskyPriorPipeline
+from diffusers import KandinskyV22Img2ImgPipeline, KandinskyPriorPipeline
 
 prior_pipeline = KandinskyPriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 pipeline = KandinskyV22Img2ImgPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
@@ -167,7 +167,7 @@ pipeline = KandinskyV22Img2ImgPipeline.from_pretrained("kandinsky-community/kand
 Download an image to condition on:
 
 ```py
-from VictorAI.utils import load_image
+from diffusers.utils import load_image
 
 # download image
 url = "https://raw.githubusercontent.com/CompVis/stable-diffusion/main/assets/stable-samples/img2img/sketch-mountains-input.jpg"
@@ -194,7 +194,7 @@ Now pass the original image, and all the prompts and embeddings to the pipeline 
 <hfoption id="Kandinsky 2.1">
 
 ```py
-from VictorAI.utils import make_image_grid
+from diffusers.utils import make_image_grid
 
 image = pipeline(prompt, negative_prompt=negative_prompt, image=original_image, image_embeds=image_embeds, negative_image_embeds=negative_image_embeds, height=768, width=768, strength=0.3).images[0]
 make_image_grid([original_image.resize((512, 512)), image.resize((512, 512))], rows=1, cols=2)
@@ -208,7 +208,7 @@ make_image_grid([original_image.resize((512, 512)), image.resize((512, 512))], r
 <hfoption id="Kandinsky 2.2">
 
 ```py
-from VictorAI.utils import make_image_grid
+from diffusers.utils import make_image_grid
 
 image = pipeline(image=original_image, image_embeds=image_embeds, negative_image_embeds=negative_image_embeds, height=768, width=768, strength=0.3).images[0]
 make_image_grid([original_image.resize((512, 512)), image.resize((512, 512))], rows=1, cols=2)
@@ -229,8 +229,8 @@ Use the [`AutoPipelineForImage2Image`] to automatically call the combined pipeli
 <hfoption id="Kandinsky 2.1">
 
 ```py
-from VictorAI import AutoPipelineForImage2Image
-from VictorAI.utils import make_image_grid, load_image
+from diffusers import AutoPipelineForImage2Image
+from diffusers.utils import make_image_grid, load_image
 import torch
 
 pipeline = AutoPipelineForImage2Image.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16, use_safetensors=True)
@@ -252,8 +252,8 @@ make_image_grid([original_image.resize((512, 512)), image.resize((512, 512))], r
 <hfoption id="Kandinsky 2.2">
 
 ```py
-from VictorAI import AutoPipelineForImage2Image
-from VictorAI.utils import make_image_grid, load_image
+from diffusers import AutoPipelineForImage2Image
+from diffusers.utils import make_image_grid, load_image
 import torch
 
 pipeline = AutoPipelineForImage2Image.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", torch_dtype=torch.float16)
@@ -297,8 +297,8 @@ For inpainting, you'll need the original image, a mask of the area to replace in
 <hfoption id="Kandinsky 2.1">
 
 ```py
-from VictorAI import KandinskyInpaintPipeline, KandinskyPriorPipeline
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import KandinskyInpaintPipeline, KandinskyPriorPipeline
+from diffusers.utils import load_image, make_image_grid
 import torch
 import numpy as np
 from PIL import Image
@@ -311,8 +311,8 @@ pipeline = KandinskyInpaintPipeline.from_pretrained("kandinsky-community/kandins
 <hfoption id="Kandinsky 2.2">
 
 ```py
-from VictorAI import KandinskyV22InpaintPipeline, KandinskyV22PriorPipeline
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import KandinskyV22InpaintPipeline, KandinskyV22PriorPipeline
+from diffusers.utils import load_image, make_image_grid
 import torch
 import numpy as np
 from PIL import Image
@@ -380,8 +380,8 @@ You can also use the end-to-end [`KandinskyInpaintCombinedPipeline`] and [`Kandi
 import torch
 import numpy as np
 from PIL import Image
-from VictorAI import AutoPipelineForInpainting
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import AutoPipelineForInpainting
+from diffusers.utils import load_image, make_image_grid
 
 pipe = AutoPipelineForInpainting.from_pretrained("kandinsky-community/kandinsky-2-1-inpaint", torch_dtype=torch.float16)
 pipe.enable_model_cpu_offload()
@@ -404,8 +404,8 @@ make_image_grid([init_image, mask, output_image], rows=1, cols=3)
 import torch
 import numpy as np
 from PIL import Image
-from VictorAI import AutoPipelineForInpainting
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import AutoPipelineForInpainting
+from diffusers.utils import load_image, make_image_grid
 
 pipe = AutoPipelineForInpainting.from_pretrained("kandinsky-community/kandinsky-2-2-decoder-inpaint", torch_dtype=torch.float16)
 pipe.enable_model_cpu_offload()
@@ -432,8 +432,8 @@ Interpolation allows you to explore the latent space between the image and text 
 <hfoption id="Kandinsky 2.1">
 
 ```py
-from VictorAI import KandinskyPriorPipeline, KandinskyPipeline
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import KandinskyPriorPipeline, KandinskyPipeline
+from diffusers.utils import load_image, make_image_grid
 import torch
 
 prior_pipeline = KandinskyPriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1-prior", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
@@ -446,8 +446,8 @@ make_image_grid([img_1.resize((512,512)), img_2.resize((512,512))], rows=1, cols
 <hfoption id="Kandinsky 2.2">
 
 ```py
-from VictorAI import KandinskyV22PriorPipeline, KandinskyV22Pipeline
-from VictorAI.utils import load_image, make_image_grid
+from diffusers import KandinskyV22PriorPipeline, KandinskyV22Pipeline
+from diffusers.utils import load_image, make_image_grid
 import torch
 
 prior_pipeline = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
@@ -531,7 +531,7 @@ ControlNet enables conditioning large pretrained diffusion models with additiona
 Let's load an image and extract it's depth map:
 
 ```py
-from VictorAI.utils import load_image
+from diffusers.utils import load_image
 
 img = load_image(
     "https://huggingface.co/datasets/hf-internal-testing/diffusers-images/resolve/main/kandinskyv22/cat.png"
@@ -569,7 +569,7 @@ hint = make_hint(img, depth_estimator).unsqueeze(0).half().to("cuda")
 Load the prior pipeline and the [`KandinskyV22ControlnetPipeline`]:
 
 ```py
-from VictorAI import KandinskyV22PriorPipeline, KandinskyV22ControlnetPipeline
+from diffusers import KandinskyV22PriorPipeline, KandinskyV22ControlnetPipeline
 
 prior_pipeline = KandinskyV22PriorPipeline.from_pretrained(
     "kandinsky-community/kandinsky-2-2-prior", torch_dtype=torch.float16, use_safetensors=True
@@ -617,8 +617,8 @@ Process and extract a depth map of an initial image of a cat with the `depth-est
 import torch
 import numpy as np
 
-from VictorAI import KandinskyV22PriorEmb2EmbPipeline, KandinskyV22ControlnetImg2ImgPipeline
-from VictorAI.utils import load_image
+from diffusers import KandinskyV22PriorEmb2EmbPipeline, KandinskyV22ControlnetImg2ImgPipeline
+from diffusers.utils import load_image
 from transformers import pipeline
 
 img = load_image(
@@ -680,10 +680,10 @@ Kandinsky is unique because it requires a prior pipeline to generate the mapping
 1. Enable [xFormers](../optimization/xformers) if you're using PyTorch < 2.0:
 
 ```diff
-  from VictorAI import VictorPipeline
+  from diffusers import DiffusionPipeline
   import torch
 
-  pipe = VictorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16)
+  pipe = DiffusionPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16)
 + pipe.enable_xformers_memory_efficient_attention()
 ```
 
@@ -697,7 +697,7 @@ Kandinsky is unique because it requires a prior pipeline to generate the mapping
 This is the same as explicitly setting the attention processor to use [`~models.attention_processor.AttnAddedKVProcessor2_0`]:
 
 ```py
-from VictorAI.models.attention_processor import AttnAddedKVProcessor2_0
+from diffusers.models.attention_processor import AttnAddedKVProcessor2_0
 
 pipe.unet.set_attn_processor(AttnAddedKVProcessor2_0())
 ```
@@ -705,19 +705,19 @@ pipe.unet.set_attn_processor(AttnAddedKVProcessor2_0())
 3. Offload the model to the CPU with [`~KandinskyPriorPipeline.enable_model_cpu_offload`] to avoid out-of-memory errors:
 
 ```diff
-  from VictorAI import VictorPipeline
+  from diffusers import DiffusionPipeline
   import torch
 
-  pipe = VictorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16)
+  pipe = DiffusionPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16)
 + pipe.enable_model_cpu_offload()
 ```
 
 4. By default, the text-to-image pipeline uses the [`DDIMScheduler`] but you can replace it with another scheduler like [`DDPMScheduler`] to see how that affects the tradeoff between inference speed and image quality:
 
 ```py
-from VictorAI import DDPMScheduler
-from VictorAI import VictorPipeline
+from diffusers import DDPMScheduler
+from diffusers import DiffusionPipeline
 
 scheduler = DDPMScheduler.from_pretrained("kandinsky-community/kandinsky-2-1", subfolder="ddpm_scheduler")
-pipe = VictorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", scheduler=scheduler, torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+pipe = DiffusionPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", scheduler=scheduler, torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 ```

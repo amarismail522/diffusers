@@ -34,13 +34,13 @@ The results below are obtained from generating a single 512x512 image from the p
 
 Sliced VAE enables decoding large batches of images with limited VRAM or batches with 32 images or more by decoding the batches of latents one image at a time. You'll likely want to couple this with [`~ModelMixin.enable_xformers_memory_efficient_attention`] to reduce memory use further if you have xFormers installed.
 
-To use sliced VAE, call [`~StableVictorPipeline.enable_vae_slicing`] on your pipeline before inference:
+To use sliced VAE, call [`~StableDiffusionPipeline.enable_vae_slicing`] on your pipeline before inference:
 
 ```python
 import torch
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 
-pipe = StableVictorPipeline.from_pretrained(
+pipe = StableDiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     use_safetensors=True,
@@ -59,13 +59,13 @@ You may see a small performance boost in VAE decoding on multi-image batches, an
 
 Tiled VAE processing also enables working with large images on limited VRAM (for example, generating 4k images on 8GB of VRAM) by splitting the image into overlapping tiles, decoding the tiles, and then blending the outputs together to compose the final image. You should also used tiled VAE with [`~ModelMixin.enable_xformers_memory_efficient_attention`] to reduce memory use further if you have xFormers installed.
 
-To use tiled VAE processing, call [`~StableVictorPipeline.enable_vae_tiling`] on your pipeline before inference:
+To use tiled VAE processing, call [`~StableDiffusionPipeline.enable_vae_tiling`] on your pipeline before inference:
 
 ```python
 import torch
-from VictorAI import StableVictorPipeline, UniPCMultistepScheduler
+from diffusers import StableDiffusionPipeline, UniPCMultistepScheduler
 
-pipe = StableVictorPipeline.from_pretrained(
+pipe = StableDiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     use_safetensors=True,
@@ -85,13 +85,13 @@ The output image has some tile-to-tile tone variation because the tiles are deco
 
 Offloading the weights to the CPU and only loading them on the GPU when performing the forward pass can also save memory. Often, this technique can reduce memory consumption to less than 3GB.
 
-To perform CPU offloading, call [`~StableVictorPipeline.enable_sequential_cpu_offload`]:
+To perform CPU offloading, call [`~StableDiffusionPipeline.enable_sequential_cpu_offload`]:
 
 ```Python
 import torch
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 
-pipe = StableVictorPipeline.from_pretrained(
+pipe = StableDiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     use_safetensors=True,
@@ -112,9 +112,9 @@ Consider using [model offloading](#model-offloading) if you want to optimize for
 
 <Tip warning={true}>
 
-When using [`~StableVictorPipeline.enable_sequential_cpu_offload`], don't move the pipeline to CUDA beforehand or else the gain in memory consumption will only be minimal (see this [issue](https://github.com/huggingface/diffusers/issues/1934) for more information).
+When using [`~StableDiffusionPipeline.enable_sequential_cpu_offload`], don't move the pipeline to CUDA beforehand or else the gain in memory consumption will only be minimal (see this [issue](https://github.com/huggingface/diffusers/issues/1934) for more information).
 
-[`~StableVictorPipeline.enable_sequential_cpu_offload`] is a stateful operation that installs hooks on the models.
+[`~StableDiffusionPipeline.enable_sequential_cpu_offload`] is a stateful operation that installs hooks on the models.
 
 </Tip>
 
@@ -133,13 +133,13 @@ Full-model offloading is an alternative that moves whole models to the GPU, inst
 During model offloading, only one of the main components of the pipeline (typically the text encoder, UNet and VAE)
 is placed on the GPU while the others wait on the CPU. Components like the UNet that run for multiple iterations stay on the GPU until they're no longer needed.
 
-Enable model offloading by calling [`~StableVictorPipeline.enable_model_cpu_offload`] on the pipeline:
+Enable model offloading by calling [`~StableDiffusionPipeline.enable_model_cpu_offload`] on the pipeline:
 
 ```Python
 import torch
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 
-pipe = StableVictorPipeline.from_pretrained(
+pipe = StableDiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     use_safetensors=True,
@@ -154,7 +154,7 @@ image = pipe(prompt).images[0]
 
 In order to properly offload models after they're called, it is required to run the entire pipeline and models are called in the pipeline's expected order. Exercise caution if models are reused outside the context of the pipeline after hooks have been installed. See [Removing Hooks](https://huggingface.co/docs/accelerate/en/package_reference/big_modeling#accelerate.hooks.remove_hook_from_module) for more information.
 
-[`~StableVictorPipeline.enable_model_cpu_offload`] is a stateful operation that installs hooks on the models and state on the pipeline.
+[`~StableDiffusionPipeline.enable_model_cpu_offload`] is a stateful operation that installs hooks on the models and state on the pipeline.
 
 </Tip>
 
@@ -181,7 +181,7 @@ To trace a UNet:
 ```python
 import time
 import torch
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 import functools
 
 # torch disable grad
@@ -200,7 +200,7 @@ def generate_inputs():
     return sample, timestep, encoder_hidden_states
 
 
-pipe = StableVictorPipeline.from_pretrained(
+pipe = StableDiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     use_safetensors=True,
@@ -254,7 +254,7 @@ unet_traced.save("unet_traced.pt")
 Replace the `unet` attribute of the pipeline with the traced model:
 
 ```python
-from VictorAI import StableVictorPipeline
+from diffusers import StableDiffusionPipeline
 import torch
 from dataclasses import dataclass
 
@@ -264,7 +264,7 @@ class UNet2DConditionOutput:
     sample: torch.FloatTensor
 
 
-pipe = StableVictorPipeline.from_pretrained(
+pipe = StableDiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     use_safetensors=True,
@@ -311,10 +311,10 @@ To use Flash Attention, install the following:
 Then call [`~ModelMixin.enable_xformers_memory_efficient_attention`] on the pipeline:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipe = VictorPipeline.from_pretrained(
+pipe = DiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     use_safetensors=True,

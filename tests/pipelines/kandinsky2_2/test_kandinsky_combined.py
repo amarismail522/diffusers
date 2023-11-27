@@ -17,12 +17,12 @@ import unittest
 
 import numpy as np
 
-from VictorAI import (
+from diffusers import (
     KandinskyV22CombinedPipeline,
     KandinskyV22Img2ImgCombinedPipeline,
     KandinskyV22InpaintCombinedPipeline,
 )
-from VictorAI.utils.testing_utils import enable_full_determinism, require_torch_gpu, torch_device
+from diffusers.utils.testing_utils import enable_full_determinism, require_torch_gpu, torch_device
 
 from ..test_pipelines_common import PipelineTesterMixin
 from .test_kandinsky import Dummies

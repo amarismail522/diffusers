@@ -16,9 +16,9 @@
 import gc
 import unittest
 
-from VictorAI import FlaxStableVictorInpaintPipeline
-from VictorAI.utils import is_flax_available, load_image
-from VictorAI.utils.testing_utils import require_flax, slow
+from diffusers import FlaxStableDiffusionInpaintPipeline
+from diffusers.utils import is_flax_available, load_image
+from diffusers.utils.testing_utils import require_flax, slow
 
 
 if is_flax_available():
@@ -30,7 +30,7 @@ if is_flax_available():
 
 @slow
 @require_flax
-class FlaxStableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
+class FlaxStableDiffusionInpaintPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -46,7 +46,7 @@ class FlaxStableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
         )
 
         model_id = "xvjiarui/stable-diffusion-2-inpainting"
-        pipeline, params = FlaxStableVictorInpaintPipeline.from_pretrained(model_id, safety_checker=None)
+        pipeline, params = FlaxStableDiffusionInpaintPipeline.from_pretrained(model_id, safety_checker=None)
 
         prompt = "Face of a yellow cat, high resolution, sitting on a park bench"
 

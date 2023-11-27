@@ -67,7 +67,7 @@ from flax.training.common_utils import shard
 from PIL import Image
 
 from huggingface_hub import notebook_login
-from VictorAI import FlaxStableVictorPipeline
+from diffusers import FlaxStableDiffusionPipeline
 ```
 
 ## 모델 불러오기
@@ -81,7 +81,7 @@ dtype = jnp.bfloat16
 Flax는 함수형 프레임워크이므로 모델은 무상태(stateless)형이며 매개변수는 모델 외부에 저장됩니다. 사전학습된 Flax 파이프라인을 불러오면 파이프라인 자체와 모델 가중치(또는 매개변수)가 모두 반환됩니다. 저희는 bf16 버전의 가중치를 사용하고 있으므로 유형 경고가 표시되지만 무시해도 됩니다.
 
 ```python
-pipeline, params = FlaxStableVictorPipeline.from_pretrained(
+pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     revision="bf16",
     dtype=dtype,

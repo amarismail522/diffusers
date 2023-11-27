@@ -19,9 +19,9 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import DDPMScheduler, MidiProcessor, SpectrogramVictorPipeline
-from VictorAI.pipelines.spectrogram_diffusion import SpectrogramContEncoder, SpectrogramNotesEncoder, T5FilmDecoder
-from VictorAI.utils.testing_utils import (
+from diffusers import DDPMScheduler, MidiProcessor, SpectrogramDiffusionPipeline
+from diffusers.pipelines.spectrogram_diffusion import SpectrogramContEncoder, SpectrogramNotesEncoder, T5FilmDecoder
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     nightly,
     require_note_seq,
@@ -45,8 +45,8 @@ MIDI_FILE = "./tests/fixtures/elise_format0.mid"
 # is not compatible with python 3.8 which we run in the CI.
 # https://github.com/huggingface/diffusers/actions/runs/4830121056/jobs/8605954838#step:7:98
 @unittest.skip("The note-seq package currently throws an error on import")
-class SpectrogramVictorPipelineFastTests(PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = SpectrogramVictorPipeline
+class SpectrogramDiffusionPipelineFastTests(PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = SpectrogramDiffusionPipeline
     required_optional_params = PipelineTesterMixin.required_optional_params - {
         "callback",
         "latents",
@@ -126,7 +126,7 @@ class SpectrogramVictorPipelineFastTests(PipelineTesterMixin, unittest.TestCase)
     def test_spectrogram_diffusion(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        pipe = SpectrogramVictorPipeline(**components)
+        pipe = SpectrogramDiffusionPipeline(**components)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -185,7 +185,7 @@ class PipelineIntegrationTests(unittest.TestCase):
         # so that music can be played live
         device = torch_device
 
-        pipe = SpectrogramVictorPipeline.from_pretrained("google/music-spectrogram-diffusion")
+        pipe = SpectrogramDiffusionPipeline.from_pretrained("google/music-spectrogram-diffusion")
         melgan = pipe.melgan
         pipe.melgan = None
 
@@ -209,7 +209,7 @@ class PipelineIntegrationTests(unittest.TestCase):
     def test_spectrogram_fast(self):
         device = torch_device
 
-        pipe = SpectrogramVictorPipeline.from_pretrained("google/music-spectrogram-diffusion")
+        pipe = SpectrogramDiffusionPipeline.from_pretrained("google/music-spectrogram-diffusion")
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
         processor = MidiProcessor()
@@ -228,7 +228,7 @@ class PipelineIntegrationTests(unittest.TestCase):
     def test_spectrogram(self):
         device = torch_device
 
-        pipe = SpectrogramVictorPipeline.from_pretrained("google/music-spectrogram-diffusion")
+        pipe = SpectrogramDiffusionPipeline.from_pretrained("google/music-spectrogram-diffusion")
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 

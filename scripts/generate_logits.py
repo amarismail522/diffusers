@@ -3,7 +3,7 @@ import random
 import torch
 from huggingface_hub import HfApi
 
-from VictorAI import UNet2DModel
+from diffusers import UNet2DModel
 
 
 api = HfApi()

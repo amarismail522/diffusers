@@ -9,7 +9,7 @@ from audio_diffusion.models import DiffusionAttnUnet1D
 from diffusion import sampling
 from torch import nn
 
-from VictorAI import DanceVictorPipeline, IPNDMScheduler, UNet1DModel
+from diffusers import DanceDiffusionPipeline, IPNDMScheduler, UNet1DModel
 
 
 MODELS_MAP = {
@@ -304,7 +304,7 @@ def main(args):
     t = torch.linspace(1, 0, steps + 1, device=device)[:-1]
     step_list = get_crash_schedule(t)
 
-    pipe = DanceVictorPipeline(unet=diffusers_model, scheduler=diffusers_scheduler)
+    pipe = DanceDiffusionPipeline(unet=diffusers_model, scheduler=diffusers_scheduler)
 
     generator = torch.manual_seed(33)
     audio = pipe(num_inference_steps=steps, generator=generator).audios

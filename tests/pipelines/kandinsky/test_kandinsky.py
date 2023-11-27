@@ -21,9 +21,9 @@ import numpy as np
 import torch
 from transformers import XLMRobertaTokenizerFast
 
-from VictorAI import DDIMScheduler, KandinskyPipeline, KandinskyPriorPipeline, UNet2DConditionModel, VQModel
-from VictorAI.pipelines.kandinsky.text_encoder import MCLIPConfig, MultilingualCLIP
-from VictorAI.utils.testing_utils import (
+from diffusers import DDIMScheduler, KandinskyPipeline, KandinskyPriorPipeline, UNet2DConditionModel, VQModel
+from diffusers.pipelines.kandinsky.text_encoder import MCLIPConfig, MultilingualCLIP
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_numpy,

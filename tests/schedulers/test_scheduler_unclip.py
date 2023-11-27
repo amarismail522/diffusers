@@ -1,6 +1,6 @@
 import torch
 
-from VictorAI import UnCLIPScheduler
+from diffusers import UnCLIPScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

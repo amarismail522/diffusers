@@ -26,8 +26,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## VQVictorPipeline
-[[autodoc]] VQVictorPipeline
+## VQDiffusionPipeline
+[[autodoc]] VQDiffusionPipeline
 	- all
 	- __call__
 

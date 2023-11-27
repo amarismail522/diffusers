@@ -6,13 +6,13 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     LatentConsistencyModelPipeline,
     LCMScheduler,
     UNet2DConditionModel,
 )
-from VictorAI.utils.testing_utils import (
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     require_torch_gpu,
     slow,

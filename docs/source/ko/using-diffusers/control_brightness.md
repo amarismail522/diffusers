@@ -22,9 +22,9 @@ Stable Diffusion 파이프라인은 [일반적인 디퓨전 노이즈 스케줄�
 2. `timestep_spacing="trailing"`, 마지막 타임스텝부터 샘플링 시작
 
 ```py
->>> from VictorAI import VictorPipeline, DDIMScheduler
+>>> from diffusers import DiffusionPipeline, DDIMScheduler
 
->>> pipeline = VictorPipeline.from_pretrained("ptx0/pseudo-journey-v2")
+>>> pipeline = DiffusionPipeline.from_pretrained("ptx0/pseudo-journey-v2")
 # switch the scheduler in the pipeline to use the DDIMScheduler
 
 >>> pipeline.scheduler = DDIMScheduler.from_config(

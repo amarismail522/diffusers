@@ -1,6 +1,6 @@
 import gradio as gr
 import torch
-from VictorAI import StableVictorPipeline, DDIMScheduler
+from diffusers import StableDiffusionPipeline, DDIMScheduler
 
 def inference(prompt, negative_prompt, num_samples, height, width, num_inference_steps, guidance_scale):
     with torch.autocast("cuda"), torch.inference_mode():
@@ -13,7 +13,7 @@ def inference(prompt, negative_prompt, num_samples, height, width, num_inference
         ).images
 
 WEIGHTS_DIR = "path to your weights directory"  # Replace with the path to your model directory
-pipe = StableVictorPipeline.from_pretrained(WEIGHTS_DIR, safety_checker=None, torch_dtype=torch.float16).to("cuda")
+pipe = StableDiffusionPipeline.from_pretrained(WEIGHTS_DIR, safety_checker=None, torch_dtype=torch.float16).to("cuda")
 pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
 # pipe.enable_xformers_memory_efficient_attention()
 g_cuda = None

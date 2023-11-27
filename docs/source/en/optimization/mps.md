@@ -22,9 +22,9 @@ specific language governing permissions and limitations under the License.
 The `mps` backend uses PyTorch's `.to()` interface to move the Stable Diffusion pipeline on to your M1 or M2 device:
 
 ```python
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 
-pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 pipe = pipe.to("mps")
 
 # Recommended if your computer has < 64 GB of RAM
@@ -44,9 +44,9 @@ Generating multiple prompts in a batch can [crash](https://github.com/huggingfac
 If you're using **PyTorch 1.13**, you need to "prime" the pipeline with an additional one-time pass through it. This is a temporary workaround for an issue where the first inference pass produces slightly different results than subsequent ones. You only need to do this pass once, and after just one inference step you can discard the result.
 
 ```diff
-  from VictorAI import VictorPipeline
+  from diffusers import DiffusionPipeline
 
-  pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5").to("mps")
+  pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5").to("mps")
   pipe.enable_attention_slicing()
 
   prompt = "a photo of an astronaut riding a horse on mars"
@@ -61,13 +61,13 @@ If you're using **PyTorch 1.13**, you need to "prime" the pipeline with an addit
 
 M1/M2 performance is very sensitive to memory pressure. When this occurs, the system automatically swaps if it needs to which significantly degrades performance.
 
-To prevent this from happening, we recommend *attention slicing* to reduce memory pressure during inference and prevent swapping. This is especially relevant if your computer has less than 64GB of system RAM, or if you generate images at non-standard resolutions larger than 512×512 pixels. Call the [`~VictorPipeline.enable_attention_slicing`] function on your pipeline:
+To prevent this from happening, we recommend *attention slicing* to reduce memory pressure during inference and prevent swapping. This is especially relevant if your computer has less than 64GB of system RAM, or if you generate images at non-standard resolutions larger than 512×512 pixels. Call the [`~DiffusionPipeline.enable_attention_slicing`] function on your pipeline:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, variant="fp16", use_safetensors=True).to("mps")
+pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, variant="fp16", use_safetensors=True).to("mps")
 pipeline.enable_attention_slicing()
 ```
 

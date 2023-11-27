@@ -23,17 +23,17 @@ However, the skip connection can sometimes introduce unnatural image details. [F
 
 FreeU is applied during inference and it does not require any additional training. The technique works for different tasks such as text-to-image, image-to-image, and text-to-video.
 
-In this guide, you will apply FreeU to the [`StableVictorPipeline`], [`StableVictorXLPipeline`], and [`TextToVideoSDPipeline`]. You need to install Diffusers from source to run the examples below.
+In this guide, you will apply FreeU to the [`StableDiffusionPipeline`], [`StableDiffusionXLPipeline`], and [`TextToVideoSDPipeline`]. You need to install Diffusers from source to run the examples below.
 
-## StableVictorPipeline
+## StableDiffusionPipeline
 
 Load the pipeline:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, safety_checker=None
 ).to("cuda")
 ```
@@ -69,10 +69,10 @@ The figure below compares non-FreeU and FreeU results respectively for the same 
 Let's see how Stable Diffusion 2 results are impacted:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-2-1", torch_dtype=torch.float16, safety_checker=None
 ).to("cuda")
 
@@ -91,10 +91,10 @@ image
 Finally, let's take a look at how FreeU affects Stable Diffusion XL results:
 
 ```py
-from VictorAI import VictorPipeline
+from diffusers import DiffusionPipeline
 import torch
 
-pipeline = VictorPipeline.from_pretrained(
+pipeline = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16,
 ).to("cuda")
 
@@ -115,12 +115,12 @@ image
 FreeU can also be used to improve video quality:
 
 ```python
-from VictorAI import VictorPipeline
-from VictorAI.utils import export_to_video
+from diffusers import DiffusionPipeline
+from diffusers.utils import export_to_video
 import torch
 
 model_id = "cerspense/zeroscope_v2_576w"
-pipe = VictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
+pipe = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
 
 prompt = "an astronaut riding a horse on mars"
 seed = 2023

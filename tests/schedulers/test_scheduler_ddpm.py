@@ -1,6 +1,6 @@
 import torch
 
-from VictorAI import DDPMScheduler
+from diffusers import DDPMScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

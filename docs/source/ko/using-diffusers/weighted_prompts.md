@@ -27,8 +27,8 @@ Diffusion 모델은 문맥화된 텍스트 임베딩으로 diffusion 모델의 c
 우리는 `diffusers`의 역할이 다른 프로젝트를 가능하게 하는 필수적인 기능을 제공하는 toolbex라고 생각합니다.
 [InvokeAI](https://github.com/invoke-ai/InvokeAI) 나 [diffuzers](https://github.com/abhishekkrthakur/diffuzers) 같은 강력한 UI를 구축할 수 있습니다.
 프롬프트를 조작하는 방법을 지원하기 위해, `diffusers` 는
-[StableVictorPipeline](https://huggingface.co/docs/diffusers/v0.18.2/en/api/pipelines/stable_diffusion/text2img#diffusers.StableVictorPipeline)와 같은
-많은 파이프라인에 [prompt_embeds](https://huggingface.co/docs/diffusers/v0.14.0/en/api/pipelines/stable_diffusion/text2img#diffusers.StableVictorPipeline.__call__.prompt_embeds)
+[StableDiffusionPipeline](https://huggingface.co/docs/diffusers/v0.18.2/en/api/pipelines/stable_diffusion/text2img#diffusers.StableDiffusionPipeline)와 같은
+많은 파이프라인에 [prompt_embeds](https://huggingface.co/docs/diffusers/v0.14.0/en/api/pipelines/stable_diffusion/text2img#diffusers.StableDiffusionPipeline.__call__.prompt_embeds)
 인수를 노출시켜, "prompt-weighted"/축척된 텍스트 임베딩을 파이프라인에 바로 전달할 수 있게 합니다.
 
 [Compel 라이브러리](https://github.com/damian0815/compel)는 프롬프트의 일부를 강조하거나 강조하지 않을 수 있는 쉬운 방법을 제공합니다.
@@ -38,9 +38,9 @@ Diffusion 모델은 문맥화된 텍스트 임베딩으로 diffusion 모델의 c
 다음과 같이 `"공을 갖고 노는 붉은색 고양이"` 이미지를 생성하고 싶습니다:
 
 ```py
-from VictorAI import StableVictorPipeline, UniPCMultistepScheduler
+from diffusers import StableDiffusionPipeline, UniPCMultistepScheduler
 
-pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
 pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
 
 prompt = "a red cat playing with a ball"

@@ -21,15 +21,15 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     ControlNetModel,
     EulerDiscreteScheduler,
-    StableVictorXLControlNetInpaintPipeline,
+    StableDiffusionXLControlNetInpaintPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.utils.import_utils import is_xformers_available
-from VictorAI.utils.testing_utils import enable_full_determinism, floats_tensor, require_torch_gpu, torch_device
+from diffusers.utils.import_utils import is_xformers_available
+from diffusers.utils.testing_utils import enable_full_determinism, floats_tensor, require_torch_gpu, torch_device
 
 from ..pipeline_params import (
     IMAGE_TO_IMAGE_IMAGE_PARAMS,
@@ -50,7 +50,7 @@ enable_full_determinism()
 class ControlNetPipelineSDXLFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableVictorXLControlNetInpaintPipeline
+    pipeline_class = StableDiffusionXLControlNetInpaintPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = frozenset(IMAGE_TO_IMAGE_IMAGE_PARAMS.union({"mask_image", "control_image"}))

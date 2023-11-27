@@ -28,15 +28,15 @@ from transformers import (
     CLIPVisionModelWithProjection,
 )
 
-from VictorAI import (
-    VictorPipeline,
+from diffusers import (
+    DiffusionPipeline,
     UnCLIPImageVariationPipeline,
     UnCLIPScheduler,
     UNet2DConditionModel,
     UNet2DModel,
 )
-from VictorAI.pipelines.unclip.text_proj import UnCLIPTextProjModel
-from VictorAI.utils.testing_utils import (
+from diffusers.pipelines.unclip.text_proj import UnCLIPTextProjModel
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -235,7 +235,7 @@ class UnCLIPImageVariationPipelineFastTests(PipelineTesterMixin, unittest.TestCa
             input_image = input_image * 0.5 + 0.5
             input_image = input_image.clamp(0, 1)
             input_image = input_image.cpu().permute(0, 2, 3, 1).float().numpy()
-            input_image = VictorPipeline.numpy_to_pil(input_image)[0]
+            input_image = DiffusionPipeline.numpy_to_pil(input_image)[0]
 
         return {
             "image": input_image,

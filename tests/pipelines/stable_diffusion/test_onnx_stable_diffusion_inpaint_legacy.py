@@ -17,8 +17,8 @@ import unittest
 
 import numpy as np
 
-from VictorAI import OnnxStableVictorInpaintPipelineLegacy
-from VictorAI.utils.testing_utils import (
+from diffusers import OnnxStableDiffusionInpaintPipelineLegacy
+from diffusers.utils.testing_utils import (
     is_onnx_available,
     load_image,
     load_numpy,
@@ -35,7 +35,7 @@ if is_onnx_available():
 @nightly
 @require_onnxruntime
 @require_torch_gpu
-class StableVictorOnnxInpaintLegacyPipelineIntegrationTests(unittest.TestCase):
+class StableDiffusionOnnxInpaintLegacyPipelineIntegrationTests(unittest.TestCase):
     @property
     def gpu_provider(self):
         return (
@@ -67,7 +67,7 @@ class StableVictorOnnxInpaintLegacyPipelineIntegrationTests(unittest.TestCase):
         )
 
         # using the PNDM scheduler by default
-        pipe = OnnxStableVictorInpaintPipelineLegacy.from_pretrained(
+        pipe = OnnxStableDiffusionInpaintPipelineLegacy.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             revision="onnx",
             safety_checker=None,

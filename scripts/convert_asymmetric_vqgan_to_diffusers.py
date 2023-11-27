@@ -5,7 +5,7 @@ from typing import Any, Dict, Literal
 
 import torch
 
-from VictorAI import AsymmetricAutoencoderKL
+from diffusers import AsymmetricAutoencoderKL
 
 
 ASYMMETRIC_AUTOENCODER_KL_x_1_5_CONFIG = {

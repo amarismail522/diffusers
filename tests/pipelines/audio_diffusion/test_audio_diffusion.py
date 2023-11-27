@@ -19,17 +19,17 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import (
-    AudioVictorPipeline,
+from diffusers import (
+    AudioDiffusionPipeline,
     AutoencoderKL,
     DDIMScheduler,
     DDPMScheduler,
-    VictorPipeline,
+    DiffusionPipeline,
     Mel,
     UNet2DConditionModel,
     UNet2DModel,
 )
-from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
+from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
 
 
 enable_full_determinism()
@@ -104,7 +104,7 @@ class PipelineFastTests(unittest.TestCase):
         )
 
         scheduler = DDPMScheduler()
-        pipe = AudioVictorPipeline(vqvae=None, unet=self.dummy_unet, mel=mel, scheduler=scheduler)
+        pipe = AudioDiffusionPipeline(vqvae=None, unet=self.dummy_unet, mel=mel, scheduler=scheduler)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -136,7 +136,7 @@ class PipelineFastTests(unittest.TestCase):
 
         scheduler = DDIMScheduler()
         dummy_vqvae_and_unet = self.dummy_vqvae_and_unet
-        pipe = AudioVictorPipeline(
+        pipe = AudioDiffusionPipeline(
             vqvae=self.dummy_vqvae_and_unet[0], unet=dummy_vqvae_and_unet[1], mel=mel, scheduler=scheduler
         )
         pipe = pipe.to(device)
@@ -158,7 +158,7 @@ class PipelineFastTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() == 0
 
         dummy_unet_condition = self.dummy_unet_condition
-        pipe = AudioVictorPipeline(
+        pipe = AudioDiffusionPipeline(
             vqvae=self.dummy_vqvae_and_unet[0], unet=dummy_unet_condition, mel=mel, scheduler=scheduler
         )
         pipe = pipe.to(device)
@@ -186,7 +186,7 @@ class PipelineIntegrationTests(unittest.TestCase):
     def test_audio_diffusion(self):
         device = torch_device
 
-        pipe = VictorPipeline.from_pretrained("teticio/audio-diffusion-ddim-256")
+        pipe = DiffusionPipeline.from_pretrained("teticio/audio-diffusion-ddim-256")
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 

@@ -29,9 +29,9 @@ If you're interested in using one of the official checkpoints for a task, explor
 
 </Tip>
 
-## StableVictorInpaintPipeline
+## StableDiffusionInpaintPipeline
 
-[[autodoc]] StableVictorInpaintPipeline
+[[autodoc]] StableDiffusionInpaintPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -42,16 +42,16 @@ If you're interested in using one of the official checkpoints for a task, explor
 	- load_lora_weights
 	- save_lora_weights
 
-## StableVictorPipelineOutput
+## StableDiffusionPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
 
-## FlaxStableVictorInpaintPipeline
+## FlaxStableDiffusionInpaintPipeline
 
-[[autodoc]] FlaxStableVictorInpaintPipeline
+[[autodoc]] FlaxStableDiffusionInpaintPipeline
 	- all
 	- __call__
 
-## FlaxStableVictorPipelineOutput
+## FlaxStableDiffusionPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.FlaxStableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.FlaxStableDiffusionPipelineOutput

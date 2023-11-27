@@ -21,8 +21,8 @@ from transformers import CLIPTokenizer
 from transformers.models.blip_2.configuration_blip_2 import Blip2Config
 from transformers.models.clip.configuration_clip import CLIPTextConfig
 
-from VictorAI import AutoencoderKL, BlipVictorPipeline, PNDMScheduler, UNet2DConditionModel
-from VictorAI.utils.testing_utils import enable_full_determinism
+from diffusers import AutoencoderKL, BlipDiffusionPipeline, PNDMScheduler, UNet2DConditionModel
+from diffusers.utils.testing_utils import enable_full_determinism
 from src.diffusers.pipelines.blip_diffusion.blip_image_processing import BlipImageProcessor
 from src.diffusers.pipelines.blip_diffusion.modeling_blip2 import Blip2QFormerModel
 from src.diffusers.pipelines.blip_diffusion.modeling_ctx_clip import ContextCLIPTextModel
@@ -33,8 +33,8 @@ from ..test_pipelines_common import PipelineTesterMixin
 enable_full_determinism()
 
 
-class BlipVictorPipelineFastTests(PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = BlipVictorPipeline
+class BlipDiffusionPipelineFastTests(PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = BlipDiffusionPipeline
     params = [
         "prompt",
         "reference_image",

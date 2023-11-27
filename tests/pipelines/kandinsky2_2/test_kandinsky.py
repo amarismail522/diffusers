@@ -20,8 +20,8 @@ import unittest
 import numpy as np
 import torch
 
-from VictorAI import DDIMScheduler, KandinskyV22Pipeline, KandinskyV22PriorPipeline, UNet2DConditionModel, VQModel
-from VictorAI.utils.testing_utils import (
+from diffusers import DDIMScheduler, KandinskyV22Pipeline, KandinskyV22PriorPipeline, UNet2DConditionModel, VQModel
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_numpy,

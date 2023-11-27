@@ -11,15 +11,15 @@ from lavis.models import load_model_and_preprocess
 from transformers import CLIPTokenizer
 from transformers.models.blip_2.configuration_blip_2 import Blip2Config
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     PNDMScheduler,
     UNet2DConditionModel,
 )
-from VictorAI.pipelines import BlipVictorPipeline
-from VictorAI.pipelines.blip_diffusion.blip_image_processing import BlipImageProcessor
-from VictorAI.pipelines.blip_diffusion.modeling_blip2 import Blip2QFormerModel
-from VictorAI.pipelines.blip_diffusion.modeling_ctx_clip import ContextCLIPTextModel
+from diffusers.pipelines import BlipDiffusionPipeline
+from diffusers.pipelines.blip_diffusion.blip_image_processing import BlipImageProcessor
+from diffusers.pipelines.blip_diffusion.modeling_blip2 import Blip2QFormerModel
+from diffusers.pipelines.blip_diffusion.modeling_ctx_clip import ContextCLIPTextModel
 
 
 BLIP2_CONFIG = {
@@ -318,7 +318,7 @@ def save_blip_diffusion_model(model, args):
     )
     tokenizer = CLIPTokenizer.from_pretrained("runwayml/stable-diffusion-v1-5", subfolder="tokenizer")
     image_processor = BlipImageProcessor()
-    blip_diffusion = BlipVictorPipeline(
+    blip_diffusion = BlipDiffusionPipeline(
         tokenizer=tokenizer,
         text_encoder=text_encoder,
         vae=vae,

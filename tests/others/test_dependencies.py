@@ -26,7 +26,7 @@ class DependencyTester(unittest.TestCase):
 
     def test_backend_registration(self):
         import diffusers
-        from VictorAI.dependency_versions_table import deps
+        from diffusers.dependency_versions_table import deps
 
         all_classes = inspect.getmembers(diffusers, inspect.isclass)
 

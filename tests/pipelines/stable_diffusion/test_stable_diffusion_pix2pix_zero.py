@@ -22,18 +22,18 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from VictorAI import (
+from diffusers import (
     AutoencoderKL,
     DDIMInverseScheduler,
     DDIMScheduler,
     DDPMScheduler,
     EulerAncestralDiscreteScheduler,
     LMSDiscreteScheduler,
-    StableVictorPix2PixZeroPipeline,
+    StableDiffusionPix2PixZeroPipeline,
     UNet2DConditionModel,
 )
-from VictorAI.image_processor import VaeImageProcessor
-from VictorAI.utils.testing_utils import (
+from diffusers.image_processor import VaeImageProcessor
+from diffusers.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -61,8 +61,8 @@ enable_full_determinism()
 
 
 @skip_mps
-class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = StableVictorPix2PixZeroPipeline
+class StableDiffusionPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = StableDiffusionPix2PixZeroPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {"image"}
     batch_params = TEXT_GUIDED_IMAGE_VARIATION_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -219,7 +219,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
     def test_stable_diffusion_pix2pix_zero_inversion(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -236,7 +236,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
     def test_stable_diffusion_pix2pix_zero_inversion_batch(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -251,7 +251,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
     def test_stable_diffusion_pix2pix_zero_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -266,7 +266,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
     def test_stable_diffusion_pix2pix_zero_negative_prompt(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -287,7 +287,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
         components["scheduler"] = EulerAncestralDiscreteScheduler(
             beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear"
         )
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -304,7 +304,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
         components["scheduler"] = DDPMScheduler()
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -320,7 +320,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
     def test_stable_diffusion_pix2pix_zero_inversion_pt_np_pil_outputs_equivalent(self):
         device = torch_device
         components = self.get_dummy_components()
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -337,7 +337,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
     def test_stable_diffusion_pix2pix_zero_inversion_pt_np_pil_inputs_equivalent(self):
         device = torch_device
         components = self.get_dummy_components()
-        sd_pipe = StableVictorPix2PixZeroPipeline(**components)
+        sd_pipe = StableDiffusionPix2PixZeroPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -360,7 +360,7 @@ class StableVictorPix2PixZeroPipelineFastTests(PipelineLatentTesterMixin, Pipeli
 
 @nightly
 @require_torch_gpu
-class StableVictorPix2PixZeroPipelineNightlyTests(unittest.TestCase):
+class StableDiffusionPix2PixZeroPipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -392,7 +392,7 @@ class StableVictorPix2PixZeroPipelineNightlyTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_pix2pix_zero_default(self):
-        pipe = StableVictorPix2PixZeroPipeline.from_pretrained(
+        pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
@@ -410,7 +410,7 @@ class StableVictorPix2PixZeroPipelineNightlyTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 5e-2
 
     def test_stable_diffusion_pix2pix_zero_k_lms(self):
-        pipe = StableVictorPix2PixZeroPipeline.from_pretrained(
+        pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.scheduler = LMSDiscreteScheduler.from_config(pipe.scheduler.config)
@@ -451,7 +451,7 @@ class StableVictorPix2PixZeroPipelineNightlyTests(unittest.TestCase):
 
         callback_fn.has_been_called = False
 
-        pipe = StableVictorPix2PixZeroPipeline.from_pretrained(
+        pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
@@ -469,7 +469,7 @@ class StableVictorPix2PixZeroPipelineNightlyTests(unittest.TestCase):
         torch.cuda.reset_max_memory_allocated()
         torch.cuda.reset_peak_memory_stats()
 
-        pipe = StableVictorPix2PixZeroPipeline.from_pretrained(
+        pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
@@ -505,7 +505,7 @@ class InversionPipelineNightlyTests(unittest.TestCase):
         cls.raw_image = raw_image
 
     def test_stable_diffusion_pix2pix_inversion(self):
-        pipe = StableVictorPix2PixZeroPipeline.from_pretrained(
+        pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.inverse_scheduler = DDIMInverseScheduler.from_config(pipe.scheduler.config)
@@ -527,7 +527,7 @@ class InversionPipelineNightlyTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice.cpu().numpy()).max() < 5e-2
 
     def test_stable_diffusion_2_pix2pix_inversion(self):
-        pipe = StableVictorPix2PixZeroPipeline.from_pretrained(
+        pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-1", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.inverse_scheduler = DDIMInverseScheduler.from_config(pipe.scheduler.config)
@@ -554,7 +554,7 @@ class InversionPipelineNightlyTests(unittest.TestCase):
             "https://huggingface.co/datasets/hf-internal-testing/diffusers-images/resolve/main/pix2pix/dog_2.npy"
         )
 
-        pipe = StableVictorPix2PixZeroPipeline.from_pretrained(
+        pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-1", safety_checker=None, torch_dtype=torch.float16
         )
         pipe.inverse_scheduler = DDIMInverseScheduler.from_config(pipe.scheduler.config)

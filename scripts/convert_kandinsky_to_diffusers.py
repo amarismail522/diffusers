@@ -5,9 +5,9 @@ import tempfile
 import torch
 from accelerate import load_checkpoint_and_dispatch
 
-from VictorAI import UNet2DConditionModel
-from VictorAI.models.prior_transformer import PriorTransformer
-from VictorAI.models.vq_model import VQModel
+from diffusers import UNet2DConditionModel
+from diffusers.models.prior_transformer import PriorTransformer
+from diffusers.models.vq_model import VQModel
 
 
 """

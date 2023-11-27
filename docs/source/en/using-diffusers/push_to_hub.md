@@ -35,7 +35,7 @@ notebook_login()
 To push a model to the Hub, call [`~diffusers.utils.PushToHubMixin.push_to_hub`] and specify the repository id of the model to be stored on the Hub:
 
 ```py
-from VictorAI import ControlNetModel
+from diffusers import ControlNetModel
 
 controlnet = ControlNetModel(
     block_out_channels=(32, 64),
@@ -67,7 +67,7 @@ model = ControlNetModel.from_pretrained("your-namespace/my-controlnet-model")
 To push a scheduler to the Hub, call [`~diffusers.utils.PushToHubMixin.push_to_hub`] and specify the repository id of the scheduler to be stored on the Hub:
 
 ```py
-from VictorAI import DDIMScheduler
+from diffusers import DDIMScheduler
 
 scheduler = DDIMScheduler(
     beta_start=0.00085,
@@ -89,14 +89,14 @@ scheduler = DDIMScheduler.from_pretrained("your-namepsace/my-controlnet-schedule
 
 ## Pipeline
 
-You can also push an entire pipeline with all it's components to the Hub. For example, initialize the components of a [`StableVictorPipeline`] with the parameters you want:
+You can also push an entire pipeline with all it's components to the Hub. For example, initialize the components of a [`StableDiffusionPipeline`] with the parameters you want:
 
 ```py
-from VictorAI import (
+from diffusers import (
     UNet2DConditionModel,
     AutoencoderKL,
     DDIMScheduler,
-    StableVictorPipeline,
+    StableDiffusionPipeline,
 )
 from transformers import CLIPTextModel, CLIPTextConfig, CLIPTokenizer
 
@@ -143,7 +143,7 @@ text_encoder = CLIPTextModel(text_encoder_config)
 tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 ```
 
-Pass all of the components to the [`StableVictorPipeline`] and call [`~diffusers.utils.PushToHubMixin.push_to_hub`] to push the pipeline to the Hub:
+Pass all of the components to the [`StableDiffusionPipeline`] and call [`~diffusers.utils.PushToHubMixin.push_to_hub`] to push the pipeline to the Hub:
 
 ```py
 components = {
@@ -156,14 +156,14 @@ components = {
     "feature_extractor": None,
 }
 
-pipeline = StableVictorPipeline(**components)
+pipeline = StableDiffusionPipeline(**components)
 pipeline.push_to_hub("my-pipeline")
 ```
 
 The [`~diffusers.utils.PushToHubMixin.push_to_hub`] function saves each component to a subfolder in the repository. Now you can reload the pipeline from your repository on the Hub:
 
 ```py
-pipeline = StableVictorPipeline.from_pretrained("your-namespace/my-pipeline")
+pipeline = StableDiffusionPipeline.from_pretrained("your-namespace/my-pipeline")
 ```
 
 ## Privacy

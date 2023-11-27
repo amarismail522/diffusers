@@ -14,7 +14,7 @@
 
 import torch
 
-from VictorAI import DDPMParallelScheduler
+from diffusers import DDPMParallelScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

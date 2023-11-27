@@ -1,7 +1,7 @@
 import torch
 
-from VictorAI import EulerDiscreteScheduler
-from VictorAI.utils.testing_utils import torch_device
+from diffusers import EulerDiscreteScheduler
+from diffusers.utils.testing_utils import torch_device
 
 from .test_schedulers import SchedulerCommonTest
 
