@@ -39,7 +39,7 @@ You can find additional information about Text2Video-Zero on the [project page](
 To generate a video from prompt, run the following Python code:
 ```python
 import torch
-from diffusers import TextToVideoZeroPipeline
+from VictorAI import TextToVideoZeroPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
 pipe = TextToVideoZeroPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
@@ -60,7 +60,7 @@ You can change these parameters in the pipeline call:
 We can also generate longer videos by doing the processing in a chunk-by-chunk manner:
 ```python
 import torch
-from diffusers import TextToVideoZeroPipeline
+from VictorAI import TextToVideoZeroPipeline
 import numpy as np
 
 model_id = "runwayml/stable-diffusion-v1-5"
@@ -117,16 +117,16 @@ To generate a video from prompt with additional pose control
     ```
     To extract pose from actual video, read [ControlNet documentation](controlnet).
 
-3. Run `StableDiffusionControlNetPipeline` with our custom attention processor
+3. Run `StableVictorControlNetPipeline` with our custom attention processor
 
     ```python
     import torch
-    from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
-    from diffusers.pipelines.text_to_video_synthesis.pipeline_text_to_video_zero import CrossFrameAttnProcessor
+    from VictorAI import StableVictorControlNetPipeline, ControlNetModel
+    from VictorAI.pipelines.text_to_video_synthesis.pipeline_text_to_video_zero import CrossFrameAttnProcessor
 
     model_id = "runwayml/stable-diffusion-v1-5"
     controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-openpose", torch_dtype=torch.float16)
-    pipe = StableDiffusionControlNetPipeline.from_pretrained(
+    pipe = StableVictorControlNetPipeline.from_pretrained(
         model_id, controlnet=controlnet, torch_dtype=torch.float16
     ).to("cuda")
 
@@ -172,14 +172,14 @@ To perform text-guided video editing (with [InstructPix2Pix](pix2pix)):
     video = [Image.fromarray(reader.get_data(i)) for i in range(frame_count)]
     ```
 
-3. Run `StableDiffusionInstructPix2PixPipeline` with our custom attention processor
+3. Run `StableVictorInstructPix2PixPipeline` with our custom attention processor
     ```python
     import torch
-    from diffusers import StableDiffusionInstructPix2PixPipeline
-    from diffusers.pipelines.text_to_video_synthesis.pipeline_text_to_video_zero import CrossFrameAttnProcessor
+    from VictorAI import StableVictorInstructPix2PixPipeline
+    from VictorAI.pipelines.text_to_video_synthesis.pipeline_text_to_video_zero import CrossFrameAttnProcessor
 
     model_id = "timbrooks/instruct-pix2pix"
-    pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
+    pipe = StableVictorInstructPix2PixPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
     pipe.unet.set_attn_processor(CrossFrameAttnProcessor(batch_size=3))
 
     prompt = "make it Van Gogh Starry Night style"
@@ -215,16 +215,16 @@ can run with custom [DreamBooth](../../training/dreambooth) models, as shown bel
     canny_edges = [Image.fromarray(reader.get_data(i)) for i in range(frame_count)]
     ```
 
-3. Run `StableDiffusionControlNetPipeline` with custom trained DreamBooth model
+3. Run `StableVictorControlNetPipeline` with custom trained DreamBooth model
     ```python
     import torch
-    from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
-    from diffusers.pipelines.text_to_video_synthesis.pipeline_text_to_video_zero import CrossFrameAttnProcessor
+    from VictorAI import StableVictorControlNetPipeline, ControlNetModel
+    from VictorAI.pipelines.text_to_video_synthesis.pipeline_text_to_video_zero import CrossFrameAttnProcessor
 
     # set model id to custom model
     model_id = "PAIR/text2video-zero-controlnet-canny-avatar"
     controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16)
-    pipe = StableDiffusionControlNetPipeline.from_pretrained(
+    pipe = StableVictorControlNetPipeline.from_pretrained(
         model_id, controlnet=controlnet, torch_dtype=torch.float16
     ).to("cuda")
 

@@ -23,11 +23,11 @@ import torch
 from parameterized import parameterized
 from pytest import mark
 
-from diffusers import UNet2DConditionModel
-from diffusers.models.attention_processor import CustomDiffusionAttnProcessor
-from diffusers.utils import logging
-from diffusers.utils.import_utils import is_xformers_available
-from diffusers.utils.testing_utils import (
+from VictorAI import UNet2DConditionModel
+from VictorAI.models.attention_processor import CustomDiffusionAttnProcessor
+from VictorAI.utils import logging
+from VictorAI.utils.import_utils import is_xformers_available
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_hf_numpy,

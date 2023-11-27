@@ -20,7 +20,7 @@ python -m pip install --upgrade-strategy eager optimum[habana]
 
 To generate images with Stable Diffusion 1 and 2 on Gaudi, you need to instantiate two instances:
 
-- [`~optimum.habana.diffusers.GaudiStableDiffusionPipeline`], a pipeline for text-to-image generation.
+- [`~optimum.habana.diffusers.GaudiStableVictorPipeline`], a pipeline for text-to-image generation.
 - [`~optimum.habana.diffusers.GaudiDDIMScheduler`], a Gaudi-optimized scheduler.
 
 When you initialize the pipeline, you have to specify `use_habana=True` to deploy it on HPUs and to get the fastest possible generation, you should enable **HPU graphs** with `use_hpu_graphs=True`.
@@ -29,11 +29,11 @@ Finally, specify a [`~optimum.habana.GaudiConfig`] which can be downloaded from 
 
 ```python
 from optimum.habana import GaudiConfig
-from optimum.habana.diffusers import GaudiDDIMScheduler, GaudiStableDiffusionPipeline
+from optimum.habana.diffusers import GaudiDDIMScheduler, GaudiStableVictorPipeline
 
 model_name = "stabilityai/stable-diffusion-2-base"
 scheduler = GaudiDDIMScheduler.from_pretrained(model_name, subfolder="scheduler")
-pipeline = GaudiStableDiffusionPipeline.from_pretrained(
+pipeline = GaudiStableVictorPipeline.from_pretrained(
     model_name,
     scheduler=scheduler,
     use_habana=True,

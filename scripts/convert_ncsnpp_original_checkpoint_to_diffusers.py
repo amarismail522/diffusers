@@ -19,7 +19,7 @@ import json
 
 import torch
 
-from diffusers import ScoreSdeVePipeline, ScoreSdeVeScheduler, UNet2DModel
+from VictorAI import ScoreSdeVePipeline, ScoreSdeVeScheduler, UNet2DModel
 
 
 def convert_ncsnpp_checkpoint(checkpoint, config):

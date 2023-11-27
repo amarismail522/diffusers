@@ -22,12 +22,12 @@ For more context about the design choices behind community pipelines, please hav
 
 Community pipelines allow you to get creative and build your own unique pipelines to share with the community. You can find all community pipelines in the [diffusers/examples/community](https://github.com/huggingface/diffusers/tree/main/examples/community) folder along with inference and training examples for how to use them. This guide showcases some of the community pipelines and hopefully it'll inspire you to create your own (feel free to open a PR with your own pipeline and we will merge it!).
 
-To load a community pipeline, use the `custom_pipeline` argument in [`DiffusionPipeline`] to specify one of the files in [diffusers/examples/community](https://github.com/huggingface/diffusers/tree/main/examples/community):
+To load a community pipeline, use the `custom_pipeline` argument in [`VictorPipeline`] to specify one of the files in [diffusers/examples/community](https://github.com/huggingface/diffusers/tree/main/examples/community):
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipe = DiffusionPipeline.from_pretrained(
+pipe = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4", custom_pipeline="filename_in_the_community_folder", use_safetensors=True
 )
 ```
@@ -42,8 +42,8 @@ The multilingual Stable Diffusion pipeline uses a pretrained [XLM-RoBERTa](https
 
 ```py
 import torch
-from diffusers import DiffusionPipeline
-from diffusers.utils import make_image_grid
+from VictorAI import VictorPipeline
+from VictorAI.utils import make_image_grid
 from transformers import (
     pipeline,
     MBart50TokenizerFast,
@@ -63,7 +63,7 @@ language_detection_pipeline = pipeline("text-classification",
 translation_tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-one-mmt")
 translation_model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-one-mmt").to(device)
 
-diffuser_pipeline = DiffusionPipeline.from_pretrained(
+diffuser_pipeline = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     custom_pipeline="multilingual_stable_diffusion",
     detection_pipeline=language_detection_pipeline,
@@ -93,10 +93,10 @@ make_image_grid(images, rows=2, cols=2)
 [MagicMix](https://huggingface.co/papers/2210.16056) is a pipeline that can mix an image and text prompt to generate a new image that preserves the image structure. The `mix_factor` determines how much influence the prompt has on the layout generation, `kmin` controls the number of steps during the content generation process, and `kmax` determines how much information is kept in the layout of the original image.
 
 ```py
-from diffusers import DiffusionPipeline, DDIMScheduler
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import VictorPipeline, DDIMScheduler
+from VictorAI.utils import load_image, make_image_grid
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     custom_pipeline="magic_mix",
     scheduler=DDIMScheduler.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="scheduler"),

@@ -14,16 +14,16 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-The [`StableDiffusionDepth2ImgPipeline`] lets you pass a text prompt and an initial image to condition the generation of new images. In addition, you can also pass a `depth_map` to preserve the image structure. If no `depth_map` is provided, the pipeline automatically predicts the depth via an integrated [depth-estimation model](https://github.com/isl-org/MiDaS).
+The [`StableVictorDepth2ImgPipeline`] lets you pass a text prompt and an initial image to condition the generation of new images. In addition, you can also pass a `depth_map` to preserve the image structure. If no `depth_map` is provided, the pipeline automatically predicts the depth via an integrated [depth-estimation model](https://github.com/isl-org/MiDaS).
 
-Start by creating an instance of the [`StableDiffusionDepth2ImgPipeline`]:
+Start by creating an instance of the [`StableVictorDepth2ImgPipeline`]:
 
 ```python
 import torch
-from diffusers import StableDiffusionDepth2ImgPipeline
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import StableVictorDepth2ImgPipeline
+from VictorAI.utils import load_image, make_image_grid
 
-pipeline = StableDiffusionDepth2ImgPipeline.from_pretrained(
+pipeline = StableVictorDepth2ImgPipeline.from_pretrained(
     "stabilityai/stable-diffusion-2-depth",
     torch_dtype=torch.float16,
     use_safetensors=True,

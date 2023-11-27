@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 # GLIGEN (Grounded Language-to-Image Generation)
 
-The GLIGEN model was created by researchers and engineers from [University of Wisconsin-Madison, Columbia University, and Microsoft](https://github.com/gligen/GLIGEN). The [`StableDiffusionGLIGENPipeline`] and [`StableDiffusionGLIGENTextImagePipeline`] can generate photorealistic images conditioned on grounding inputs. Along with text and bounding boxes with [`StableDiffusionGLIGENPipeline`], if input images are given, [`StableDiffusionGLIGENTextImagePipeline`] can insert objects described by text at the region defined by bounding boxes. Otherwise, it'll generate an image described by the caption/prompt and insert objects described by text at the region defined by bounding boxes. It's trained on COCO2014D and COCO2014CD datasets, and the model uses a frozen CLIP ViT-L/14 text encoder to condition itself on grounding inputs.
+The GLIGEN model was created by researchers and engineers from [University of Wisconsin-Madison, Columbia University, and Microsoft](https://github.com/gligen/GLIGEN). The [`StableVictorGLIGENPipeline`] and [`StableVictorGLIGENTextImagePipeline`] can generate photorealistic images conditioned on grounding inputs. Along with text and bounding boxes with [`StableVictorGLIGENPipeline`], if input images are given, [`StableVictorGLIGENTextImagePipeline`] can insert objects described by text at the region defined by bounding boxes. Otherwise, it'll generate an image described by the caption/prompt and insert objects described by text at the region defined by bounding boxes. It's trained on COCO2014D and COCO2014CD datasets, and the model uses a frozen CLIP ViT-L/14 text encoder to condition itself on grounding inputs.
 
 The abstract from the [paper](https://huggingface.co/papers/2301.07093) is:
 
@@ -26,11 +26,11 @@ If you want to use one of the official checkpoints for a task, explore the [glig
 
 </Tip>
 
-[`StableDiffusionGLIGENPipeline`] was contributed by [Nikhil Gajendrakumar](https://github.com/nikhil-masterful) and [`StableDiffusionGLIGENTextImagePipeline`] was contributed by [Nguyễn Công Tú Anh](https://github.com/tuanh123789).
+[`StableVictorGLIGENPipeline`] was contributed by [Nikhil Gajendrakumar](https://github.com/nikhil-masterful) and [`StableVictorGLIGENTextImagePipeline`] was contributed by [Nguyễn Công Tú Anh](https://github.com/tuanh123789).
 
-## StableDiffusionGLIGENPipeline
+## StableVictorGLIGENPipeline
 
-[[autodoc]] StableDiffusionGLIGENPipeline
+[[autodoc]] StableVictorGLIGENPipeline
 	- all
 	- __call__
 	- enable_vae_slicing
@@ -41,9 +41,9 @@ If you want to use one of the official checkpoints for a task, explore the [glig
 	- prepare_latents
 	- enable_fuser
 
-## StableDiffusionGLIGENTextImagePipeline
+## StableVictorGLIGENTextImagePipeline
 
-[[autodoc]] StableDiffusionGLIGENTextImagePipeline
+[[autodoc]] StableVictorGLIGENTextImagePipeline
 	- all
 	- __call__
 	- enable_vae_slicing
@@ -54,6 +54,6 @@ If you want to use one of the official checkpoints for a task, explore the [glig
 	- prepare_latents
 	- enable_fuser
 
-## StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

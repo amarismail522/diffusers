@@ -22,16 +22,16 @@ import torch
 from huggingface_hub import hf_hub_download
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDIMScheduler,
     DPMSolverMultistepScheduler,
     EulerDiscreteScheduler,
-    StableDiffusionPipeline,
+    StableVictorPipeline,
     UNet2DConditionModel,
 )
-from diffusers.models.attention_processor import AttnProcessor
-from diffusers.utils.testing_utils import (
+from VictorAI.models.attention_processor import AttnProcessor
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     load_numpy,
     numpy_cosine_similarity_distance,
@@ -44,7 +44,7 @@ from diffusers.utils.testing_utils import (
 enable_full_determinism()
 
 
-class StableDiffusion2VPredictionPipelineFastTests(unittest.TestCase):
+class StableVictor2VPredictionPipelineFastTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -119,7 +119,7 @@ class StableDiffusion2VPredictionPipelineFastTests(unittest.TestCase):
         tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionPipeline(
+        sd_pipe = StableVictorPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -168,7 +168,7 @@ class StableDiffusion2VPredictionPipelineFastTests(unittest.TestCase):
         tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionPipeline(
+        sd_pipe = StableVictorPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -228,7 +228,7 @@ class StableDiffusion2VPredictionPipelineFastTests(unittest.TestCase):
         bert = bert.half()
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionPipeline(
+        sd_pipe = StableVictorPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -250,7 +250,7 @@ class StableDiffusion2VPredictionPipelineFastTests(unittest.TestCase):
 
 @slow
 @require_torch_gpu
-class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
+class StableVictor2VPredictionPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -258,7 +258,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
         torch.cuda.empty_cache()
 
     def test_stable_diffusion_v_pred_default(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2")
+        sd_pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.enable_attention_slicing()
         sd_pipe.set_progress_bar_config(disable=None)
@@ -276,7 +276,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_stable_diffusion_v_pred_upcast_attention(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained(
+        sd_pipe = StableVictorPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-1", torch_dtype=torch.float16
         )
         sd_pipe = sd_pipe.to(torch_device)
@@ -297,7 +297,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
 
     def test_stable_diffusion_v_pred_euler(self):
         scheduler = EulerDiscreteScheduler.from_pretrained("stabilityai/stable-diffusion-2", subfolder="scheduler")
-        sd_pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2", scheduler=scheduler)
+        sd_pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2", scheduler=scheduler)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.enable_attention_slicing()
         sd_pipe.set_progress_bar_config(disable=None)
@@ -322,7 +322,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
         scheduler = DPMSolverMultistepScheduler.from_pretrained(
             "stabilityai/stable-diffusion-2", subfolder="scheduler"
         )
-        sd_pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2", scheduler=scheduler)
+        sd_pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2", scheduler=scheduler)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.enable_attention_slicing()
         sd_pipe.set_progress_bar_config(disable=None)
@@ -342,7 +342,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
     def test_stable_diffusion_attention_slicing_v_pred(self):
         torch.cuda.reset_peak_memory_stats()
         model_id = "stabilityai/stable-diffusion-2"
-        pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -379,7 +379,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
             "sd2-text2img/astronaut_riding_a_horse_v_pred.npy"
         )
 
-        pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2")
+        pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2")
         pipe.to(torch_device)
         pipe.enable_attention_slicing()
         pipe.set_progress_bar_config(disable=None)
@@ -400,7 +400,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
             "sd2-text2img/lion_galaxy.npy"
         )
 
-        pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2-1")
+        pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2-1")
         pipe.scheduler = DDIMScheduler.from_config(
             pipe.scheduler.config, timestep_spacing="trailing", rescale_betas_zero_snr=True
         )
@@ -431,7 +431,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
             "sd2-text2img/astronaut_riding_a_horse_v_pred_fp16.npy"
         )
 
-        pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2", torch_dtype=torch.float16)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -448,7 +448,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
     def test_download_local(self):
         filename = hf_hub_download("stabilityai/stable-diffusion-2-1", filename="v2-1_768-ema-pruned.safetensors")
 
-        pipe = StableDiffusionPipeline.from_single_file(filename, torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_single_file(filename, torch_dtype=torch.float16)
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.enable_model_cpu_offload()
 
@@ -461,7 +461,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
             "https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.safetensors"
         )
 
-        pipe_single = StableDiffusionPipeline.from_single_file(single_file_path)
+        pipe_single = StableVictorPipeline.from_single_file(single_file_path)
         pipe_single.scheduler = DDIMScheduler.from_config(pipe_single.scheduler.config)
         pipe_single.unet.set_attn_processor(AttnProcessor())
         pipe_single.enable_model_cpu_offload()
@@ -469,7 +469,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
         generator = torch.Generator(device="cpu").manual_seed(0)
         image_ckpt = pipe_single("a turtle", num_inference_steps=2, generator=generator, output_type="np").images[0]
 
-        pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2-1")
+        pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2-1")
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.unet.set_attn_processor(AttnProcessor())
         pipe.enable_model_cpu_offload()
@@ -504,7 +504,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
 
         test_callback_fn.has_been_called = False
 
-        pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2", torch_dtype=torch.float16)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -527,12 +527,12 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
         pipeline_id = "stabilityai/stable-diffusion-2"
 
         start_time = time.time()
-        pipeline_low_cpu_mem_usage = StableDiffusionPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16)
+        pipeline_low_cpu_mem_usage = StableVictorPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16)
         pipeline_low_cpu_mem_usage.to(torch_device)
         low_cpu_mem_usage_time = time.time() - start_time
 
         start_time = time.time()
-        _ = StableDiffusionPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16, low_cpu_mem_usage=False)
+        _ = StableVictorPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16, low_cpu_mem_usage=False)
         normal_load_time = time.time() - start_time
 
         assert 2 * low_cpu_mem_usage_time < normal_load_time
@@ -545,7 +545,7 @@ class StableDiffusion2VPredictionPipelineIntegrationTests(unittest.TestCase):
         pipeline_id = "stabilityai/stable-diffusion-2"
         prompt = "Andromeda galaxy in a bottle"
 
-        pipeline = StableDiffusionPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16)
+        pipeline = StableVictorPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16)
         pipeline = pipeline.to(torch_device)
         pipeline.enable_attention_slicing(1)
         pipeline.enable_sequential_cpu_offload()

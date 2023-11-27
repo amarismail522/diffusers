@@ -8,16 +8,16 @@
 
 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index)는 분산 설정에서 추론을 쉽게 훈련하거나 실행할 수 있도록 설계된 라이브러리입니다. 분산 환경 설정 프로세스를 간소화하여 PyTorch 코드에 집중할 수 있도록 해줍니다.
 
-시작하려면 Python 파일을 생성하고 [`accelerate.PartialState`]를 초기화하여 분산 환경을 생성하면, 설정이 자동으로 감지되므로 `rank` 또는 `world_size`를 명시적으로 정의할 필요가 없습니다. ['DiffusionPipeline`]을 `distributed_state.device`로 이동하여 각 프로세스에 GPU를 할당합니다.
+시작하려면 Python 파일을 생성하고 [`accelerate.PartialState`]를 초기화하여 분산 환경을 생성하면, 설정이 자동으로 감지되므로 `rank` 또는 `world_size`를 명시적으로 정의할 필요가 없습니다. ['VictorPipeline`]을 `distributed_state.device`로 이동하여 각 프로세스에 GPU를 할당합니다.
 
 이제 컨텍스트 관리자로 [`~accelerate.PartialState.split_between_processes`] 유틸리티를 사용하여 프로세스 수에 따라 프롬프트를 자동으로 분배합니다.
 
 
 ```py
 from accelerate import PartialState
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
 distributed_state = PartialState()
 pipeline.to(distributed_state.device)
 
@@ -40,7 +40,7 @@ accelerate launch run_distributed.py --num_processes=2
 
 PyTorch는 데이터 병렬 처리를 가능하게 하는 [`DistributedDataParallel`](https://pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html)을 지원합니다.
 
-시작하려면 Python 파일을 생성하고 `torch.distributed` 및 `torch.multiprocessing`을 임포트하여 분산 프로세스 그룹을 설정하고 각 GPU에서 추론용 프로세스를 생성합니다. 그리고 [`DiffusionPipeline`]도 초기화해야 합니다:
+시작하려면 Python 파일을 생성하고 `torch.distributed` 및 `torch.multiprocessing`을 임포트하여 분산 프로세스 그룹을 설정하고 각 GPU에서 추론용 프로세스를 생성합니다. 그리고 [`VictorPipeline`]도 초기화해야 합니다:
 
 확산 파이프라인을 `rank`로 이동하고 `get_rank`를 사용하여 각 프로세스에 GPU를 할당하면 각 프로세스가 다른 프롬프트를 처리합니다:
 
@@ -49,9 +49,9 @@ import torch
 import torch.distributed as dist
 import torch.multiprocessing as mp
 
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-sd = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+sd = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
 ```
 
 사용할 백엔드 유형, 현재 프로세스의 `rank`, `world_size` 또는 참여하는 프로세스 수로 분산 환경 생성을 처리하는 함수[`init_process_group`]를 만들어 추론을 실행해야 합니다.

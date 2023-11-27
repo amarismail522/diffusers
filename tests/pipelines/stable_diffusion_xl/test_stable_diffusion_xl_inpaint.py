@@ -22,18 +22,18 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDIMScheduler,
     DPMSolverMultistepScheduler,
     EulerDiscreteScheduler,
     HeunDiscreteScheduler,
     LCMScheduler,
-    StableDiffusionXLInpaintPipeline,
+    StableVictorXLInpaintPipeline,
     UNet2DConditionModel,
     UniPCMultistepScheduler,
 )
-from diffusers.utils.testing_utils import enable_full_determinism, floats_tensor, require_torch_gpu, slow, torch_device
+from VictorAI.utils.testing_utils import enable_full_determinism, floats_tensor, require_torch_gpu, slow, torch_device
 
 from ..pipeline_params import (
     TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS,
@@ -46,8 +46,8 @@ from ..test_pipelines_common import PipelineLatentTesterMixin, PipelineTesterMix
 enable_full_determinism()
 
 
-class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = StableDiffusionXLInpaintPipeline
+class StableVictorXLInpaintPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = StableVictorXLInpaintPipeline
     params = TEXT_GUIDED_IMAGE_INPAINTING_PARAMS
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS
     image_params = frozenset([])
@@ -197,7 +197,7 @@ class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, Pipel
     def test_stable_diffusion_xl_inpaint_euler(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionXLInpaintPipeline(**components)
+        sd_pipe = StableVictorXLInpaintPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -214,7 +214,7 @@ class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, Pipel
     def test_stable_diffusion_xl_inpaint_euler_lcm(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableDiffusionXLInpaintPipeline(**components)
+        sd_pipe = StableVictorXLInpaintPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.config)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -241,7 +241,7 @@ class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, Pipel
 
     def test_stable_diffusion_xl_inpaint_negative_prompt_embeds(self):
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionXLInpaintPipeline(**components)
+        sd_pipe = StableVictorXLInpaintPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -283,16 +283,16 @@ class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, Pipel
     def test_stable_diffusion_xl_offloads(self):
         pipes = []
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        sd_pipe = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipes.append(sd_pipe)
 
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionXLInpaintPipeline(**components)
+        sd_pipe = StableVictorXLInpaintPipeline(**components)
         sd_pipe.enable_model_cpu_offload()
         pipes.append(sd_pipe)
 
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionXLInpaintPipeline(**components)
+        sd_pipe = StableVictorXLInpaintPipeline(**components)
         sd_pipe.enable_sequential_cpu_offload()
         pipes.append(sd_pipe)
 
@@ -328,9 +328,9 @@ class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, Pipel
 
     def test_stable_diffusion_two_xl_mixture_of_denoiser_fast(self):
         components = self.get_dummy_components()
-        pipe_1 = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        pipe_1 = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipe_1.unet.set_default_attn_processor()
-        pipe_2 = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        pipe_2 = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipe_2.unet.set_default_attn_processor()
 
         def assert_run_mixture(
@@ -388,9 +388,9 @@ class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, Pipel
     @slow
     def test_stable_diffusion_two_xl_mixture_of_denoiser(self):
         components = self.get_dummy_components()
-        pipe_1 = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        pipe_1 = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipe_1.unet.set_default_attn_processor()
-        pipe_2 = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        pipe_2 = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipe_2.unet.set_default_attn_processor()
 
         def assert_run_mixture(
@@ -455,11 +455,11 @@ class StableDiffusionXLInpaintPipelineFastTests(PipelineLatentTesterMixin, Pipel
     @slow
     def test_stable_diffusion_three_xl_mixture_of_denoiser(self):
         components = self.get_dummy_components()
-        pipe_1 = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        pipe_1 = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipe_1.unet.set_default_attn_processor()
-        pipe_2 = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        pipe_2 = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipe_2.unet.set_default_attn_processor()
-        pipe_3 = StableDiffusionXLInpaintPipeline(**components).to(torch_device)
+        pipe_3 = StableVictorXLInpaintPipeline(**components).to(torch_device)
         pipe_3.unet.set_default_attn_processor()
 
         def assert_run_mixture(

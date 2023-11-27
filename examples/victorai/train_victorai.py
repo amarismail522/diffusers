@@ -18,9 +18,9 @@ from torch.utils.data import Dataset
 from accelerate import Accelerator
 from accelerate.logging import get_logger
 from accelerate.utils import set_seed
-from diffusers import AutoencoderKL, DDIMScheduler, DDPMScheduler, StableDiffusionPipeline, UNet2DConditionModel
-from diffusers.optimization import get_scheduler
-from diffusers.utils.import_utils import is_xformers_available
+from VictorAI import AutoencoderKL, DDIMScheduler, DDPMScheduler, StableVictorPipeline, UNet2DConditionModel
+from VictorAI.optimization import get_scheduler
+from VictorAI.utils.import_utils import is_xformers_available
 from PIL import Image
 from torchvision import transforms
 from tqdm.auto import tqdm
@@ -466,7 +466,7 @@ def main(args):
             if cur_class_images < args.num_class_images:
                 torch_dtype = torch.float16 if accelerator.device.type == "cuda" else torch.float32
                 if pipeline is None:
-                    pipeline = StableDiffusionPipeline.from_pretrained(
+                    pipeline = StableVictorPipeline.from_pretrained(
                         args.pretrained_model_name_or_path,
                         vae=AutoencoderKL.from_pretrained(
                             args.pretrained_vae_name_or_path or args.pretrained_model_name_or_path,
@@ -716,7 +716,7 @@ def main(args):
                 text_enc_model = accelerator.unwrap_model(text_encoder, keep_fp32_wrapper=True)
             else:
                 text_enc_model = CLIPTextModel.from_pretrained(args.pretrained_model_name_or_path, subfolder="text_encoder", revision=args.revision)
-            pipeline = StableDiffusionPipeline.from_pretrained(
+            pipeline = StableVictorPipeline.from_pretrained(
                 args.pretrained_model_name_or_path,
                 unet=accelerator.unwrap_model(unet, keep_fp32_wrapper=True),
                 text_encoder=text_enc_model,

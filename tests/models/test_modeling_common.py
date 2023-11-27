@@ -27,11 +27,11 @@ import torch
 from huggingface_hub import delete_repo
 from requests.exceptions import HTTPError
 
-from diffusers.models import UNet2DConditionModel
-from diffusers.models.attention_processor import AttnProcessor, AttnProcessor2_0, XFormersAttnProcessor
-from diffusers.training_utils import EMAModel
-from diffusers.utils import is_xformers_available, logging
-from diffusers.utils.testing_utils import (
+from VictorAI.models import UNet2DConditionModel
+from VictorAI.models.attention_processor import AttnProcessor, AttnProcessor2_0, XFormersAttnProcessor
+from VictorAI.training_utils import EMAModel
+from VictorAI.utils import is_xformers_available, logging
+from VictorAI.utils.testing_utils import (
     CaptureLogger,
     require_python39_or_higher,
     require_torch_2,

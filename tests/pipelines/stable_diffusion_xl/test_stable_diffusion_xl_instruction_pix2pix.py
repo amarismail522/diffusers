@@ -20,16 +20,16 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     EulerDiscreteScheduler,
     UNet2DConditionModel,
 )
-from diffusers.image_processor import VaeImageProcessor
-from diffusers.pipelines.stable_diffusion_xl.pipeline_stable_diffusion_xl_instruct_pix2pix import (
-    StableDiffusionXLInstructPix2PixPipeline,
+from VictorAI.image_processor import VaeImageProcessor
+from VictorAI.pipelines.stable_diffusion_xl.pipeline_stable_diffusion_xl_instruct_pix2pix import (
+    StableVictorXLInstructPix2PixPipeline,
 )
-from diffusers.utils.testing_utils import enable_full_determinism, floats_tensor, torch_device
+from VictorAI.utils.testing_utils import enable_full_determinism, floats_tensor, torch_device
 
 from ..pipeline_params import (
     IMAGE_TO_IMAGE_IMAGE_PARAMS,
@@ -47,14 +47,14 @@ from ..test_pipelines_common import (
 enable_full_determinism()
 
 
-class StableDiffusionXLInstructPix2PixPipelineFastTests(
+class StableVictorXLInstructPix2PixPipelineFastTests(
     PipelineLatentTesterMixin,
     PipelineKarrasSchedulerTesterMixin,
     PipelineTesterMixin,
     SDXLOptionalComponentsTesterMixin,
     unittest.TestCase,
 ):
-    pipeline_class = StableDiffusionXLInstructPix2PixPipeline
+    pipeline_class = StableVictorXLInstructPix2PixPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {"height", "width", "cross_attention_kwargs"}
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS
     image_params = IMAGE_TO_IMAGE_IMAGE_PARAMS
@@ -163,7 +163,7 @@ class StableDiffusionXLInstructPix2PixPipelineFastTests(
     # Overwrite the default test_latents_inputs because pix2pix encode the image differently
     def test_latents_input(self):
         components = self.get_dummy_components()
-        pipe = StableDiffusionXLInstructPix2PixPipeline(**components)
+        pipe = StableVictorXLInstructPix2PixPipeline(**components)
         pipe.image_processor = VaeImageProcessor(do_resize=False, do_normalize=False)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)

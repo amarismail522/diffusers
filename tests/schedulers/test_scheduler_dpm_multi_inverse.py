@@ -2,7 +2,7 @@ import tempfile
 
 import torch
 
-from diffusers import DPMSolverMultistepInverseScheduler, DPMSolverMultistepScheduler
+from VictorAI import DPMSolverMultistepInverseScheduler, DPMSolverMultistepScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

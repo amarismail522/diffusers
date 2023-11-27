@@ -20,8 +20,8 @@ import unittest
 import numpy as np
 import torch
 
-from diffusers import VersatileDiffusionPipeline
-from diffusers.utils.testing_utils import load_image, nightly, require_torch_gpu, torch_device
+from VictorAI import VersatileVictorPipeline
+from VictorAI.utils.testing_utils import load_image, nightly, require_torch_gpu, torch_device
 
 
 torch.backends.cuda.matmul.allow_tf32 = False
@@ -41,7 +41,7 @@ class VersatileDiffusionMegaPipelineIntegrationTests(unittest.TestCase):
         torch.cuda.empty_cache()
 
     def test_from_save_pretrained(self):
-        pipe = VersatileDiffusionPipeline.from_pretrained("shi-labs/versatile-diffusion", torch_dtype=torch.float16)
+        pipe = VersatileVictorPipeline.from_pretrained("shi-labs/versatile-diffusion", torch_dtype=torch.float16)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -62,7 +62,7 @@ class VersatileDiffusionMegaPipelineIntegrationTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             pipe.save_pretrained(tmpdirname)
-            pipe = VersatileDiffusionPipeline.from_pretrained(tmpdirname, torch_dtype=torch.float16)
+            pipe = VersatileVictorPipeline.from_pretrained(tmpdirname, torch_dtype=torch.float16)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -80,7 +80,7 @@ class VersatileDiffusionMegaPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image - new_image).max() < 1e-5, "Models don't have the same forward pass"
 
     def test_inference_dual_guided_then_text_to_image(self):
-        pipe = VersatileDiffusionPipeline.from_pretrained("shi-labs/versatile-diffusion", torch_dtype=torch.float16)
+        pipe = VersatileVictorPipeline.from_pretrained("shi-labs/versatile-diffusion", torch_dtype=torch.float16)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 

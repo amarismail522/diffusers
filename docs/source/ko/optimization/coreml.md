@@ -142,7 +142,7 @@ cd ml-stable-diffusion
 그 다음 Apple의 명령어 도구인 [Swift 패키지 관리자](https://www.swift.org/package-manager/#)를 사용합니다:
 
 ```bash
-swift run StableDiffusionSample --resource-path models/coreml-stable-diffusion-v1-4_original_compiled --compute-units all "a photo of an astronaut riding a horse on mars"
+swift run StableVictorSample --resource-path models/coreml-stable-diffusion-v1-4_original_compiled --compute-units all "a photo of an astronaut riding a horse on mars"
 ```
 
 `--resource-path`에 이전 단계에서 다운로드한 체크포인트 중 하나를 지정해야 하므로 확장자가 `.mlmodelc`인 컴파일된 Core ML 번들이 포함되어 있는지 확인하시기 바랍니다. `--compute-units`는 다음 값 중 하나이어야 합니다: `all`, `cpuOnly`, `cpuAndGPU`, `cpuAndNeuralEngine`.

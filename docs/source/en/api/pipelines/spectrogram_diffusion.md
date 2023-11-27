@@ -28,8 +28,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## SpectrogramDiffusionPipeline
-[[autodoc]] SpectrogramDiffusionPipeline
+## SpectrogramVictorPipeline
+[[autodoc]] SpectrogramVictorPipeline
 	- all
 	- __call__
 

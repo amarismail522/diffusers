@@ -7,8 +7,8 @@ import torch
 from torch.nn import functional as F
 from transformers import CLIPConfig, CLIPImageProcessor, CLIPVisionModelWithProjection, T5EncoderModel, T5Tokenizer
 
-from diffusers import DDPMScheduler, IFPipeline, IFSuperResolutionPipeline, UNet2DConditionModel
-from diffusers.pipelines.deepfloyd_if.safety_checker import IFSafetyChecker
+from VictorAI import DDPMScheduler, IFPipeline, IFSuperResolutionPipeline, UNet2DConditionModel
+from VictorAI.pipelines.deepfloyd_if.safety_checker import IFSafetyChecker
 
 
 try:

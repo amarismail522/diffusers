@@ -17,8 +17,8 @@ import unittest
 
 import numpy as np
 
-from diffusers import LMSDiscreteScheduler, OnnxStableDiffusionInpaintPipeline
-from diffusers.utils.testing_utils import (
+from VictorAI import LMSDiscreteScheduler, OnnxStableVictorInpaintPipeline
+from VictorAI.utils.testing_utils import (
     is_onnx_available,
     load_image,
     nightly,
@@ -33,7 +33,7 @@ if is_onnx_available():
     import onnxruntime as ort
 
 
-class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
+class OnnxStableVictorPipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
     # FIXME: add fast tests
     pass
 
@@ -41,7 +41,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
 @nightly
 @require_onnxruntime
 @require_torch_gpu
-class OnnxStableDiffusionInpaintPipelineIntegrationTests(unittest.TestCase):
+class OnnxStableVictorInpaintPipelineIntegrationTests(unittest.TestCase):
     @property
     def gpu_provider(self):
         return (
@@ -67,7 +67,7 @@ class OnnxStableDiffusionInpaintPipelineIntegrationTests(unittest.TestCase):
             "https://huggingface.co/datasets/hf-internal-testing/diffusers-images/resolve/main"
             "/in_paint/overture-creations-5sI6fQgYIuo_mask.png"
         )
-        pipe = OnnxStableDiffusionInpaintPipeline.from_pretrained(
+        pipe = OnnxStableVictorInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-inpainting",
             revision="onnx",
             safety_checker=None,
@@ -109,7 +109,7 @@ class OnnxStableDiffusionInpaintPipelineIntegrationTests(unittest.TestCase):
         lms_scheduler = LMSDiscreteScheduler.from_pretrained(
             "runwayml/stable-diffusion-inpainting", subfolder="scheduler", revision="onnx"
         )
-        pipe = OnnxStableDiffusionInpaintPipeline.from_pretrained(
+        pipe = OnnxStableVictorInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-inpainting",
             revision="onnx",
             scheduler=lms_scheduler,

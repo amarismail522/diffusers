@@ -23,8 +23,8 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import AutoencoderKL, DDIMScheduler, DDPMScheduler, StableDiffusionUpscalePipeline, UNet2DConditionModel
-from diffusers.utils.testing_utils import (
+from VictorAI import AutoencoderKL, DDIMScheduler, DDPMScheduler, StableVictorUpscalePipeline, UNet2DConditionModel
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -39,7 +39,7 @@ from diffusers.utils.testing_utils import (
 enable_full_determinism()
 
 
-class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
+class StableVictorUpscalePipelineFastTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -120,7 +120,7 @@ class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
         low_res_image = Image.fromarray(np.uint8(image)).convert("RGB").resize((64, 64))
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionUpscalePipeline(
+        sd_pipe = StableVictorUpscalePipeline(
             unet=unet,
             low_res_scheduler=low_res_scheduler,
             scheduler=scheduler,
@@ -181,7 +181,7 @@ class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
         low_res_image = Image.fromarray(np.uint8(image)).convert("RGB").resize((64, 64))
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionUpscalePipeline(
+        sd_pipe = StableVictorUpscalePipeline(
             unet=unet,
             low_res_scheduler=low_res_scheduler,
             scheduler=scheduler,
@@ -232,7 +232,7 @@ class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
         low_res_image = Image.fromarray(np.uint8(image)).convert("RGB").resize((64, 64))
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionUpscalePipeline(
+        sd_pipe = StableVictorUpscalePipeline(
             unet=unet,
             low_res_scheduler=low_res_scheduler,
             scheduler=scheduler,
@@ -302,7 +302,7 @@ class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
         text_encoder = text_encoder.half()
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionUpscalePipeline(
+        sd_pipe = StableVictorUpscalePipeline(
             unet=unet,
             low_res_scheduler=low_res_scheduler,
             scheduler=scheduler,
@@ -336,7 +336,7 @@ class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
         tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionUpscalePipeline(
+        sd_pipe = StableVictorUpscalePipeline(
             unet=self.dummy_cond_unet_upscale,
             low_res_scheduler=low_res_scheduler,
             scheduler=scheduler,
@@ -350,7 +350,7 @@ class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             sd_pipe.save_pretrained(tmpdirname)
-            sd_pipe = StableDiffusionUpscalePipeline.from_pretrained(tmpdirname).to(device)
+            sd_pipe = StableVictorUpscalePipeline.from_pretrained(tmpdirname).to(device)
         pipes.append(sd_pipe)
 
         prompt = "A painting of a squirrel eating a burger"
@@ -376,7 +376,7 @@ class StableDiffusionUpscalePipelineFastTests(unittest.TestCase):
 
 @slow
 @require_torch_gpu
-class StableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
+class StableVictorUpscalePipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -394,7 +394,7 @@ class StableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
         )
 
         model_id = "stabilityai/stable-diffusion-x4-upscaler"
-        pipe = StableDiffusionUpscalePipeline.from_pretrained(model_id)
+        pipe = StableVictorUpscalePipeline.from_pretrained(model_id)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -424,7 +424,7 @@ class StableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
         )
 
         model_id = "stabilityai/stable-diffusion-x4-upscaler"
-        pipe = StableDiffusionUpscalePipeline.from_pretrained(
+        pipe = StableVictorUpscalePipeline.from_pretrained(
             model_id,
             torch_dtype=torch.float16,
         )
@@ -457,7 +457,7 @@ class StableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
         )
 
         model_id = "stabilityai/stable-diffusion-x4-upscaler"
-        pipe = StableDiffusionUpscalePipeline.from_pretrained(
+        pipe = StableVictorUpscalePipeline.from_pretrained(
             model_id,
             torch_dtype=torch.float16,
         )
@@ -489,7 +489,7 @@ class StableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
 
         prompt = "a cat sitting on a park bench"
         model_id = "stabilityai/stable-diffusion-x4-upscaler"
-        pipe = StableDiffusionUpscalePipeline.from_pretrained(model_id)
+        pipe = StableVictorUpscalePipeline.from_pretrained(model_id)
         pipe.enable_model_cpu_offload()
 
         generator = torch.Generator("cpu").manual_seed(0)
@@ -499,7 +499,7 @@ class StableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
         single_file_path = (
             "https://huggingface.co/stabilityai/stable-diffusion-x4-upscaler/blob/main/x4-upscaler-ema.safetensors"
         )
-        pipe_from_single_file = StableDiffusionUpscalePipeline.from_single_file(single_file_path)
+        pipe_from_single_file = StableVictorUpscalePipeline.from_single_file(single_file_path)
         pipe_from_single_file.enable_model_cpu_offload()
 
         generator = torch.Generator("cpu").manual_seed(0)

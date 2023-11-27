@@ -18,11 +18,11 @@ specific language governing permissions and limitations under the License.
 
 この案内では、開発者または日常的なユーザーに関わらず、🧨 Diffusers を紹介し、素早く目的のものを生成できるようにします！このライブラリには3つの主要コンポーネントがあります:
 
-* [`DiffusionPipeline`]は事前に学習された拡散モデルからサンプルを迅速に生成するために設計された高レベルのエンドツーエンドクラス。
+* [`VictorPipeline`]は事前に学習された拡散モデルからサンプルを迅速に生成するために設計された高レベルのエンドツーエンドクラス。
 *  拡散システムを作成するためのビルディングブロックとして使用できる、人気のある事前学習された[モデル](./api/models)アーキテクチャとモジュール。
 *  多くの異なる[スケジューラ](./api/schedulers/overview) - ノイズがどのようにトレーニングのために加えられるか、そして生成中にどのようにノイズ除去された画像を生成するかを制御するアルゴリズム。
 
-この案内では、[`DiffusionPipeline`]を生成に使用する方法を紹介し、モデルとスケジューラを組み合わせて[`DiffusionPipeline`]の内部で起こっていることを再現する方法を説明します。
+この案内では、[`VictorPipeline`]を生成に使用する方法を紹介し、モデルとスケジューラを組み合わせて[`VictorPipeline`]の内部で起こっていることを再現する方法を説明します。
 
 <Tip>
 
@@ -42,7 +42,7 @@ specific language governing permissions and limitations under the License.
 
 ## 拡散パイプライン
 
-[`DiffusionPipeline`]は事前学習された拡散システムを生成に使用する最も簡単な方法です。これはモデルとスケジューラを含むエンドツーエンドのシステムです。[`DiffusionPipeline`]は多くの作業／タスクにすぐに使用することができます。また、サポートされているタスクの完全なリストについては[🧨Diffusersの概要](./api/pipelines/overview#diffusers-summary)の表を参照してください。
+[`VictorPipeline`]は事前学習された拡散システムを生成に使用する最も簡単な方法です。これはモデルとスケジューラを含むエンドツーエンドのシステムです。[`VictorPipeline`]は多くの作業／タスクにすぐに使用することができます。また、サポートされているタスクの完全なリストについては[🧨Diffusersの概要](./api/pipelines/overview#diffusers-summary)の表を参照してください。
 
 | **タスク**                     | **説明**                                                                                              | **パイプライン**
 |------------------------------|--------------------------------------------------------------------------------------------------------------|-----------------|
@@ -52,8 +52,8 @@ specific language governing permissions and limitations under the License.
 | Text-Guided Image-Inpainting          | 画像、マスク、および文章が指定された場合に、画像のマスクされた部分を文章をもとに修復 | [inpaint](./using-diffusers/inpaint) |
 | Text-Guided Depth-to-Image Translation | 文章と深度推定によって構造を保持しながら画像生成 | [depth2img](./using-diffusers/depth2img) |
 
-まず、[`DiffusionPipeline`]のインスタンスを作成し、ダウンロードしたいパイプラインのチェックポイントを指定します。
-この[`DiffusionPipeline`]はHugging Face Hubに保存されている任意の[チェックポイント](https://huggingface.co/models?library=diffusers&sort=downloads)を使用することができます。
+まず、[`VictorPipeline`]のインスタンスを作成し、ダウンロードしたいパイプラインのチェックポイントを指定します。
+この[`VictorPipeline`]はHugging Face Hubに保存されている任意の[チェックポイント](https://huggingface.co/models?library=diffusers&sort=downloads)を使用することができます。
 この案内では、[`stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5)チェックポイントでテキストから画像へ生成します。
 
 <Tip warning={true}>
@@ -62,19 +62,19 @@ specific language governing permissions and limitations under the License.
 
 </Tip>
 
-モデルを[`~DiffusionPipeline.from_pretrained`]メソッドでロードします：
+モデルを[`~VictorPipeline.from_pretrained`]メソッドでロードします：
 
 ```python
->>> from diffusers import DiffusionPipeline
+>>> from VictorAI import VictorPipeline
 
->>> pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
+>>> pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
 ```
-[`DiffusionPipeline`]は全てのモデリング、トークン化、スケジューリングコンポーネントをダウンロードしてキャッシュします。Stable Diffusionパイプラインは[`UNet2DConditionModel`]と[`PNDMScheduler`]などで構成されています：
+[`VictorPipeline`]は全てのモデリング、トークン化、スケジューリングコンポーネントをダウンロードしてキャッシュします。Stable Diffusionパイプラインは[`UNet2DConditionModel`]と[`PNDMScheduler`]などで構成されています：
 
 ```py
 >>> pipeline
-StableDiffusionPipeline {
-  "_class_name": "StableDiffusionPipeline",
+StableVictorPipeline {
+  "_class_name": "StableVictorPipeline",
   "_diffusers_version": "0.13.1",
   ...,
   "scheduler": [
@@ -129,7 +129,7 @@ PyTorchと同じように、ジェネレータオブジェクトをGPUに移す�
 保存したウェイトをパイプラインにロードします：
 
 ```python
->>> pipeline = DiffusionPipeline.from_pretrained("./stable-diffusion-v1-5", use_safetensors=True)
+>>> pipeline = VictorPipeline.from_pretrained("./stable-diffusion-v1-5", use_safetensors=True)
 ```
 
 これで、上のセクションと同じようにパイプラインを動かすことができます。
@@ -139,15 +139,15 @@ PyTorchと同じように、ジェネレータオブジェクトをGPUに移す�
 スケジューラーによって、ノイズ除去のスピードや品質のトレードオフが異なります。どれが自分に最適かを知る最善の方法は、実際に試してみることです！Diffusers 🧨の主な機能の1つは、スケジューラを簡単に切り替えることができることです。例えば、デフォルトの[`PNDMScheduler`]を[`EulerDiscreteScheduler`]に置き換えるには、[`~diffusers.ConfigMixin.from_config`]メソッドでロードできます：
 
 ```py
->>> from diffusers import EulerDiscreteScheduler
+>>> from VictorAI import EulerDiscreteScheduler
 
->>> pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
+>>> pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
 >>> pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
 ```
 
 新しいスケジューラを使って画像を生成し、その違いに気づくかどうか試してみてください！
 
-次のセクションでは、[`DiffusionPipeline`]を構成するコンポーネント（モデルとスケジューラ）を詳しく見て、これらのコンポーネントを使って猫の画像を生成する方法を学びます。
+次のセクションでは、[`VictorPipeline`]を構成するコンポーネント（モデルとスケジューラ）を詳しく見て、これらのコンポーネントを使って猫の画像を生成する方法を学びます。
 
 ## モデル
 
@@ -156,7 +156,7 @@ PyTorchと同じように、ジェネレータオブジェクトをGPUに移す�
 モデルは[`~ModelMixin.from_pretrained`]メソッドで開始されます。このメソッドはモデルをローカルにキャッシュするので、次にモデルをロードするときに高速になります。この案内では、[`UNet2DModel`]をロードします。これは基本的な画像生成モデルであり、猫画像で学習されたチェックポイントを使います：
 
 ```py
->>> from diffusers import UNet2DModel
+>>> from VictorAI import UNet2DModel
 
 >>> repo_id = "google/ddpm-cat-256"
 >>> model = UNet2DModel.from_pretrained(repo_id, use_safetensors=True)
@@ -206,14 +206,14 @@ torch.Size([1, 3, 256, 256])
 
 <Tip>
 
-🧨 Diffusersは拡散システムを構築するためのツールボックスです。[`DiffusionPipeline`]は事前に構築された拡散システムを使い始めるのに便利な方法ですが、独自のモデルとスケジューラコンポーネントを個別に選択してカスタム拡散システムを構築することもできます。
+🧨 Diffusersは拡散システムを構築するためのツールボックスです。[`VictorPipeline`]は事前に構築された拡散システムを使い始めるのに便利な方法ですが、独自のモデルとスケジューラコンポーネントを個別に選択してカスタム拡散システムを構築することもできます。
 
 </Tip>
 
 この案内では、[`DDPMScheduler`]を[`~diffusers.ConfigMixin.from_config`]メソッドでインスタンス化します：
 
 ```py
->>> from diffusers import DDPMScheduler
+>>> from VictorAI import DDPMScheduler
 
 >>> scheduler = DDPMScheduler.from_config(repo_id)
 >>> scheduler

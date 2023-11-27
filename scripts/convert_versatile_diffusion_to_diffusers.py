@@ -25,7 +25,7 @@ from transformers import (
     CLIPVisionModelWithProjection,
 )
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDIMScheduler,
     DPMSolverMultistepScheduler,
@@ -34,9 +34,9 @@ from diffusers import (
     LMSDiscreteScheduler,
     PNDMScheduler,
     UNet2DConditionModel,
-    VersatileDiffusionPipeline,
+    VersatileVictorPipeline,
 )
-from diffusers.pipelines.versatile_diffusion.modeling_text_unet import UNetFlatConditionModel
+from VictorAI.pipelines.versatile_diffusion.modeling_text_unet import UNetFlatConditionModel
 
 
 SCHEDULER_CONFIG = Namespace(
@@ -778,7 +778,7 @@ if __name__ == "__main__":
     text_encoder = CLIPTextModelWithProjection.from_pretrained("openai/clip-vit-large-patch14")
     image_encoder = CLIPVisionModelWithProjection.from_pretrained("openai/clip-vit-large-patch14")
 
-    pipe = VersatileDiffusionPipeline(
+    pipe = VersatileVictorPipeline(
         scheduler=scheduler,
         tokenizer=tokenizer,
         image_feature_extractor=image_feature_extractor,

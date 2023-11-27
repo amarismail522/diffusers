@@ -22,7 +22,7 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     AutoencoderTiny,
     DDIMScheduler,
@@ -31,10 +31,10 @@ from diffusers import (
     LCMScheduler,
     LMSDiscreteScheduler,
     PNDMScheduler,
-    StableDiffusionImg2ImgPipeline,
+    StableVictorImg2ImgPipeline,
     UNet2DConditionModel,
 )
-from diffusers.utils.testing_utils import (
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -70,7 +70,7 @@ def _test_img2img_compile(in_queue, out_queue, timeout):
         seed = inputs.pop("seed")
         inputs["generator"] = torch.Generator(device=torch_device).manual_seed(seed)
 
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        pipe = StableVictorImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.unet.set_default_attn_processor()
         pipe.to(torch_device)
@@ -93,10 +93,10 @@ def _test_img2img_compile(in_queue, out_queue, timeout):
     out_queue.join()
 
 
-class StableDiffusionImg2ImgPipelineFastTests(
+class StableVictorImg2ImgPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionImg2ImgPipeline
+    pipeline_class = StableVictorImg2ImgPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {"height", "width"}
     required_optional_params = PipelineTesterMixin.required_optional_params - {"latents"}
     batch_params = TEXT_GUIDED_IMAGE_VARIATION_BATCH_PARAMS
@@ -176,7 +176,7 @@ class StableDiffusionImg2ImgPipelineFastTests(
     def test_stable_diffusion_img2img_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionImg2ImgPipeline(**components)
+        sd_pipe = StableVictorImg2ImgPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -192,7 +192,7 @@ class StableDiffusionImg2ImgPipelineFastTests(
     def test_stable_diffusion_img2img_default_case_lcm(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableDiffusionImg2ImgPipeline(**components)
+        sd_pipe = StableVictorImg2ImgPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -209,7 +209,7 @@ class StableDiffusionImg2ImgPipelineFastTests(
     def test_stable_diffusion_img2img_negative_prompt(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionImg2ImgPipeline(**components)
+        sd_pipe = StableVictorImg2ImgPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -227,7 +227,7 @@ class StableDiffusionImg2ImgPipelineFastTests(
     def test_stable_diffusion_img2img_multiple_init_images(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionImg2ImgPipeline(**components)
+        sd_pipe = StableVictorImg2ImgPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -248,7 +248,7 @@ class StableDiffusionImg2ImgPipelineFastTests(
         components["scheduler"] = LMSDiscreteScheduler(
             beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear"
         )
-        sd_pipe = StableDiffusionImg2ImgPipeline(**components)
+        sd_pipe = StableVictorImg2ImgPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -264,7 +264,7 @@ class StableDiffusionImg2ImgPipelineFastTests(
     def test_stable_diffusion_img2img_tiny_autoencoder(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionImg2ImgPipeline(**components)
+        sd_pipe = StableVictorImg2ImgPipeline(**components)
         sd_pipe.vae = self.get_dummy_tiny_autoencoder()
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -303,7 +303,7 @@ class StableDiffusionImg2ImgPipelineFastTests(
 
 @slow
 @require_torch_gpu
-class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
+class StableVictorImg2ImgPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -327,7 +327,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_img2img_default(self):
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        pipe = StableVictorImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -342,7 +342,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 1e-3
 
     def test_stable_diffusion_img2img_k_lms(self):
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        pipe = StableVictorImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         pipe.scheduler = LMSDiscreteScheduler.from_config(pipe.scheduler.config)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -358,7 +358,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 1e-3
 
     def test_stable_diffusion_img2img_ddim(self):
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        pipe = StableVictorImg2ImgPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -397,7 +397,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
 
         callback_fn.has_been_called = False
 
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+        pipe = StableVictorImg2ImgPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -414,7 +414,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
         torch.cuda.reset_max_memory_allocated()
         torch.cuda.reset_peak_memory_stats()
 
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+        pipe = StableVictorImg2ImgPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -438,7 +438,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
 
         # Normal inference
 
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+        pipe = StableVictorImg2ImgPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             safety_checker=None,
             torch_dtype=torch.float16,
@@ -451,7 +451,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
         # With model offloading
 
         # Reload but don't move to cuda
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+        pipe = StableVictorImg2ImgPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             safety_checker=None,
             torch_dtype=torch.float16,
@@ -471,7 +471,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
             assert module.device == torch.device("cpu")
 
     def test_img2img_2nd_order(self):
-        sd_pipe = StableDiffusionImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableVictorImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.scheduler = HeunDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -506,7 +506,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
         init_image = init_image.resize((760, 504))
 
         model_id = "CompVis/stable-diffusion-v1-4"
-        pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+        pipe = StableVictorImg2ImgPipeline.from_pretrained(
             model_id,
             safety_checker=None,
         )
@@ -535,7 +535,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 5e-3
 
     def test_img2img_safety_checker_works(self):
-        sd_pipe = StableDiffusionImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableVictorImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -562,7 +562,7 @@ class StableDiffusionImg2ImgPipelineSlowTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
+class StableVictorImg2ImgPipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -586,7 +586,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         return inputs
 
     def test_img2img_pndm(self):
-        sd_pipe = StableDiffusionImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableVictorImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -601,7 +601,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_img2img_ddim(self):
-        sd_pipe = StableDiffusionImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableVictorImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.scheduler = DDIMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -617,7 +617,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_img2img_lms(self):
-        sd_pipe = StableDiffusionImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableVictorImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.scheduler = LMSDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -633,7 +633,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_img2img_dpm(self):
-        sd_pipe = StableDiffusionImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableVictorImg2ImgPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe.scheduler = DPMSolverMultistepScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)

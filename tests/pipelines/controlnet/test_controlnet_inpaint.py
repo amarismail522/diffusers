@@ -25,17 +25,17 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     ControlNetModel,
     DDIMScheduler,
-    StableDiffusionControlNetInpaintPipeline,
+    StableVictorControlNetInpaintPipeline,
     UNet2DConditionModel,
 )
-from diffusers.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
-from diffusers.utils import load_image
-from diffusers.utils.import_utils import is_xformers_available
-from diffusers.utils.testing_utils import (
+from VictorAI.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
+from VictorAI.utils import load_image
+from VictorAI.utils.import_utils import is_xformers_available
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_numpy,
@@ -44,7 +44,7 @@ from diffusers.utils.testing_utils import (
     slow,
     torch_device,
 )
-from diffusers.utils.torch_utils import randn_tensor
+from VictorAI.utils.torch_utils import randn_tensor
 
 from ..pipeline_params import (
     TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS,
@@ -64,7 +64,7 @@ enable_full_determinism()
 class ControlNetInpaintPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionControlNetInpaintPipeline
+    pipeline_class = StableVictorControlNetInpaintPipeline
     params = TEXT_GUIDED_IMAGE_INPAINTING_PARAMS
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS
     image_params = frozenset({"control_image"})  # skip `image` and `mask` for now, only test for control_image
@@ -181,7 +181,7 @@ class ControlNetInpaintPipelineFastTests(
 
 
 class ControlNetSimpleInpaintPipelineFastTests(ControlNetInpaintPipelineFastTests):
-    pipeline_class = StableDiffusionControlNetInpaintPipeline
+    pipeline_class = StableVictorControlNetInpaintPipeline
     params = TEXT_GUIDED_IMAGE_INPAINTING_PARAMS
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS
     image_params = frozenset([])
@@ -255,7 +255,7 @@ class ControlNetSimpleInpaintPipelineFastTests(ControlNetInpaintPipelineFastTest
 class MultiControlNetInpaintPipelineFastTests(
     PipelineTesterMixin, PipelineKarrasSchedulerTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionControlNetInpaintPipeline
+    pipeline_class = StableVictorControlNetInpaintPipeline
     params = TEXT_GUIDED_IMAGE_INPAINTING_PARAMS
     batch_params = TEXT_GUIDED_IMAGE_INPAINTING_BATCH_PARAMS
 
@@ -454,7 +454,7 @@ class ControlNetInpaintPipelineSlowTests(unittest.TestCase):
     def test_canny(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny")
 
-        pipe = StableDiffusionControlNetInpaintPipeline.from_pretrained(
+        pipe = StableVictorControlNetInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-inpainting", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -499,7 +499,7 @@ class ControlNetInpaintPipelineSlowTests(unittest.TestCase):
     def test_inpaint(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_inpaint")
 
-        pipe = StableDiffusionControlNetInpaintPipeline.from_pretrained(
+        pipe = StableVictorControlNetInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
@@ -555,14 +555,14 @@ class ControlNetInpaintPipelineSlowTests(unittest.TestCase):
 
     def test_load_local(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_canny")
-        pipe_1 = StableDiffusionControlNetInpaintPipeline.from_pretrained(
+        pipe_1 = StableVictorControlNetInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
 
         controlnet = ControlNetModel.from_single_file(
             "https://huggingface.co/lllyasviel/ControlNet-v1-1/blob/main/control_v11p_sd15_canny.pth"
         )
-        pipe_2 = StableDiffusionControlNetInpaintPipeline.from_single_file(
+        pipe_2 = StableVictorControlNetInpaintPipeline.from_single_file(
             "https://huggingface.co/runwayml/stable-diffusion-v1-5/blob/main/v1-5-pruned-emaonly.safetensors",
             safety_checker=None,
             controlnet=controlnet,

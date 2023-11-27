@@ -16,7 +16,7 @@
 import tempfile
 import unittest
 
-from diffusers import (
+from VictorAI import (
     DDIMScheduler,
     DDPMScheduler,
     DPMSolverMultistepScheduler,
@@ -25,8 +25,8 @@ from diffusers import (
     PNDMScheduler,
     logging,
 )
-from diffusers.configuration_utils import ConfigMixin, register_to_config
-from diffusers.utils.testing_utils import CaptureLogger
+from VictorAI.configuration_utils import ConfigMixin, register_to_config
+from VictorAI.utils.testing_utils import CaptureLogger
 
 
 class SampleObject(ConfigMixin):

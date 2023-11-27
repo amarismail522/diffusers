@@ -22,7 +22,7 @@ import torch
 from packaging import version
 from torch.onnx import export
 
-from diffusers import OnnxRuntimeModel, OnnxStableDiffusionPipeline, StableDiffusionPipeline
+from VictorAI import OnnxRuntimeModel, OnnxStableVictorPipeline, StableVictorPipeline
 
 
 is_torch_less_than_1_11 = version.parse(version.parse(torch.__version__).base_version) < version.parse("1.11")
@@ -76,7 +76,7 @@ def convert_models(model_path: str, output_path: str, opset: int, fp16: bool = F
         raise ValueError("`float16` model export is only supported on GPUs with CUDA")
     else:
         device = "cpu"
-    pipeline = StableDiffusionPipeline.from_pretrained(model_path, torch_dtype=dtype).to(device)
+    pipeline = StableVictorPipeline.from_pretrained(model_path, torch_dtype=dtype).to(device)
     output_path = Path(output_path)
 
     # TEXT ENCODER
@@ -219,7 +219,7 @@ def convert_models(model_path: str, output_path: str, opset: int, fp16: bool = F
         safety_checker = None
         feature_extractor = None
 
-    onnx_pipeline = OnnxStableDiffusionPipeline(
+    onnx_pipeline = OnnxStableVictorPipeline(
         vae_encoder=OnnxRuntimeModel.from_pretrained(output_path / "vae_encoder"),
         vae_decoder=OnnxRuntimeModel.from_pretrained(output_path / "vae_decoder"),
         text_encoder=OnnxRuntimeModel.from_pretrained(output_path / "text_encoder"),
@@ -236,7 +236,7 @@ def convert_models(model_path: str, output_path: str, opset: int, fp16: bool = F
 
     del pipeline
     del onnx_pipeline
-    _ = OnnxStableDiffusionPipeline.from_pretrained(output_path, provider="CPUExecutionProvider")
+    _ = OnnxStableVictorPipeline.from_pretrained(output_path, provider="CPUExecutionProvider")
     print("ONNX pipeline is loadable")
 
 

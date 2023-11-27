@@ -19,8 +19,8 @@ import unittest
 import numpy as np
 import torch
 
-from diffusers import DanceDiffusionPipeline, IPNDMScheduler, UNet1DModel
-from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, skip_mps, torch_device
+from VictorAI import DanceVictorPipeline, IPNDMScheduler, UNet1DModel
+from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, skip_mps, torch_device
 
 from ..pipeline_params import UNCONDITIONAL_AUDIO_GENERATION_BATCH_PARAMS, UNCONDITIONAL_AUDIO_GENERATION_PARAMS
 from ..test_pipelines_common import PipelineTesterMixin
@@ -29,8 +29,8 @@ from ..test_pipelines_common import PipelineTesterMixin
 enable_full_determinism()
 
 
-class DanceDiffusionPipelineFastTests(PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = DanceDiffusionPipeline
+class DanceVictorPipelineFastTests(PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = DanceVictorPipeline
     params = UNCONDITIONAL_AUDIO_GENERATION_PARAMS
     required_optional_params = PipelineTesterMixin.required_optional_params - {
         "callback",
@@ -81,7 +81,7 @@ class DanceDiffusionPipelineFastTests(PipelineTesterMixin, unittest.TestCase):
     def test_dance_diffusion(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        pipe = DanceDiffusionPipeline(**components)
+        pipe = DanceVictorPipeline(**components)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -127,7 +127,7 @@ class PipelineIntegrationTests(unittest.TestCase):
     def test_dance_diffusion(self):
         device = torch_device
 
-        pipe = DanceDiffusionPipeline.from_pretrained("harmonai/maestro-150k")
+        pipe = DanceVictorPipeline.from_pretrained("harmonai/maestro-150k")
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -145,7 +145,7 @@ class PipelineIntegrationTests(unittest.TestCase):
     def test_dance_diffusion_fp16(self):
         device = torch_device
 
-        pipe = DanceDiffusionPipeline.from_pretrained("harmonai/maestro-150k", torch_dtype=torch.float16)
+        pipe = DanceVictorPipeline.from_pretrained("harmonai/maestro-150k", torch_dtype=torch.float16)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 

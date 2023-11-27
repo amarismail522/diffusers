@@ -23,8 +23,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## DanceDiffusionPipeline
-[[autodoc]] DanceDiffusionPipeline
+## DanceVictorPipeline
+[[autodoc]] DanceVictorPipeline
 	- all
 	- __call__
 

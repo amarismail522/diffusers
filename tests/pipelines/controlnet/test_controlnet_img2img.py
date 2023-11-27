@@ -25,17 +25,17 @@ import torch
 from PIL import Image
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     ControlNetModel,
     DDIMScheduler,
-    StableDiffusionControlNetImg2ImgPipeline,
+    StableVictorControlNetImg2ImgPipeline,
     UNet2DConditionModel,
 )
-from diffusers.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
-from diffusers.utils import load_image
-from diffusers.utils.import_utils import is_xformers_available
-from diffusers.utils.testing_utils import (
+from VictorAI.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
+from VictorAI.utils import load_image
+from VictorAI.utils.import_utils import is_xformers_available
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_numpy,
@@ -43,7 +43,7 @@ from diffusers.utils.testing_utils import (
     slow,
     torch_device,
 )
-from diffusers.utils.torch_utils import randn_tensor
+from VictorAI.utils.torch_utils import randn_tensor
 
 from ..pipeline_params import (
     IMAGE_TO_IMAGE_IMAGE_PARAMS,
@@ -63,7 +63,7 @@ enable_full_determinism()
 class ControlNetImg2ImgPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionControlNetImg2ImgPipeline
+    pipeline_class = StableVictorControlNetImg2ImgPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {"height", "width"}
     batch_params = TEXT_GUIDED_IMAGE_VARIATION_BATCH_PARAMS
     image_params = IMAGE_TO_IMAGE_IMAGE_PARAMS.union({"control_image"})
@@ -178,10 +178,10 @@ class ControlNetImg2ImgPipelineFastTests(
         self._test_inference_batch_single_identical(expected_max_diff=2e-3)
 
 
-class StableDiffusionMultiControlNetPipelineFastTests(
+class StableVictorMultiControlNetPipelineFastTests(
     PipelineTesterMixin, PipelineKarrasSchedulerTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionControlNetImg2ImgPipeline
+    pipeline_class = StableVictorControlNetImg2ImgPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {"height", "width"}
     batch_params = TEXT_GUIDED_IMAGE_VARIATION_BATCH_PARAMS
     image_params = frozenset([])  # TO_DO: add image_params once refactored VaeImageProcessor.preprocess
@@ -382,7 +382,7 @@ class ControlNetImg2ImgPipelineSlowTests(unittest.TestCase):
     def test_canny(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny")
 
-        pipe = StableDiffusionControlNetImg2ImgPipeline.from_pretrained(
+        pipe = StableVictorControlNetImg2ImgPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
         pipe.enable_model_cpu_offload()
@@ -419,14 +419,14 @@ class ControlNetImg2ImgPipelineSlowTests(unittest.TestCase):
 
     def test_load_local(self):
         controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_canny")
-        pipe_1 = StableDiffusionControlNetImg2ImgPipeline.from_pretrained(
+        pipe_1 = StableVictorControlNetImg2ImgPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", safety_checker=None, controlnet=controlnet
         )
 
         controlnet = ControlNetModel.from_single_file(
             "https://huggingface.co/lllyasviel/ControlNet-v1-1/blob/main/control_v11p_sd15_canny.pth"
         )
-        pipe_2 = StableDiffusionControlNetImg2ImgPipeline.from_single_file(
+        pipe_2 = StableVictorControlNetImg2ImgPipeline.from_single_file(
             "https://huggingface.co/runwayml/stable-diffusion-v1-5/blob/main/v1-5-pruned-emaonly.safetensors",
             safety_checker=None,
             controlnet=controlnet,

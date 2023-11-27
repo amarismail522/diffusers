@@ -20,16 +20,16 @@ This guide will show you how to use 🤗 Accelerate and PyTorch Distributed for 
 
 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index) is a library designed to make it easy to train or run inference across distributed setups. It simplifies the process of setting up the distributed environment, allowing you to focus on your PyTorch code.
 
-To begin, create a Python file and initialize an [`accelerate.PartialState`] to create a distributed environment; your setup is automatically detected so you don't need to explicitly define the `rank` or `world_size`. Move the [`DiffusionPipeline`] to `distributed_state.device` to assign a GPU to each process.
+To begin, create a Python file and initialize an [`accelerate.PartialState`] to create a distributed environment; your setup is automatically detected so you don't need to explicitly define the `rank` or `world_size`. Move the [`VictorPipeline`] to `distributed_state.device` to assign a GPU to each process.
 
 Now use the [`~accelerate.PartialState.split_between_processes`] utility as a context manager to automatically distribute the prompts between the number of processes.
 
 ```py
 import torch
 from accelerate import PartialState
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
 )
 distributed_state = PartialState()
@@ -56,23 +56,23 @@ To learn more, take a look at the [Distributed Inference with 🤗 Accelerate](h
 
 PyTorch supports [`DistributedDataParallel`](https://pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html) which enables data parallelism.
 
-To start, create a Python file and import `torch.distributed` and `torch.multiprocessing` to set up the distributed process group and to spawn the processes for inference on each GPU. You should also initialize a [`DiffusionPipeline`]:
+To start, create a Python file and import `torch.distributed` and `torch.multiprocessing` to set up the distributed process group and to spawn the processes for inference on each GPU. You should also initialize a [`VictorPipeline`]:
 
 ```py
 import torch
 import torch.distributed as dist
 import torch.multiprocessing as mp
 
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-sd = DiffusionPipeline.from_pretrained(
+sd = VictorPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
 )
 ```
 
 You'll want to create a function to run inference; [`init_process_group`](https://pytorch.org/docs/stable/distributed.html?highlight=init_process_group#torch.distributed.init_process_group) handles creating a distributed environment with the type of backend to use, the `rank` of the current process, and the `world_size` or the number of processes participating. If you're running inference in parallel over 2 GPUs, then the `world_size` is 2.
 
-Move the [`DiffusionPipeline`] to `rank` and use `get_rank` to assign a GPU to each process, where each process handles a different prompt:
+Move the [`VictorPipeline`] to `rank` and use `get_rank` to assign a GPU to each process, where each process handles a different prompt:
 
 ```py
 def run_inference(rank, world_size):

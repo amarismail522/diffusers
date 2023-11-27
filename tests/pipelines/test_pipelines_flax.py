@@ -19,8 +19,8 @@ import unittest
 
 import numpy as np
 
-from diffusers.utils import is_flax_available
-from diffusers.utils.testing_utils import require_flax, slow
+from VictorAI.utils import is_flax_available
+from VictorAI.utils.testing_utils import require_flax, slow
 
 
 if is_flax_available():
@@ -29,7 +29,7 @@ if is_flax_available():
     from flax.jax_utils import replicate
     from flax.training.common_utils import shard
 
-    from diffusers import FlaxDDIMScheduler, FlaxDiffusionPipeline, FlaxStableDiffusionPipeline
+    from VictorAI import FlaxDDIMScheduler, FlaxVictorPipeline, FlaxStableVictorPipeline
 
 
 @require_flax
@@ -37,7 +37,7 @@ class DownloadTests(unittest.TestCase):
     def test_download_only_pytorch(self):
         with tempfile.TemporaryDirectory() as tmpdirname:
             # pipeline has Flax weights
-            _ = FlaxDiffusionPipeline.from_pretrained(
+            _ = FlaxVictorPipeline.from_pretrained(
                 "hf-internal-testing/tiny-stable-diffusion-pipe", safety_checker=None, cache_dir=tmpdirname
             )
 
@@ -53,7 +53,7 @@ class DownloadTests(unittest.TestCase):
 @require_flax
 class FlaxPipelineTests(unittest.TestCase):
     def test_dummy_all_tpus(self):
-        pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+        pipeline, params = FlaxStableVictorPipeline.from_pretrained(
             "hf-internal-testing/tiny-stable-diffusion-pipe", safety_checker=None
         )
 
@@ -85,7 +85,7 @@ class FlaxPipelineTests(unittest.TestCase):
         assert len(images_pil) == num_samples
 
     def test_stable_diffusion_v1_4(self):
-        pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+        pipeline, params = FlaxStableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", revision="flax", safety_checker=None
         )
 
@@ -114,7 +114,7 @@ class FlaxPipelineTests(unittest.TestCase):
             assert np.abs((np.abs(images, dtype=np.float32).sum() - 2383808.2)) < 5e-1
 
     def test_stable_diffusion_v1_4_bfloat_16(self):
-        pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+        pipeline, params = FlaxStableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", revision="bf16", dtype=jnp.bfloat16, safety_checker=None
         )
 
@@ -143,7 +143,7 @@ class FlaxPipelineTests(unittest.TestCase):
             assert np.abs((np.abs(images, dtype=np.float32).sum() - 2373516.75)) < 5e-1
 
     def test_stable_diffusion_v1_4_bfloat_16_with_safety(self):
-        pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+        pipeline, params = FlaxStableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", revision="bf16", dtype=jnp.bfloat16
         )
 
@@ -180,7 +180,7 @@ class FlaxPipelineTests(unittest.TestCase):
             steps_offset=1,
         )
 
-        pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+        pipeline, params = FlaxStableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             revision="bf16",
             dtype=jnp.bfloat16,
@@ -225,7 +225,7 @@ class FlaxPipelineTests(unittest.TestCase):
         prompt = num_samples * [prompt]
         prng_seed = jax.random.split(jax.random.PRNGKey(0), num_samples)
 
-        pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+        pipeline, params = FlaxStableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             revision="bf16",
             dtype=jnp.bfloat16,
@@ -240,7 +240,7 @@ class FlaxPipelineTests(unittest.TestCase):
         slice = images[2, 0, 256, 10:17, 1]
 
         # With memory efficient attention
-        pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+        pipeline, params = FlaxStableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             revision="bf16",
             dtype=jnp.bfloat16,

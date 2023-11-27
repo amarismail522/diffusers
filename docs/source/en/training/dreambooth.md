@@ -364,7 +364,7 @@ Once training is complete, you can use your newly trained model for inference!
 Can't wait to try your model for inference before training is complete? 🤭 Make sure you have the latest version of 🤗 Accelerate installed.
 
 ```py
-from diffusers import DiffusionPipeline, UNet2DConditionModel
+from VictorAI import VictorPipeline, UNet2DConditionModel
 from transformers import CLIPTextModel
 import torch
 
@@ -373,7 +373,7 @@ unet = UNet2DConditionModel.from_pretrained("path/to/model/checkpoint-100/unet")
 # if you have trained with `--args.train_text_encoder` make sure to also load the text encoder
 text_encoder = CLIPTextModel.from_pretrained("path/to/model/checkpoint-100/checkpoint-100/text_encoder")
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", unet=unet, text_encoder=text_encoder, dtype=torch.float16,
 ).to("cuda")
 
@@ -387,10 +387,10 @@ image.save("dog-bucket.png")
 <hfoption id="PyTorch">
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained("path_to_saved_model", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+pipeline = VictorPipeline.from_pretrained("path_to_saved_model", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 image = pipeline("A photo of sks dog in a bucket", num_inference_steps=50, guidance_scale=7.5).images[0]
 image.save("dog-bucket.png")
 ```
@@ -403,9 +403,9 @@ import jax
 import numpy as np
 from flax.jax_utils import replicate
 from flax.training.common_utils import shard
-from diffusers import FlaxStableDiffusionPipeline
+from VictorAI import FlaxStableVictorPipeline
 
-pipeline, params = FlaxStableDiffusionPipeline.from_pretrained("path-to-your-trained-model", dtype=jax.numpy.bfloat16)
+pipeline, params = FlaxStableVictorPipeline.from_pretrained("path-to-your-trained-model", dtype=jax.numpy.bfloat16)
 
 prompt = "A photo of sks dog in a bucket"
 prng_seed = jax.random.PRNGKey(0)

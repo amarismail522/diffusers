@@ -1,7 +1,7 @@
 import argparse
 import torch
 from PIL import Image
-from diffusers import AutoPipelineForImage2Image
+from VictorAI import AutoPipelineForImage2Image
 
 def main(args):
     # Load the pre-trained model

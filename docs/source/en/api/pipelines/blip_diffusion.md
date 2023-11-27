@@ -21,7 +21,7 @@ The abstract from the paper is:
 
 The original codebase can be found at [salesforce/LAVIS](https://github.com/salesforce/LAVIS/tree/main/projects/blip-diffusion). You can find the official BLIP-Diffusion checkpoints under the [hf.co/SalesForce](https://hf.co/SalesForce) organization.
 
-`BlipDiffusionPipeline` and `BlipDiffusionControlNetPipeline` were contributed by [`ayushtues`](https://github.com/ayushtues/).
+`BlipVictorPipeline` and `BlipDiffusionControlNetPipeline` were contributed by [`ayushtues`](https://github.com/ayushtues/).
 
 <Tip>
 
@@ -30,8 +30,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 </Tip>
 
 
-## BlipDiffusionPipeline
-[[autodoc]] BlipDiffusionPipeline
+## BlipVictorPipeline
+[[autodoc]] BlipVictorPipeline
     - all
     - __call__
 

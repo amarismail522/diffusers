@@ -14,19 +14,19 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-[`DiffusionPipeline`]を使って特定のスタイルで画像を生成したり、希望する画像を生成したりするのは難しいことです。多くの場合、[`DiffusionPipeline`]を何度か実行してからでないと満足のいく画像は得られません。しかし、何もないところから何かを生成するにはたくさんの計算が必要です。生成を何度も何度も実行する場合、特にたくさんの計算量が必要になります。
+[`VictorPipeline`]を使って特定のスタイルで画像を生成したり、希望する画像を生成したりするのは難しいことです。多くの場合、[`VictorPipeline`]を何度か実行してからでないと満足のいく画像は得られません。しかし、何もないところから何かを生成するにはたくさんの計算が必要です。生成を何度も何度も実行する場合、特にたくさんの計算量が必要になります。
 
 そのため、パイプラインから*計算*（速度）と*メモリ*（GPU RAM）の効率を最大限に引き出し、生成サイクル間の時間を短縮することで、より高速な反復処理を行えるようにすることが重要です。
 
-このチュートリアルでは、[`DiffusionPipeline`]を用いて、より速く、より良い計算を行う方法を説明します。
+このチュートリアルでは、[`VictorPipeline`]を用いて、より速く、より良い計算を行う方法を説明します。
 
 まず、[`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5)モデルをロードします：
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipeline = DiffusionPipeline.from_pretrained(model_id, use_safetensors=True)
+pipeline = VictorPipeline.from_pretrained(model_id, use_safetensors=True)
 ```
 
 ここで使用するプロンプトの例は年老いた戦士の長の肖像画ですが、ご自由に変更してください：
@@ -68,14 +68,14 @@ image
     <img src="https://huggingface.co/datasets/diffusers/docs-images/resolve/main/stable_diffusion_101/sd_101_1.png">
 </div>
 
-この処理にはT4 GPUで~30秒かかりました（割り当てられているGPUがT4より優れている場合はもっと速いかもしれません）。デフォルトでは、[`DiffusionPipeline`]は完全な`float32`精度で生成を50ステップ実行します。float16`のような低い精度に変更するか、推論ステップ数を減らすことで高速化することができます。
+この処理にはT4 GPUで~30秒かかりました（割り当てられているGPUがT4より優れている場合はもっと速いかもしれません）。デフォルトでは、[`VictorPipeline`]は完全な`float32`精度で生成を50ステップ実行します。float16`のような低い精度に変更するか、推論ステップ数を減らすことで高速化することができます。
 
 まずは `float16` でモデルをロードして画像を生成してみましょう：
 
 ```python
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16, use_safetensors=True)
+pipeline = VictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16, use_safetensors=True)
 pipeline = pipeline.to("cuda")
 generator = torch.Generator("cuda").manual_seed(0)
 image = pipeline(prompt, generator=generator).images[0]
@@ -94,7 +94,7 @@ image
 
 </Tip>
 
-生成ステップ数を減らすという方法もあります。より効率的なスケジューラを選択することで、出力品質を犠牲にすることなくステップ数を減らすことができます。`compatibles`メソッドを呼び出すことで、[`DiffusionPipeline`]の現在のモデルと互換性のあるスケジューラを見つけることができます：
+生成ステップ数を減らすという方法もあります。より効率的なスケジューラを選択することで、出力品質を犠牲にすることなくステップ数を減らすことができます。`compatibles`メソッドを呼び出すことで、[`VictorPipeline`]の現在のモデルと互換性のあるスケジューラを見つけることができます：
 
 ```python
 pipeline.scheduler.compatibles
@@ -118,7 +118,7 @@ pipeline.scheduler.compatibles
 Stable Diffusionモデルはデフォルトで[`PNDMScheduler`]を使用します。このスケジューラは通常~50の推論ステップを必要としますが、[`DPMSolverMultistepScheduler`]のような高性能なスケジューラでは~20または25の推論ステップで済みます。[`ConfigMixin.from_config`]メソッドを使用すると、新しいスケジューラをロードすることができます：
 
 ```python
-from diffusers import DPMSolverMultistepScheduler
+from VictorAI import DPMSolverMultistepScheduler
 
 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 ```
@@ -155,13 +155,13 @@ def get_inputs(batch_size=1):
 `batch_size=4`で開始し、どれだけメモリを消費したかを確認します：
 
 ```python
-from diffusers.utils import make_image_grid 
+from VictorAI.utils import make_image_grid 
 
 images = pipeline(**get_inputs(batch_size=4)).images
 make_image_grid(images, 2, 2)
 ```
 
-大容量のRAMを搭載したGPUでない限り、上記のコードはおそらく`OOM`エラーを返したはずです！メモリの大半はクロスアテンションレイヤーが占めています。この処理をバッチで実行する代わりに、逐次実行することでメモリを大幅に節約できます。必要なのは、[`~DiffusionPipeline.enable_attention_slicing`]関数を使用することだけです：
+大容量のRAMを搭載したGPUでない限り、上記のコードはおそらく`OOM`エラーを返したはずです！メモリの大半はクロスアテンションレイヤーが占めています。この処理をバッチで実行する代わりに、逐次実行することでメモリを大幅に節約できます。必要なのは、[`~VictorPipeline.enable_attention_slicing`]関数を使用することだけです：
 
 ```python
 pipeline.enable_attention_slicing()
@@ -195,7 +195,7 @@ make_image_grid(images, rows=2, cols=4)
 現在のパイプラインコンポーネントを新しいバージョンに置き換えてみることもできます。Stability AIが提供する最新の[autodecoder](https://huggingface.co/stabilityai/stable-diffusion-2-1/tree/main/vae)をパイプラインにロードし、画像を生成してみましょう：
 
 ```python
-from diffusers import AutoencoderKL
+from VictorAI import AutoencoderKL
 
 vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse", torch_dtype=torch.float16).to("cuda")
 pipeline.vae = vae
@@ -253,7 +253,7 @@ make_image_grid(images, 2, 2)
 
 ## 次のステップ
 
-このチュートリアルでは、[`DiffusionPipeline`]を最適化して計算効率とメモリ効率を向上させ、生成される出力の品質を向上させる方法を学びました。パイプラインをさらに高速化することに興味があれば、以下のリソースを参照してください：
+このチュートリアルでは、[`VictorPipeline`]を最適化して計算効率とメモリ効率を向上させ、生成される出力の品質を向上させる方法を学びました。パイプラインをさらに高速化することに興味があれば、以下のリソースを参照してください：
 
 - [PyTorch 2.0](./optimization/torch2.0)と[`torch.compile`](https://pytorch.org/docs/stable/generated/torch.compile.html)がどのように生成速度を5-300%高速化できるかを学んでください。A100 GPUの場合、画像生成は最大50%速くなります！
 - PyTorch 2が使えない場合は、[xFormers](./optimization/xformers)をインストールすることをお勧めします。このライブラリのメモリ効率の良いアテンションメカニズムは PyTorch 1.13.1 と相性が良く、高速化とメモリ消費量の削減を同時に実現します。

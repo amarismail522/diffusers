@@ -26,12 +26,12 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## StableDiffusionAttendAndExcitePipeline
+## StableVictorAttendAndExcitePipeline
 
-[[autodoc]] StableDiffusionAttendAndExcitePipeline
+[[autodoc]] StableVictorAttendAndExcitePipeline
 	- all
 	- __call__
 
-## StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

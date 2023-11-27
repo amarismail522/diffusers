@@ -18,15 +18,15 @@ import unittest
 
 import numpy as np
 
-from diffusers import (
+from VictorAI import (
     DPMSolverMultistepScheduler,
     EulerAncestralDiscreteScheduler,
     EulerDiscreteScheduler,
     LMSDiscreteScheduler,
-    OnnxStableDiffusionUpscalePipeline,
+    OnnxStableVictorUpscalePipeline,
     PNDMScheduler,
 )
-from diffusers.utils.testing_utils import (
+from VictorAI.utils.testing_utils import (
     floats_tensor,
     is_onnx_available,
     load_image,
@@ -42,7 +42,7 @@ if is_onnx_available():
     import onnxruntime as ort
 
 
-class OnnxStableDiffusionUpscalePipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
+class OnnxStableVictorUpscalePipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
     # TODO: is there an appropriate internal test set?
     hub_checkpoint = "ssube/stable-diffusion-x4-upscaler-onnx"
 
@@ -60,7 +60,7 @@ class OnnxStableDiffusionUpscalePipelineFastTests(OnnxPipelineTesterMixin, unitt
         return inputs
 
     def test_pipeline_default_ddpm(self):
-        pipe = OnnxStableDiffusionUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.set_progress_bar_config(disable=None)
 
         inputs = self.get_dummy_inputs()
@@ -73,7 +73,7 @@ class OnnxStableDiffusionUpscalePipelineFastTests(OnnxPipelineTesterMixin, unitt
         assert np.abs(image_slice - expected_slice).max() < 1e-1
 
     def test_pipeline_pndm(self):
-        pipe = OnnxStableDiffusionUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = PNDMScheduler.from_config(pipe.scheduler.config, skip_prk_steps=True)
         pipe.set_progress_bar_config(disable=None)
 
@@ -86,7 +86,7 @@ class OnnxStableDiffusionUpscalePipelineFastTests(OnnxPipelineTesterMixin, unitt
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-1
 
     def test_pipeline_dpm_multistep(self):
-        pipe = OnnxStableDiffusionUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
         pipe.set_progress_bar_config(disable=None)
 
@@ -102,7 +102,7 @@ class OnnxStableDiffusionUpscalePipelineFastTests(OnnxPipelineTesterMixin, unitt
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-1
 
     def test_pipeline_euler(self):
-        pipe = OnnxStableDiffusionUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
         pipe.set_progress_bar_config(disable=None)
 
@@ -117,7 +117,7 @@ class OnnxStableDiffusionUpscalePipelineFastTests(OnnxPipelineTesterMixin, unitt
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-1
 
     def test_pipeline_euler_ancestral(self):
-        pipe = OnnxStableDiffusionUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorUpscalePipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
         pipe.set_progress_bar_config(disable=None)
 
@@ -136,7 +136,7 @@ class OnnxStableDiffusionUpscalePipelineFastTests(OnnxPipelineTesterMixin, unitt
 @nightly
 @require_onnxruntime
 @require_torch_gpu
-class OnnxStableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
+class OnnxStableVictorUpscalePipelineIntegrationTests(unittest.TestCase):
     @property
     def gpu_provider(self):
         return (
@@ -160,7 +160,7 @@ class OnnxStableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
         )
         init_image = init_image.resize((128, 128))
         # using the PNDM scheduler by default
-        pipe = OnnxStableDiffusionUpscalePipeline.from_pretrained(
+        pipe = OnnxStableVictorUpscalePipeline.from_pretrained(
             "ssube/stable-diffusion-x4-upscaler-onnx",
             provider=self.gpu_provider,
             sess_options=self.gpu_options,
@@ -196,7 +196,7 @@ class OnnxStableDiffusionUpscalePipelineIntegrationTests(unittest.TestCase):
         lms_scheduler = LMSDiscreteScheduler.from_pretrained(
             "ssube/stable-diffusion-x4-upscaler-onnx", subfolder="scheduler"
         )
-        pipe = OnnxStableDiffusionUpscalePipeline.from_pretrained(
+        pipe = OnnxStableVictorUpscalePipeline.from_pretrained(
             "ssube/stable-diffusion-x4-upscaler-onnx",
             scheduler=lms_scheduler,
             provider=self.gpu_provider,

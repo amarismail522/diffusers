@@ -18,8 +18,8 @@ import unittest
 import numpy as np
 import torch
 
-from diffusers import PNDMPipeline, PNDMScheduler, UNet2DModel
-from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch, torch_device
+from VictorAI import PNDMPipeline, PNDMScheduler, UNet2DModel
+from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch, torch_device
 
 
 enable_full_determinism()

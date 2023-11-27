@@ -21,8 +21,8 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import AutoencoderKL, CycleDiffusionPipeline, DDIMScheduler, UNet2DConditionModel
-from diffusers.utils.testing_utils import (
+from VictorAI import AutoencoderKL, CycleVictorPipeline, DDIMScheduler, UNet2DConditionModel
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -44,8 +44,8 @@ from ..test_pipelines_common import PipelineLatentTesterMixin, PipelineTesterMix
 enable_full_determinism()
 
 
-class CycleDiffusionPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = CycleDiffusionPipeline
+class CycleVictorPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = CycleVictorPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {
         "negative_prompt",
         "height",
@@ -137,7 +137,7 @@ class CycleDiffusionPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterM
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components()
-        pipe = CycleDiffusionPipeline(**components)
+        pipe = CycleVictorPipeline(**components)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -158,7 +158,7 @@ class CycleDiffusionPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterM
         for name, module in components.items():
             if hasattr(module, "half"):
                 components[name] = module.half()
-        pipe = CycleDiffusionPipeline(**components)
+        pipe = CycleVictorPipeline(**components)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -196,7 +196,7 @@ class CycleDiffusionPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterM
 
 @nightly
 @require_torch_gpu
-class CycleDiffusionPipelineIntegrationTests(unittest.TestCase):
+class CycleVictorPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -215,7 +215,7 @@ class CycleDiffusionPipelineIntegrationTests(unittest.TestCase):
 
         model_id = "CompVis/stable-diffusion-v1-4"
         scheduler = DDIMScheduler.from_pretrained(model_id, subfolder="scheduler")
-        pipe = CycleDiffusionPipeline.from_pretrained(
+        pipe = CycleVictorPipeline.from_pretrained(
             model_id, scheduler=scheduler, safety_checker=None, torch_dtype=torch.float16, revision="fp16"
         )
 
@@ -256,7 +256,7 @@ class CycleDiffusionPipelineIntegrationTests(unittest.TestCase):
 
         model_id = "CompVis/stable-diffusion-v1-4"
         scheduler = DDIMScheduler.from_pretrained(model_id, subfolder="scheduler")
-        pipe = CycleDiffusionPipeline.from_pretrained(model_id, scheduler=scheduler, safety_checker=None)
+        pipe = CycleVictorPipeline.from_pretrained(model_id, scheduler=scheduler, safety_checker=None)
 
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)

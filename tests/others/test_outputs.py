@@ -6,8 +6,8 @@ from typing import List, Union
 import numpy as np
 import PIL.Image
 
-from diffusers.utils.outputs import BaseOutput
-from diffusers.utils.testing_utils import require_torch
+from VictorAI.utils.outputs import BaseOutput
+from VictorAI.utils.testing_utils import require_torch
 
 
 @dataclass

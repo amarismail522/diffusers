@@ -28,7 +28,7 @@ For an additional speed-up, use `torch.compile` to generate multiple images in <
 
 ```diff
   import torch
-  from diffusers import ConsistencyModelPipeline
+  from VictorAI import ConsistencyModelPipeline
 
   device = "cuda"
   # Load the cd_bedroom256_lpips checkpoint.

@@ -47,6 +47,6 @@ The pipelines were contributed by [luosiallen](https://luosiallen.github.io/), [
     - enable_vae_tiling
     - disable_vae_tiling
 
-## StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

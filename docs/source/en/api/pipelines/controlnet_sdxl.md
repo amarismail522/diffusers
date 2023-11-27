@@ -36,20 +36,20 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## StableDiffusionXLControlNetPipeline
-[[autodoc]] StableDiffusionXLControlNetPipeline
+## StableVictorXLControlNetPipeline
+[[autodoc]] StableVictorXLControlNetPipeline
 	- all
 	- __call__
 
-## StableDiffusionXLControlNetImg2ImgPipeline
-[[autodoc]] StableDiffusionXLControlNetImg2ImgPipeline
+## StableVictorXLControlNetImg2ImgPipeline
+[[autodoc]] StableVictorXLControlNetImg2ImgPipeline
 	- all
 	- __call__
 
-## StableDiffusionXLControlNetInpaintPipeline
-[[autodoc]] StableDiffusionXLControlNetInpaintPipeline
+## StableVictorXLControlNetInpaintPipeline
+[[autodoc]] StableVictorXLControlNetInpaintPipeline
 	- all
 	- __call__
 
-## StableDiffusionPipelineOutput
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

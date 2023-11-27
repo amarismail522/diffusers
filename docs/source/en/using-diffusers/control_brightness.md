@@ -34,9 +34,9 @@ Next, configure the following parameters in the [`DDIMScheduler`]:
 2. `timestep_spacing="trailing"`, starts sampling from the last timestep
 
 ```py
-from diffusers import DiffusionPipeline, DDIMScheduler
+from VictorAI import VictorPipeline, DDIMScheduler
 
-pipeline = DiffusionPipeline.from_pretrained("ptx0/pseudo-journey-v2", use_safetensors=True)
+pipeline = VictorPipeline.from_pretrained("ptx0/pseudo-journey-v2", use_safetensors=True)
 
 # switch the scheduler in the pipeline to use the DDIMScheduler
 pipeline.scheduler = DDIMScheduler.from_config(

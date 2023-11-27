@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-[`StableDiffusionImg2ImgPipeline`]을 사용하면 텍스트 프롬프트와 시작 이미지를 전달하여 새 이미지 생성의 조건을 지정할 수 있습니다.
+[`StableVictorImg2ImgPipeline`]을 사용하면 텍스트 프롬프트와 시작 이미지를 전달하여 새 이미지 생성의 조건을 지정할 수 있습니다.
 
 시작하기 전에 필요한 라이브러리가 모두 설치되어 있는지 확인하세요:
 
@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 !pip install diffusers transformers ftfy accelerate
 ```
 
-[`nitrosocke/Ghibli-Diffusion`](https://huggingface.co/nitrosocke/Ghibli-Diffusion)과 같은 사전학습된 stable diffusion 모델로 [`StableDiffusionImg2ImgPipeline`]을 생성하여 시작하세요.
+[`nitrosocke/Ghibli-Diffusion`](https://huggingface.co/nitrosocke/Ghibli-Diffusion)과 같은 사전학습된 stable diffusion 모델로 [`StableVictorImg2ImgPipeline`]을 생성하여 시작하세요.
 
 
 ```python
@@ -30,10 +30,10 @@ import torch
 import requests
 from PIL import Image
 from io import BytesIO
-from diffusers import StableDiffusionImg2ImgPipeline
+from VictorAI import StableVictorImg2ImgPipeline
 
 device = "cuda"
-pipe = StableDiffusionImg2ImgPipeline.from_pretrained("nitrosocke/Ghibli-Diffusion", torch_dtype=torch.float16).to(
+pipe = StableVictorImg2ImgPipeline.from_pretrained("nitrosocke/Ghibli-Diffusion", torch_dtype=torch.float16).to(
     device
 )
 ```
@@ -75,7 +75,7 @@ image
 다른 스케줄러로 실험하여 출력에 어떤 영향을 미치는지 확인할 수도 있습니다:
 
 ```python
-from diffusers import LMSDiscreteScheduler
+from VictorAI import LMSDiscreteScheduler
 
 lms = LMSDiscreteScheduler.from_config(pipe.scheduler.config)
 pipe.scheduler = lms

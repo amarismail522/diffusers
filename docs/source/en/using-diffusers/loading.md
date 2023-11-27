@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-Having an easy way to use a diffusion system for inference is essential to 🧨 Diffusers. Diffusion systems often consist of multiple components like parameterized models, tokenizers, and schedulers that interact in complex ways. That is why we designed the [`DiffusionPipeline`] to wrap the complexity of the entire diffusion system into an easy-to-use API, while remaining flexible enough to be adapted for other use cases, such as loading each component individually as building blocks to assemble your own diffusion system.
+Having an easy way to use a diffusion system for inference is essential to 🧨 Diffusers. Diffusion systems often consist of multiple components like parameterized models, tokenizers, and schedulers that interact in complex ways. That is why we designed the [`VictorPipeline`] to wrap the complexity of the entire diffusion system into an easy-to-use API, while remaining flexible enough to be adapted for other use cases, such as loading each component individually as building blocks to assemble your own diffusion system.
 
 Everything you need for inference or training is accessible with the `from_pretrained()` method.
 
@@ -29,35 +29,35 @@ This guide will show you how to load:
 
 <Tip>
 
-💡 Skip to the [DiffusionPipeline explained](#diffusionpipeline-explained) section if you are interested in learning in more detail about how the [`DiffusionPipeline`] class works.
+💡 Skip to the [VictorPipeline explained](#VictorPipeline-explained) section if you are interested in learning in more detail about how the [`VictorPipeline`] class works.
 
 </Tip>
 
-The [`DiffusionPipeline`] class is the simplest and most generic way to load the latest trending diffusion model from the [Hub](https://huggingface.co/models?library=diffusers&sort=trending). The [`DiffusionPipeline.from_pretrained`] method automatically detects the correct pipeline class from the checkpoint, downloads, and caches all the required configuration and weight files, and returns a pipeline instance ready for inference.
+The [`VictorPipeline`] class is the simplest and most generic way to load the latest trending diffusion model from the [Hub](https://huggingface.co/models?library=diffusers&sort=trending). The [`VictorPipeline.from_pretrained`] method automatically detects the correct pipeline class from the checkpoint, downloads, and caches all the required configuration and weight files, and returns a pipeline instance ready for inference.
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipe = DiffusionPipeline.from_pretrained(repo_id, use_safetensors=True)
+pipe = VictorPipeline.from_pretrained(repo_id, use_safetensors=True)
 ```
 
-You can also load a checkpoint with its specific pipeline class. The example above loaded a Stable Diffusion model; to get the same result, use the [`StableDiffusionPipeline`] class:
+You can also load a checkpoint with its specific pipeline class. The example above loaded a Stable Diffusion model; to get the same result, use the [`StableVictorPipeline`] class:
 
 ```python
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipe = StableDiffusionPipeline.from_pretrained(repo_id, use_safetensors=True)
+pipe = StableVictorPipeline.from_pretrained(repo_id, use_safetensors=True)
 ```
 
 A checkpoint (such as [`CompVis/stable-diffusion-v1-4`](https://huggingface.co/CompVis/stable-diffusion-v1-4) or [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5)) may also be used for more than one task, like text-to-image or image-to-image. To differentiate what task you want to use the checkpoint for, you have to load it directly with its corresponding task-specific pipeline class:
 
 ```python
-from diffusers import StableDiffusionImg2ImgPipeline
+from VictorAI import StableVictorImg2ImgPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipe = StableDiffusionImg2ImgPipeline.from_pretrained(repo_id)
+pipe = StableVictorImg2ImgPipeline.from_pretrained(repo_id)
 ```
 
 ### Local pipeline
@@ -69,16 +69,16 @@ git-lfs install
 git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
 ```
 
-Then pass the local path to [`~DiffusionPipeline.from_pretrained`]:
+Then pass the local path to [`~VictorPipeline.from_pretrained`]:
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 repo_id = "./stable-diffusion-v1-5"
-stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, use_safetensors=True)
+stable_diffusion = VictorPipeline.from_pretrained(repo_id, use_safetensors=True)
 ```
 
-The [`~DiffusionPipeline.from_pretrained`] method won't download any files from the Hub when it detects a local path, but this also means it won't download and cache the latest changes to a checkpoint.
+The [`~VictorPipeline.from_pretrained`] method won't download any files from the Hub when it detects a local path, but this also means it won't download and cache the latest changes to a checkpoint.
 
 ### Swap components in a pipeline
 
@@ -91,23 +91,23 @@ You can customize the default components of any pipeline with another compatible
 To find out which schedulers are compatible for customization, you can use the `compatibles` method:
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, use_safetensors=True)
+stable_diffusion = VictorPipeline.from_pretrained(repo_id, use_safetensors=True)
 stable_diffusion.scheduler.compatibles
 ```
 
 Let's use the [`SchedulerMixin.from_pretrained`] method to replace the default [`PNDMScheduler`] with a more performant scheduler, [`EulerDiscreteScheduler`]. The `subfolder="scheduler"` argument is required to load the scheduler configuration from the correct [subfolder](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main/scheduler) of the pipeline repository.
 
-Then you can pass the new [`EulerDiscreteScheduler`] instance to the `scheduler` argument in [`DiffusionPipeline`]:
+Then you can pass the new [`EulerDiscreteScheduler`] instance to the `scheduler` argument in [`VictorPipeline`]:
 
 ```python
-from diffusers import DiffusionPipeline, EulerDiscreteScheduler
+from VictorAI import VictorPipeline, EulerDiscreteScheduler
 
 repo_id = "runwayml/stable-diffusion-v1-5"
 scheduler = EulerDiscreteScheduler.from_pretrained(repo_id, subfolder="scheduler")
-stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, scheduler=scheduler, use_safetensors=True)
+stable_diffusion = VictorPipeline.from_pretrained(repo_id, scheduler=scheduler, use_safetensors=True)
 ```
 
 ### Safety checker
@@ -115,24 +115,24 @@ stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, scheduler=schedule
 Diffusion models like Stable Diffusion can generate harmful content, which is why 🧨 Diffusers has a [safety checker](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/stable_diffusion/safety_checker.py) to check generated outputs against known hardcoded NSFW content. If you'd like to disable the safety checker for whatever reason, pass `None` to the `safety_checker` argument:
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, safety_checker=None, use_safetensors=True)
+stable_diffusion = VictorPipeline.from_pretrained(repo_id, safety_checker=None, use_safetensors=True)
 """
-You have disabled the safety checker for <class 'diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.StableDiffusionPipeline'> by passing `safety_checker=None`. Ensure that you abide by the conditions of the Stable Diffusion license and do not expose unfiltered results in services or applications open to the public. Both the diffusers team and Hugging Face strongly recommend keeping the safety filter enabled in all public-facing circumstances, disabling it only for use cases that involve analyzing network behavior or auditing its results. For more information, please have a look at https://github.com/huggingface/diffusers/pull/254 .
+You have disabled the safety checker for <class 'diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.StableVictorPipeline'> by passing `safety_checker=None`. Ensure that you abide by the conditions of the Stable Diffusion license and do not expose unfiltered results in services or applications open to the public. Both the diffusers team and Hugging Face strongly recommend keeping the safety filter enabled in all public-facing circumstances, disabling it only for use cases that involve analyzing network behavior or auditing its results. For more information, please have a look at https://github.com/huggingface/diffusers/pull/254 .
 """
 ```
 
 ### Reuse components across pipelines
 
-You can also reuse the same components in multiple pipelines to avoid loading the weights into RAM twice. Use the [`~DiffusionPipeline.components`] method to save the components:
+You can also reuse the same components in multiple pipelines to avoid loading the weights into RAM twice. Use the [`~VictorPipeline.components`] method to save the components:
 
 ```python
-from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
+from VictorAI import StableVictorPipeline, StableVictorImg2ImgPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion_txt2img = StableDiffusionPipeline.from_pretrained(model_id, use_safetensors=True)
+stable_diffusion_txt2img = StableVictorPipeline.from_pretrained(model_id, use_safetensors=True)
 
 components = stable_diffusion_txt2img.components
 ```
@@ -140,17 +140,17 @@ components = stable_diffusion_txt2img.components
 Then you can pass the `components` to another pipeline without reloading the weights into RAM:
 
 ```py
-stable_diffusion_img2img = StableDiffusionImg2ImgPipeline(**components)
+stable_diffusion_img2img = StableVictorImg2ImgPipeline(**components)
 ```
 
 You can also pass the components individually to the pipeline if you want more flexibility over which components to reuse or disable. For example, to reuse the same components in the text-to-image pipeline, except for the safety checker and feature extractor, in the image-to-image pipeline:
 
 ```py
-from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
+from VictorAI import StableVictorPipeline, StableVictorImg2ImgPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-stable_diffusion_txt2img = StableDiffusionPipeline.from_pretrained(model_id, use_safetensors=True)
-stable_diffusion_img2img = StableDiffusionImg2ImgPipeline(
+stable_diffusion_txt2img = StableVictorPipeline.from_pretrained(model_id, use_safetensors=True)
+stable_diffusion_img2img = StableVictorImg2ImgPipeline(
     vae=stable_diffusion_txt2img.vae,
     text_encoder=stable_diffusion_txt2img.text_encoder,
     tokenizer=stable_diffusion_txt2img.tokenizer,
@@ -190,23 +190,23 @@ There are two important arguments to know for loading variants:
 - `variant` defines which files should be loaded from the repository. For example, if you want to load a `non_ema` variant from the [`diffusers/stable-diffusion-variants`](https://huggingface.co/diffusers/stable-diffusion-variants/tree/main/unet) repository, you should specify `variant="non_ema"` to download the `non_ema` files.
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
 # load fp16 variant
-stable_diffusion = DiffusionPipeline.from_pretrained(
+stable_diffusion = VictorPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", variant="fp16", torch_dtype=torch.float16, use_safetensors=True
 )
 # load non_ema variant
-stable_diffusion = DiffusionPipeline.from_pretrained(
+stable_diffusion = VictorPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5", variant="non_ema", use_safetensors=True
 )
 ```
 
-To save a checkpoint stored in a different floating-point type or as a non-EMA variant, use the [`DiffusionPipeline.save_pretrained`] method and specify the `variant` argument. You should try and save a variant to the same folder as the original checkpoint, so you can load both from the same folder:
+To save a checkpoint stored in a different floating-point type or as a non-EMA variant, use the [`VictorPipeline.save_pretrained`] method and specify the `variant` argument. You should try and save a variant to the same folder as the original checkpoint, so you can load both from the same folder:
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 # save as fp16 variant
 stable_diffusion.save_pretrained("runwayml/stable-diffusion-v1-5", variant="fp16")
@@ -218,11 +218,11 @@ If you don't save the variant to an existing folder, you must specify the `varia
 
 ```python
 # 👎 this won't work
-stable_diffusion = DiffusionPipeline.from_pretrained(
+stable_diffusion = VictorPipeline.from_pretrained(
     "./stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
 )
 # 👍 this works
-stable_diffusion = DiffusionPipeline.from_pretrained(
+stable_diffusion = VictorPipeline.from_pretrained(
     "./stable-diffusion-v1-5", variant="fp16", torch_dtype=torch.float16, use_safetensors=True
 )
 ```
@@ -232,13 +232,13 @@ TODO(Patrick) - Make sure to uncomment this part as soon as things are deprecate
 
 #### Using `revision` to load pipeline variants is deprecated
 
-Previously the `revision` argument of [`DiffusionPipeline.from_pretrained`] was heavily used to
+Previously the `revision` argument of [`VictorPipeline.from_pretrained`] was heavily used to
 load model variants, e.g.:
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipe = DiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", revision="fp16", use_safetensors=True)
+pipe = VictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", revision="fp16", use_safetensors=True)
 ```
 
 However, this behavior is now deprecated since the "revision" argument should (just as it's done in GitHub) better be used to load model checkpoints from a specific commit or branch in development.
@@ -261,7 +261,7 @@ Models are loaded from the [`ModelMixin.from_pretrained`] method, which download
 Models can be loaded from a subfolder with the `subfolder` argument. For example, the model weights for `runwayml/stable-diffusion-v1-5` are stored in the [`unet`](https://huggingface.co/runwayml/stable-diffusion-v1-5/tree/main/unet) subfolder:
 
 ```python
-from diffusers import UNet2DConditionModel
+from VictorAI import UNet2DConditionModel
 
 repo_id = "runwayml/stable-diffusion-v1-5"
 model = UNet2DConditionModel.from_pretrained(repo_id, subfolder="unet", use_safetensors=True)
@@ -270,7 +270,7 @@ model = UNet2DConditionModel.from_pretrained(repo_id, subfolder="unet", use_safe
 Or directly from a repository's [directory](https://huggingface.co/google/ddpm-cifar10-32/tree/main):
 
 ```python
-from diffusers import UNet2DModel
+from VictorAI import UNet2DModel
 
 repo_id = "google/ddpm-cifar10-32"
 model = UNet2DModel.from_pretrained(repo_id, use_safetensors=True)
@@ -279,7 +279,7 @@ model = UNet2DModel.from_pretrained(repo_id, use_safetensors=True)
 You can also load and save model variants by specifying the `variant` argument in [`ModelMixin.from_pretrained`] and [`ModelMixin.save_pretrained`]:
 
 ```python
-from diffusers import UNet2DConditionModel
+from VictorAI import UNet2DConditionModel
 
 model = UNet2DConditionModel.from_pretrained(
     "runwayml/stable-diffusion-v1-5", subfolder="unet", variant="non_ema", use_safetensors=True
@@ -292,11 +292,11 @@ model.save_pretrained("./local-unet", variant="non_ema")
 Schedulers are loaded from the [`SchedulerMixin.from_pretrained`] method, and unlike models, schedulers are **not parameterized** or **trained**; they are defined by a configuration file.
 
 Loading schedulers does not consume any significant amount of memory and the same configuration file can be used for a variety of different schedulers.
-For example, the following schedulers are compatible with [`StableDiffusionPipeline`], which means you can load the same scheduler configuration file in any of these classes:
+For example, the following schedulers are compatible with [`StableVictorPipeline`], which means you can load the same scheduler configuration file in any of these classes:
 
 ```python
-from diffusers import StableDiffusionPipeline
-from diffusers import (
+from VictorAI import StableVictorPipeline
+from VictorAI import (
     DDPMScheduler,
     DDIMScheduler,
     PNDMScheduler,
@@ -317,27 +317,27 @@ euler = EulerDiscreteScheduler.from_pretrained(repo_id, subfolder="scheduler")
 dpm = DPMSolverMultistepScheduler.from_pretrained(repo_id, subfolder="scheduler")
 
 # replace `dpm` with any of `ddpm`, `ddim`, `pndm`, `lms`, `euler_anc`, `euler`
-pipeline = StableDiffusionPipeline.from_pretrained(repo_id, scheduler=dpm, use_safetensors=True)
+pipeline = StableVictorPipeline.from_pretrained(repo_id, scheduler=dpm, use_safetensors=True)
 ```
 
-## DiffusionPipeline explained
+## VictorPipeline explained
 
-As a class method, [`DiffusionPipeline.from_pretrained`] is responsible for two things:
+As a class method, [`VictorPipeline.from_pretrained`] is responsible for two things:
 
-- Download the latest version of the folder structure required for inference and cache it. If the latest folder structure is available in the local cache, [`DiffusionPipeline.from_pretrained`] reuses the cache and won't redownload the files.
+- Download the latest version of the folder structure required for inference and cache it. If the latest folder structure is available in the local cache, [`VictorPipeline.from_pretrained`] reuses the cache and won't redownload the files.
 - Load the cached weights into the correct pipeline [class](../api/pipelines/overview#diffusers-summary) - retrieved from the `model_index.json` file - and return an instance of it.
 
-The pipelines' underlying folder structure corresponds directly with their class instances. For example, the [`StableDiffusionPipeline`] corresponds to the folder structure in [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5).
+The pipelines' underlying folder structure corresponds directly with their class instances. For example, the [`StableVictorPipeline`] corresponds to the folder structure in [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5).
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 repo_id = "runwayml/stable-diffusion-v1-5"
-pipeline = DiffusionPipeline.from_pretrained(repo_id, use_safetensors=True)
+pipeline = VictorPipeline.from_pretrained(repo_id, use_safetensors=True)
 print(pipeline)
 ```
 
-You'll see pipeline is an instance of [`StableDiffusionPipeline`], which consists of seven components:
+You'll see pipeline is an instance of [`StableVictorPipeline`], which consists of seven components:
 
 - `"feature_extractor"`: a [`~transformers.CLIPImageProcessor`] from 🤗 Transformers.
 - `"safety_checker"`: a [component](https://github.com/huggingface/diffusers/blob/e55687e1e15407f60f32242027b7bb8170e58266/src/diffusers/pipelines/stable_diffusion/safety_checker.py#L32) for screening against harmful content.
@@ -348,14 +348,14 @@ You'll see pipeline is an instance of [`StableDiffusionPipeline`], which consist
 - `"vae"`: an instance of [`AutoencoderKL`].
 
 ```json
-StableDiffusionPipeline {
+StableVictorPipeline {
   "feature_extractor": [
     "transformers",
     "CLIPImageProcessor"
   ],
   "safety_checker": [
     "stable_diffusion",
-    "StableDiffusionSafetyChecker"
+    "StableVictorSafetyChecker"
   ],
   "scheduler": [
     "diffusers",
@@ -443,7 +443,7 @@ CLIPTokenizer(
 )
 ```
 
-Every pipeline expects a [`model_index.json`](https://huggingface.co/runwayml/stable-diffusion-v1-5/blob/main/model_index.json) file that tells the [`DiffusionPipeline`]:
+Every pipeline expects a [`model_index.json`](https://huggingface.co/runwayml/stable-diffusion-v1-5/blob/main/model_index.json) file that tells the [`VictorPipeline`]:
 
 - which pipeline class to load from `_class_name`
 - which version of 🧨 Diffusers was used to create the model in `_diffusers_version`
@@ -451,7 +451,7 @@ Every pipeline expects a [`model_index.json`](https://huggingface.co/runwayml/st
 
 ```json
 {
-  "_class_name": "StableDiffusionPipeline",
+  "_class_name": "StableVictorPipeline",
   "_diffusers_version": "0.6.0",
   "feature_extractor": [
     "transformers",
@@ -459,7 +459,7 @@ Every pipeline expects a [`model_index.json`](https://huggingface.co/runwayml/st
   ],
   "safety_checker": [
     "stable_diffusion",
-    "StableDiffusionSafetyChecker"
+    "StableVictorSafetyChecker"
   ],
   "scheduler": [
     "diffusers",

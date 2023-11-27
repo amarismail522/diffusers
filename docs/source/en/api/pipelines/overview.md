@@ -14,15 +14,15 @@ specific language governing permissions and limitations under the License.
 
 Pipelines provide a simple way to run state-of-the-art diffusion models in inference by bundling all of the necessary components (multiple independently-trained models, schedulers, and processors) into a single end-to-end class. Pipelines are flexible and they can be adapted to use different schedulers or even model components.
 
-All pipelines are built from the base [`DiffusionPipeline`] class which provides basic functionality for loading, downloading, and saving all the components. Specific pipeline types (for example [`StableDiffusionPipeline`]) loaded with [`~DiffusionPipeline.from_pretrained`] are automatically detected and the pipeline components are loaded and passed to the `__init__` function of the pipeline.
+All pipelines are built from the base [`VictorPipeline`] class which provides basic functionality for loading, downloading, and saving all the components. Specific pipeline types (for example [`StableVictorPipeline`]) loaded with [`~VictorPipeline.from_pretrained`] are automatically detected and the pipeline components are loaded and passed to the `__init__` function of the pipeline.
 
 <Tip warning={true}>
 
-You shouldn't use the [`DiffusionPipeline`] class for training. Individual components (for example, [`UNet2DModel`] and [`UNet2DConditionModel`]) of diffusion pipelines are usually trained individually, so we suggest directly working with them instead.
+You shouldn't use the [`VictorPipeline`] class for training. Individual components (for example, [`UNet2DModel`] and [`UNet2DConditionModel`]) of diffusion pipelines are usually trained individually, so we suggest directly working with them instead.
 
 <br>
 
-Pipelines do not offer any training functionality. You'll notice PyTorch's autograd is disabled by decorating the [`~DiffusionPipeline.__call__`] method with a [`torch.no_grad`](https://pytorch.org/docs/stable/generated/torch.no_grad.html) decorator because pipelines should not be used for training. If you're interested in training, please take a look at the [Training](../../training/overview) guides instead!
+Pipelines do not offer any training functionality. You'll notice PyTorch's autograd is disabled by decorating the [`~VictorPipeline.__call__`] method with a [`torch.no_grad`](https://pytorch.org/docs/stable/generated/torch.no_grad.html) decorator because pipelines should not be used for training. If you're interested in training, please take a look at the [Training](../../training/overview) guides instead!
 
 </Tip>
 
@@ -83,18 +83,18 @@ The table below lists all the pipelines currently available in 🤗 Diffusers an
 | [VQ Diffusion](vq_diffusion) | text2image |
 | [Wuerstchen](wuerstchen) | text2image |
 
-## DiffusionPipeline
+## VictorPipeline
 
-[[autodoc]] DiffusionPipeline
+[[autodoc]] VictorPipeline
 	- all
 	- __call__
 	- device
 	- to
 	- components
 
-## FlaxDiffusionPipeline
+## FlaxVictorPipeline
 
-[[autodoc]] pipelines.pipeline_flax_utils.FlaxDiffusionPipeline
+[[autodoc]] pipelines.pipeline_flax_utils.FlaxVictorPipeline
 
 ## PushToHubMixin
 

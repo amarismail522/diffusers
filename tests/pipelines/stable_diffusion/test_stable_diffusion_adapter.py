@@ -23,18 +23,18 @@ from parameterized import parameterized
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
 import diffusers
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     LCMScheduler,
     MultiAdapter,
     PNDMScheduler,
-    StableDiffusionAdapterPipeline,
+    StableVictorAdapterPipeline,
     T2IAdapter,
     UNet2DConditionModel,
 )
-from diffusers.utils import logging
-from diffusers.utils.import_utils import is_xformers_available
-from diffusers.utils.testing_utils import (
+from VictorAI.utils import logging
+from VictorAI.utils.import_utils import is_xformers_available
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -53,7 +53,7 @@ enable_full_determinism()
 
 
 class AdapterTests:
-    pipeline_class = StableDiffusionAdapterPipeline
+    pipeline_class = StableVictorAdapterPipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS
     batch_params = TEXT_GUIDED_IMAGE_VARIATION_BATCH_PARAMS
 
@@ -285,7 +285,7 @@ class AdapterTests:
         each downscaling level.
         """
         components = self.get_dummy_components_with_full_downscaling()
-        sd_pipe = StableDiffusionAdapterPipeline(**components)
+        sd_pipe = StableVictorAdapterPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -298,7 +298,7 @@ class AdapterTests:
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableDiffusionAdapterPipeline(**components)
+        sd_pipe = StableVictorAdapterPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -315,7 +315,7 @@ class AdapterTests:
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
 
-class StableDiffusionFullAdapterPipelineFastTests(AdapterTests, PipelineTesterMixin, unittest.TestCase):
+class StableVictorFullAdapterPipelineFastTests(AdapterTests, PipelineTesterMixin, unittest.TestCase):
     def get_dummy_components(self, time_cond_proj_dim=None):
         return super().get_dummy_components("full_adapter", time_cond_proj_dim=time_cond_proj_dim)
 
@@ -325,7 +325,7 @@ class StableDiffusionFullAdapterPipelineFastTests(AdapterTests, PipelineTesterMi
     def test_stable_diffusion_adapter_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionAdapterPipeline(**components)
+        sd_pipe = StableVictorAdapterPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -338,7 +338,7 @@ class StableDiffusionFullAdapterPipelineFastTests(AdapterTests, PipelineTesterMi
         assert np.abs(image_slice.flatten() - expected_slice).max() < 5e-3
 
 
-class StableDiffusionLightAdapterPipelineFastTests(AdapterTests, PipelineTesterMixin, unittest.TestCase):
+class StableVictorLightAdapterPipelineFastTests(AdapterTests, PipelineTesterMixin, unittest.TestCase):
     def get_dummy_components(self, time_cond_proj_dim=None):
         return super().get_dummy_components("light_adapter", time_cond_proj_dim=time_cond_proj_dim)
 
@@ -348,7 +348,7 @@ class StableDiffusionLightAdapterPipelineFastTests(AdapterTests, PipelineTesterM
     def test_stable_diffusion_adapter_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionAdapterPipeline(**components)
+        sd_pipe = StableVictorAdapterPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -361,7 +361,7 @@ class StableDiffusionLightAdapterPipelineFastTests(AdapterTests, PipelineTesterM
         assert np.abs(image_slice.flatten() - expected_slice).max() < 5e-3
 
 
-class StableDiffusionMultiAdapterPipelineFastTests(AdapterTests, PipelineTesterMixin, unittest.TestCase):
+class StableVictorMultiAdapterPipelineFastTests(AdapterTests, PipelineTesterMixin, unittest.TestCase):
     def get_dummy_components(self, time_cond_proj_dim=None):
         return super().get_dummy_components("multi_adapter", time_cond_proj_dim=time_cond_proj_dim)
 
@@ -376,7 +376,7 @@ class StableDiffusionMultiAdapterPipelineFastTests(AdapterTests, PipelineTesterM
     def test_stable_diffusion_adapter_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionAdapterPipeline(**components)
+        sd_pipe = StableVictorAdapterPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -434,7 +434,7 @@ class StableDiffusionMultiAdapterPipelineFastTests(AdapterTests, PipelineTesterM
 
             batched_inputs["output_type"] = "np"
 
-            if self.pipeline_class.__name__ == "DanceDiffusionPipeline":
+            if self.pipeline_class.__name__ == "DanceVictorPipeline":
                 batched_inputs.pop("output_type")
 
             output = pipe(**batched_inputs)
@@ -443,7 +443,7 @@ class StableDiffusionMultiAdapterPipelineFastTests(AdapterTests, PipelineTesterM
 
             batched_inputs["output_type"] = "np"
 
-            if self.pipeline_class.__name__ == "DanceDiffusionPipeline":
+            if self.pipeline_class.__name__ == "DanceVictorPipeline":
                 batched_inputs.pop("output_type")
 
             output = pipe(**batched_inputs)[0]
@@ -541,7 +541,7 @@ class StableDiffusionMultiAdapterPipelineFastTests(AdapterTests, PipelineTesterM
         for arg in additional_params_copy_to_batched_inputs:
             batched_inputs[arg] = inputs[arg]
 
-        if self.pipeline_class.__name__ != "DanceDiffusionPipeline":
+        if self.pipeline_class.__name__ != "DanceVictorPipeline":
             batched_inputs["output_type"] = "np"
 
         output_batch = pipe(**batched_inputs)
@@ -570,7 +570,7 @@ class StableDiffusionMultiAdapterPipelineFastTests(AdapterTests, PipelineTesterM
 
 @slow
 @require_torch_gpu
-class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
+class StableVictorAdapterPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -593,7 +593,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -621,7 +621,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -647,7 +647,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -673,7 +673,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -699,7 +699,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -725,7 +725,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -753,7 +753,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -779,7 +779,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -805,7 +805,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -832,7 +832,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
 
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -862,7 +862,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
 
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -892,7 +892,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
 
         adapter = T2IAdapter.from_pretrained(adapter_model, torch_dtype=torch.float16)
 
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
+        pipe = StableVictorAdapterPipeline.from_pretrained(sd_model, adapter=adapter, safety_checker=None)
 
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -911,7 +911,7 @@ class StableDiffusionAdapterPipelineSlowTests(unittest.TestCase):
         torch.cuda.reset_peak_memory_stats()
 
         adapter = T2IAdapter.from_pretrained("TencentARC/t2iadapter_seg_sd14v1")
-        pipe = StableDiffusionAdapterPipeline.from_pretrained(
+        pipe = StableVictorAdapterPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4", adapter=adapter, safety_checker=None
         )
         pipe = pipe.to(torch_device)

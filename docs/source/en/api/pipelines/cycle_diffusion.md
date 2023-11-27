@@ -24,10 +24,10 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## CycleDiffusionPipeline
-[[autodoc]] CycleDiffusionPipeline
+## CycleVictorPipeline
+[[autodoc]] CycleVictorPipeline
 	- all
 	- __call__
 
-## StableDiffusionPiplineOutput
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+## StableVictorPiplineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

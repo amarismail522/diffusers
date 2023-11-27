@@ -18,16 +18,16 @@ import unittest
 
 import numpy as np
 
-from diffusers import (
+from VictorAI import (
     DDIMScheduler,
     DPMSolverMultistepScheduler,
     EulerAncestralDiscreteScheduler,
     EulerDiscreteScheduler,
     LMSDiscreteScheduler,
-    OnnxStableDiffusionPipeline,
+    OnnxStableVictorPipeline,
     PNDMScheduler,
 )
-from diffusers.utils.testing_utils import is_onnx_available, nightly, require_onnxruntime, require_torch_gpu
+from VictorAI.utils.testing_utils import is_onnx_available, nightly, require_onnxruntime, require_torch_gpu
 
 from ..test_pipelines_onnx_common import OnnxPipelineTesterMixin
 
@@ -36,8 +36,8 @@ if is_onnx_available():
     import onnxruntime as ort
 
 
-class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
-    hub_checkpoint = "hf-internal-testing/tiny-random-OnnxStableDiffusionPipeline"
+class OnnxStableVictorPipelineFastTests(OnnxPipelineTesterMixin, unittest.TestCase):
+    hub_checkpoint = "hf-internal-testing/tiny-random-OnnxStableVictorPipeline"
 
     def get_dummy_inputs(self, seed=0):
         generator = np.random.RandomState(seed)
@@ -51,7 +51,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         return inputs
 
     def test_pipeline_default_ddim(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.set_progress_bar_config(disable=None)
 
         inputs = self.get_dummy_inputs()
@@ -64,7 +64,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_pipeline_pndm(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = PNDMScheduler.from_config(pipe.scheduler.config, skip_prk_steps=True)
         pipe.set_progress_bar_config(disable=None)
 
@@ -78,7 +78,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_pipeline_lms(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = LMSDiscreteScheduler.from_config(pipe.scheduler.config)
         pipe.set_progress_bar_config(disable=None)
 
@@ -92,7 +92,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_pipeline_euler(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
         pipe.set_progress_bar_config(disable=None)
 
@@ -106,7 +106,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_pipeline_euler_ancestral(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
         pipe.set_progress_bar_config(disable=None)
 
@@ -120,7 +120,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_pipeline_dpm_multistep(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
         pipe.set_progress_bar_config(disable=None)
 
@@ -134,7 +134,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_stable_diffusion_prompt_embeds(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.set_progress_bar_config(disable=None)
 
         inputs = self.get_dummy_inputs()
@@ -167,7 +167,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
         assert np.abs(image_slice_1.flatten() - image_slice_2.flatten()).max() < 1e-4
 
     def test_stable_diffusion_negative_prompt_embeds(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
+        pipe = OnnxStableVictorPipeline.from_pretrained(self.hub_checkpoint, provider="CPUExecutionProvider")
         pipe.set_progress_bar_config(disable=None)
 
         inputs = self.get_dummy_inputs()
@@ -207,7 +207,7 @@ class OnnxStableDiffusionPipelineFastTests(OnnxPipelineTesterMixin, unittest.Tes
 @nightly
 @require_onnxruntime
 @require_torch_gpu
-class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
+class OnnxStableVictorPipelineIntegrationTests(unittest.TestCase):
     @property
     def gpu_provider(self):
         return (
@@ -226,7 +226,7 @@ class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
 
     def test_inference_default_pndm(self):
         # using the PNDM scheduler by default
-        sd_pipe = OnnxStableDiffusionPipeline.from_pretrained(
+        sd_pipe = OnnxStableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             revision="onnx",
             safety_checker=None,
@@ -252,7 +252,7 @@ class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
         ddim_scheduler = DDIMScheduler.from_pretrained(
             "runwayml/stable-diffusion-v1-5", subfolder="scheduler", revision="onnx"
         )
-        sd_pipe = OnnxStableDiffusionPipeline.from_pretrained(
+        sd_pipe = OnnxStableVictorPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5",
             revision="onnx",
             scheduler=ddim_scheduler,
@@ -278,7 +278,7 @@ class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
         lms_scheduler = LMSDiscreteScheduler.from_pretrained(
             "runwayml/stable-diffusion-v1-5", subfolder="scheduler", revision="onnx"
         )
-        sd_pipe = OnnxStableDiffusionPipeline.from_pretrained(
+        sd_pipe = OnnxStableVictorPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5",
             revision="onnx",
             scheduler=lms_scheduler,
@@ -326,7 +326,7 @@ class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
 
         test_callback_fn.has_been_called = False
 
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(
+        pipe = OnnxStableVictorPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5",
             revision="onnx",
             safety_checker=None,
@@ -351,7 +351,7 @@ class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
         assert number_of_steps == 6
 
     def test_stable_diffusion_no_safety_checker(self):
-        pipe = OnnxStableDiffusionPipeline.from_pretrained(
+        pipe = OnnxStableVictorPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5",
             revision="onnx",
             safety_checker=None,
@@ -359,7 +359,7 @@ class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
             provider=self.gpu_provider,
             sess_options=self.gpu_options,
         )
-        assert isinstance(pipe, OnnxStableDiffusionPipeline)
+        assert isinstance(pipe, OnnxStableVictorPipeline)
         assert pipe.safety_checker is None
 
         image = pipe("example prompt", num_inference_steps=2).images[0]
@@ -368,7 +368,7 @@ class OnnxStableDiffusionPipelineIntegrationTests(unittest.TestCase):
         # check that there's no error when saving a pipeline with one of the models being None
         with tempfile.TemporaryDirectory() as tmpdirname:
             pipe.save_pretrained(tmpdirname)
-            pipe = OnnxStableDiffusionPipeline.from_pretrained(tmpdirname)
+            pipe = OnnxStableVictorPipeline.from_pretrained(tmpdirname)
 
         # sanity check that the pipeline still works
         assert pipe.safety_checker is None

@@ -28,9 +28,9 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## AltDiffusionPipeline
+## AltVictorPipeline
 
-[[autodoc]] AltDiffusionPipeline
+[[autodoc]] AltVictorPipeline
 	- all
 	- __call__
 
@@ -40,8 +40,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 	- all
 	- __call__
 
-## AltDiffusionPipelineOutput
+## AltVictorPipelineOutput
 
-[[autodoc]] pipelines.alt_diffusion.AltDiffusionPipelineOutput
+[[autodoc]] pipelines.alt_diffusion.AltVictorPipelineOutput
 	- all
 	- __call__

@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 
-from diffusers import VQDiffusionScheduler
+from VictorAI import VQDiffusionScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

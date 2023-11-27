@@ -22,7 +22,7 @@ You can find additional information about MultiDiffusion on the [project page](h
 
 ## Tips
 
-While calling [`StableDiffusionPanoramaPipeline`], it's possible to specify the `view_batch_size` parameter to be > 1.
+While calling [`StableVictorPanoramaPipeline`], it's possible to specify the `view_batch_size` parameter to be > 1.
 For some GPUs with high performance, this can speedup the generation process and increase VRAM usage.
 
 To generate panorama-like images make sure you pass the width parameter accordingly. We recommend a width value of 2048 which is the default.
@@ -41,10 +41,10 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## StableDiffusionPanoramaPipeline
-[[autodoc]] StableDiffusionPanoramaPipeline
+## StableVictorPanoramaPipeline
+[[autodoc]] StableVictorPanoramaPipeline
 	- __call__
 	- all
 
-## StableDiffusionPipelineOutput
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

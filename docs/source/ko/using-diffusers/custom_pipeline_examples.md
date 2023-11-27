@@ -27,9 +27,9 @@ specific language governing permissions and limitations under the License.
 | Long Prompt Weighting Stable Diffusion | 토큰 길이 제한이 없고 프롬프트에서 파싱 가중치 지원을 하는 **하나의** Stable Diffusion 파이프라인,                                                                                                                                                                                                                                                                                                                                                                                                    | [Long Prompt Weighting Stable Diffusion](#long-prompt-weighting-stable-diffusion) |-                                                                                                                                                                                                                  | [SkyTNT](https://github.com/SkyTNT)                        |
 | Speech to Image                        | 자동 음성 인식을 사용하여 텍스트를 작성하고 Stable Diffusion을 사용하여 이미지를 생성합니다.                                                                                                                                                                                                                                                                                                                                                                                                          | [Speech to Image](#speech-to-image)                                               | -                                                                                                                                                                                                                 | [Mikail Duzenli](https://github.com/MikailINTech)          |
 
-커스텀 파이프라인을 불러오려면 `diffusers/examples/community`에 있는 파일 중 하나로서 `custom_pipeline` 인수를 `DiffusionPipeline`에 전달하기만 하면 됩니다. 자신만의 파이프라인이 있는 PR을 보내주시면 빠르게 병합해드리겠습니다.
+커스텀 파이프라인을 불러오려면 `diffusers/examples/community`에 있는 파일 중 하나로서 `custom_pipeline` 인수를 `VictorPipeline`에 전달하기만 하면 됩니다. 자신만의 파이프라인이 있는 PR을 보내주시면 빠르게 병합해드리겠습니다.
 ```py
-pipe = DiffusionPipeline.from_pretrained(
+pipe = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4", custom_pipeline="filename_in_the_community_folder"
 )
 ```
@@ -43,7 +43,7 @@ pipe = DiffusionPipeline.from_pretrained(
 다음 코드는 약 12GB의 GPU RAM이 필요합니다.
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 from transformers import CLIPImageProcessor, CLIPModel
 import torch
 
@@ -52,7 +52,7 @@ feature_extractor = CLIPImageProcessor.from_pretrained("laion/CLIP-ViT-B-32-laio
 clip_model = CLIPModel.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16)
 
 
-guided_pipeline = DiffusionPipeline.from_pretrained(
+guided_pipeline = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     custom_pipeline="clip_guided_stable_diffusion",
     clip_model=clip_model,
@@ -92,9 +92,9 @@ for i, img in enumerate(images):
 예시 "one-step-unet"는 다음과 같이 실행할 수 있습니다.
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipe = DiffusionPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipeline="one_step_unet")
+pipe = VictorPipeline.from_pretrained("google/ddpm-cifar10-32", custom_pipeline="one_step_unet")
 pipe()
 ```
 
@@ -105,10 +105,10 @@ pipe()
 다음 코드는 최소 8GB VRAM의 GPU에서 실행할 수 있으며 약 5분 정도 소요됩니다.
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipe = DiffusionPipeline.from_pretrained(
+pipe = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     torch_dtype=torch.float16,
     safety_checker=None,  # Very important for videos...lots of false positives while interpolating
@@ -138,7 +138,7 @@ walk(...)` 함수의 출력은 `output_dir`에 정의된 대로 폴더에 저장
 The Stable Diffusion Mega 파이프라인을 사용하면 Stable Diffusion 파이프라인의 주요 사용 사례를 단일 클래스에서 사용할 수 있습니다.
 ```python
 #!/usr/bin/env python3
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import PIL
 import requests
 from io import BytesIO
@@ -150,7 +150,7 @@ def download_image(url):
     return PIL.Image.open(BytesIO(response.content)).convert("RGB")
 
 
-pipe = DiffusionPipeline.from_pretrained(
+pipe = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     custom_pipeline="stable_diffusion_mega",
     torch_dtype=torch.float16,
@@ -194,10 +194,10 @@ images = pipe.inpaint(prompt=prompt, image=init_image, mask_image=mask_image, st
 #### pytorch
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipe = DiffusionPipeline.from_pretrained(
+pipe = VictorPipeline.from_pretrained(
     "hakurei/waifu-diffusion", custom_pipeline="lpw_stable_diffusion", torch_dtype=torch.float16
 )
 pipe = pipe.to("cuda")
@@ -211,10 +211,10 @@ pipe.text2img(prompt, negative_prompt=neg_prompt, width=512, height=512, max_emb
 #### onnxruntime
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipe = DiffusionPipeline.from_pretrained(
+pipe = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     custom_pipeline="lpw_stable_diffusion_onnx",
     revision="onnx",
@@ -236,7 +236,7 @@ import torch
 
 import matplotlib.pyplot as plt
 from datasets import load_dataset
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 from transformers import (
     WhisperForConditionalGeneration,
     WhisperProcessor,
@@ -255,7 +255,7 @@ speech_data = audio_sample["audio"]["array"]
 model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small").to(device)
 processor = WhisperProcessor.from_pretrained("openai/whisper-small")
 
-diffuser_pipeline = DiffusionPipeline.from_pretrained(
+diffuser_pipeline = VictorPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
     custom_pipeline="speech_to_image_diffusion",
     speech_model=model,

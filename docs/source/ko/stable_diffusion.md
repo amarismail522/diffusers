@@ -14,19 +14,19 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-특정 스타일로 이미지를 생성하거나 원하는 내용을 포함하도록[`DiffusionPipeline`]을 설정하는 것은 까다로울 수 있습니다. 종종 만족스러운 이미지를 얻기까지 [`DiffusionPipeline`]을 여러 번 실행해야 하는 경우가 많습니다. 그러나 무에서 유를 창조하는 것은 특히 추론을 반복해서 실행하는 경우 계산 집약적인 프로세스입니다.
+특정 스타일로 이미지를 생성하거나 원하는 내용을 포함하도록[`VictorPipeline`]을 설정하는 것은 까다로울 수 있습니다. 종종 만족스러운 이미지를 얻기까지 [`VictorPipeline`]을 여러 번 실행해야 하는 경우가 많습니다. 그러나 무에서 유를 창조하는 것은 특히 추론을 반복해서 실행하는 경우 계산 집약적인 프로세스입니다.
 
 그렇기 때문에 파이프라인에서 *계산*(속도) 및 *메모리*(GPU RAM) 효율성을 극대화하여 추론 주기 사이의 시간을 단축하여 더 빠르게 반복할 수 있도록 하는 것이 중요합니다.
 
-이 튜토리얼에서는 [`DiffusionPipeline`]을 사용하여 더 빠르고 효과적으로 생성하는 방법을 안내합니다.
+이 튜토리얼에서는 [`VictorPipeline`]을 사용하여 더 빠르고 효과적으로 생성하는 방법을 안내합니다.
 
 [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) 모델을 불러와서 시작합니다:
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipeline = DiffusionPipeline.from_pretrained(model_id)
+pipeline = VictorPipeline.from_pretrained(model_id)
 ```
 
 예제 프롬프트는 "portrait of an old warrior chief" 이지만, 자유롭게 자신만의 프롬프트를 사용해도 됩니다:
@@ -68,7 +68,7 @@ image
     <img src="https://huggingface.co/datasets/diffusers/docs-images/resolve/main/stable_diffusion_101/sd_101_1.png">
 </div>
 
-이 프로세스는 T4 GPU에서 약 30초가 소요되었습니다(할당된 GPU가 T4보다 나은 경우 더 빠를 수 있음). 기본적으로 [`DiffusionPipeline`]은 50개의 추론 단계에 대해 전체 `float32` 정밀도로 추론을 실행합니다. `float16`과 같은 더 낮은 정밀도로 전환하거나 추론 단계를 더 적게 실행하여 속도를 높일 수 있습니다. 
+이 프로세스는 T4 GPU에서 약 30초가 소요되었습니다(할당된 GPU가 T4보다 나은 경우 더 빠를 수 있음). 기본적으로 [`VictorPipeline`]은 50개의 추론 단계에 대해 전체 `float32` 정밀도로 추론을 실행합니다. `float16`과 같은 더 낮은 정밀도로 전환하거나 추론 단계를 더 적게 실행하여 속도를 높일 수 있습니다. 
 
 `float16`으로 모델을 로드하고 이미지를 생성해 보겠습니다:
 
@@ -76,7 +76,7 @@ image
 ```python
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+pipeline = VictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
 pipeline = pipeline.to("cuda")
 generator = torch.Generator("cuda").manual_seed(0)
 image = pipeline(prompt, generator=generator).images[0]
@@ -95,7 +95,7 @@ image
 
 </Tip>
 
-또 다른 옵션은 추론 단계의 수를 줄이는 것입니다. 보다 효율적인 스케줄러를 선택하면 출력 품질 저하 없이 단계 수를 줄이는 데 도움이 될 수 있습니다. 현재 모델과 호환되는 스케줄러는 `compatibles` 메서드를 호출하여 [`DiffusionPipeline`]에서 찾을 수 있습니다:
+또 다른 옵션은 추론 단계의 수를 줄이는 것입니다. 보다 효율적인 스케줄러를 선택하면 출력 품질 저하 없이 단계 수를 줄이는 데 도움이 될 수 있습니다. 현재 모델과 호환되는 스케줄러는 `compatibles` 메서드를 호출하여 [`VictorPipeline`]에서 찾을 수 있습니다:
 
 ```python
 pipeline.scheduler.compatibles
@@ -119,7 +119,7 @@ pipeline.scheduler.compatibles
 Stable Diffusion 모델은 일반적으로 약 50개의 추론 단계가 필요한 [`PNDMScheduler`]를 기본으로 사용하지만, [`DPMSolverMultistepScheduler`]와 같이 성능이 더 뛰어난 스케줄러는 약 20개 또는 25개의 추론 단계만 필요로 합니다. 새 스케줄러를 로드하려면 [`ConfigMixin.from_config`] 메서드를 사용합니다:
 
 ```python
-from diffusers import DPMSolverMultistepScheduler
+from VictorAI import DPMSolverMultistepScheduler
 
 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 ```
@@ -175,7 +175,7 @@ images = pipeline(**get_inputs(batch_size=4)).images
 image_grid(images)
 ```
 
-RAM이 더 많은 GPU가 아니라면 위의 코드에서 `OOM` 오류가 반환되었을 것입니다! 대부분의 메모리는 cross-attention 레이어가 차지합니다. 이 작업을 배치로 실행하는 대신 순차적으로 실행하면 상당한 양의 메모리를 절약할 수 있습니다. 파이프라인을 구성하여 [`~DiffusionPipeline.enable_attention_slicing`] 함수를 사용하기만 하면 됩니다:
+RAM이 더 많은 GPU가 아니라면 위의 코드에서 `OOM` 오류가 반환되었을 것입니다! 대부분의 메모리는 cross-attention 레이어가 차지합니다. 이 작업을 배치로 실행하는 대신 순차적으로 실행하면 상당한 양의 메모리를 절약할 수 있습니다. 파이프라인을 구성하여 [`~VictorPipeline.enable_attention_slicing`] 함수를 사용하기만 하면 됩니다:
 
 
 ```python
@@ -213,7 +213,7 @@ image_grid(images, rows=2, cols=4)
 
 
 ```python
-from diffusers import AutoencoderKL
+from VictorAI import AutoencoderKL
 
 vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse", torch_dtype=torch.float16).to("cuda")
 pipeline.vae = vae
@@ -272,7 +272,7 @@ image_grid(images)
 
 ## 다음 단계
 
-이 튜토리얼에서는 계산 및 메모리 효율을 높이고 생성된 출력의 품질을 개선하기 위해 [`DiffusionPipeline`]을 최적화하는 방법을 배웠습니다. 파이프라인을 더 빠르게 만드는 데 관심이 있다면 다음 리소스를 살펴보세요:
+이 튜토리얼에서는 계산 및 메모리 효율을 높이고 생성된 출력의 품질을 개선하기 위해 [`VictorPipeline`]을 최적화하는 방법을 배웠습니다. 파이프라인을 더 빠르게 만드는 데 관심이 있다면 다음 리소스를 살펴보세요:
 
 - [PyTorch 2.0](./optimization/torch2.0) 및 [`torch.compile`](https://pytorch.org/docs/stable/generated/torch.compile.html)이 어떻게 추론 속도를 5~300% 향상시킬 수 있는지 알아보세요. A100 GPU에서는 추론 속도가 최대 50%까지 빨라질 수 있습니다!
 - PyTorch 2를 사용할 수 없는 경우, [xFormers](./optimization/xformers)를 설치하는 것이 좋습니다. 메모리 효율적인 어텐션 메커니즘은 PyTorch 1.13.1과 함께 사용하면 속도가 빨라지고 메모리 소비가 줄어듭니다.

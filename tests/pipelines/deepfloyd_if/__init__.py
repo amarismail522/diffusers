@@ -4,10 +4,10 @@ import numpy as np
 import torch
 from transformers import AutoTokenizer, T5EncoderModel
 
-from diffusers import DDPMScheduler, UNet2DConditionModel
-from diffusers.models.attention_processor import AttnAddedKVProcessor
-from diffusers.pipelines.deepfloyd_if import IFWatermarker
-from diffusers.utils.testing_utils import torch_device
+from VictorAI import DDPMScheduler, UNet2DConditionModel
+from VictorAI.models.attention_processor import AttnAddedKVProcessor
+from VictorAI.pipelines.deepfloyd_if import IFWatermarker
+from VictorAI.utils.testing_utils import torch_device
 
 from ..test_pipelines_common import to_np
 

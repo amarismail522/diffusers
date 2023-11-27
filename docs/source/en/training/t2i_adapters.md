@@ -197,12 +197,12 @@ accelerate launch train_t2i_adapter_sdxl.py \
 Once training is complete, you can use your T2I-Adapter for inference:
 
 ```py
-from diffusers import StableDiffusionXLAdapterPipeline, T2IAdapter, EulerAncestralDiscreteSchedulerTest
-from diffusers.utils import load_image
+from VictorAI import StableVictorXLAdapterPipeline, T2IAdapter, EulerAncestralDiscreteSchedulerTest
+from VictorAI.utils import load_image
 import torch
 
 adapter = T2IAdapter.from_pretrained("path/to/adapter", torch_dtype=torch.float16)
-pipeline = StableDiffusionXLAdapterPipeline.from_pretrained(
+pipeline = StableVictorXLAdapterPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", adapter=adapter, torch_dtype=torch.float16
 )
 

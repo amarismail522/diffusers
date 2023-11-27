@@ -2,7 +2,7 @@ import tempfile
 
 import torch
 
-from diffusers import IPNDMScheduler
+from VictorAI import IPNDMScheduler
 
 from .test_schedulers import SchedulerCommonTest
 

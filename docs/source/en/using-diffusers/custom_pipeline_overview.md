@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 ## Community pipelines
 
-Community pipelines are any [`DiffusionPipeline`] class that are different from the original implementation as specified in their paper (for example, the [`StableDiffusionControlNetPipeline`] corresponds to the [Text-to-Image Generation with ControlNet Conditioning](https://arxiv.org/abs/2302.05543) paper). They provide additional functionality or extend the original implementation of a pipeline.
+Community pipelines are any [`VictorPipeline`] class that are different from the original implementation as specified in their paper (for example, the [`StableVictorControlNetPipeline`] corresponds to the [Text-to-Image Generation with ControlNet Conditioning](https://arxiv.org/abs/2302.05543) paper). They provide additional functionality or extend the original implementation of a pipeline.
 
 There are many cool community pipelines like [Speech to Image](https://github.com/huggingface/diffusers/tree/main/examples/community#speech-to-image) or [Composable Stable Diffusion](https://github.com/huggingface/diffusers/tree/main/examples/community#composable-stable-diffusion), and you can find all the official community pipelines [here](https://github.com/huggingface/diffusers/tree/main/examples/community).
 
@@ -29,9 +29,9 @@ To load any community pipeline on the Hub, pass the repository id of the communi
 </Tip>
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "google/ddpm-cifar10-32", custom_pipeline="hf-internal-testing/diffusers-dummy-pipeline", use_safetensors=True
 )
 ```
@@ -39,7 +39,7 @@ pipeline = DiffusionPipeline.from_pretrained(
 Loading an official community pipeline is similar, but you can mix loading weights from an official repository id and pass pipeline components directly. The example below loads the community [CLIP Guided Stable Diffusion](https://github.com/huggingface/diffusers/tree/main/examples/community#clip-guided-stable-diffusion) pipeline, and you can pass the CLIP model components directly to it:
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 from transformers import CLIPImageProcessor, CLIPModel
 
 clip_model_id = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
@@ -47,7 +47,7 @@ clip_model_id = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
 feature_extractor = CLIPImageProcessor.from_pretrained(clip_model_id)
 clip_model = CLIPModel.from_pretrained(clip_model_id)
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     custom_pipeline="clip_guided_stable_diffusion",
     clip_model=clip_model,
@@ -79,7 +79,7 @@ text_encoder = T5EncoderModel.from_pretrained(pipe_id, subfolder="text_encoder")
 2. Load a scheduler:
 
 ```python
-from diffusers import DPMSolverMultistepScheduler
+from VictorAI import DPMSolverMultistepScheduler
 
 scheduler = DPMSolverMultistepScheduler.from_pretrained(pipe_id, subfolder="scheduler")
 ```
@@ -142,10 +142,10 @@ After the pipeline is successfully pushed, you need a couple of changes:
 To run inference, simply add the `trust_remote_code` argument while initializing the pipeline to handle all the "magic" behind the scenes.
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "<change-username>/<change-id>", trust_remote_code=True, torch_dtype=torch.float16
 ).to("cuda")
 
@@ -171,10 +171,10 @@ As an additional reference example, you can refer to the repository structure of
 
 ```python
 
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "stabilityai/japanese-stable-diffusion-xl", trust_remote_code=True
 )
 pipeline.to("cuda")

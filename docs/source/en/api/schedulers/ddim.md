@@ -61,10 +61,10 @@ image = pipe(prompt, guidance_rescale=0.7).images[0]
 For example:
 
 ```py
-from diffusers import DiffusionPipeline, DDIMScheduler
+from VictorAI import VictorPipeline, DDIMScheduler
 import torch
 
-pipe = DiffusionPipeline.from_pretrained("ptx0/pseudo-journey-v2", torch_dtype=torch.float16)
+pipe = VictorPipeline.from_pretrained("ptx0/pseudo-journey-v2", torch_dtype=torch.float16)
 pipe.scheduler = DDIMScheduler.from_config(
     pipe.scheduler.config, rescale_betas_zero_snr=True, timestep_spacing="trailing"
 )

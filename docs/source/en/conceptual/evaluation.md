@@ -31,8 +31,8 @@ The methods shown in this document can also be used to evaluate different [noise
 
 We cover Diffusion models with the following pipelines:
 
-- Text-guided image generation (such as the [`StableDiffusionPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/text2img)).
-- Text-guided image generation, additionally conditioned on an input image (such as the [`StableDiffusionImg2ImgPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/img2img) and [`StableDiffusionInstructPix2PixPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/pix2pix)).
+- Text-guided image generation (such as the [`StableVictorPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/text2img)).
+- Text-guided image generation, additionally conditioned on an input image (such as the [`StableVictorImg2ImgPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/img2img) and [`StableVictorInstructPix2PixPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/pix2pix)).
 - Class-conditioned image generation models (such as the [`DiTPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/dit)).
 
 ## Qualitative Evaluation
@@ -119,14 +119,14 @@ In this section, we will walk you through how to evaluate three different diffus
 
 [CLIP score](https://arxiv.org/abs/2104.08718) measures the compatibility of image-caption pairs. Higher CLIP scores imply higher compatibility 🔼. The CLIP score is a quantitative measurement of the qualitative concept "compatibility". Image-caption pair compatibility can also be thought of as the semantic similarity between the image and the caption. CLIP score was found to have high correlation with human judgement.
 
-Let's first load a [`StableDiffusionPipeline`]:
+Let's first load a [`StableVictorPipeline`]:
 
 ```python
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 import torch
 
 model_ckpt = "CompVis/stable-diffusion-v1-4"
-sd_pipeline = StableDiffusionPipeline.from_pretrained(model_ckpt, torch_dtype=torch.float16).to("cuda")
+sd_pipeline = StableVictorPipeline.from_pretrained(model_ckpt, torch_dtype=torch.float16).to("cuda")
 ```
 
 Generate some images with multiple prompts:
@@ -167,7 +167,7 @@ print(f"CLIP score: {sd_clip_score}")
 
 In the above example, we generated one image per prompt. If we generated multiple images per prompt, we would have to take the average score from the generated images per prompt.
 
-Now, if we wanted to compare two checkpoints compatible with the [`StableDiffusionPipeline`] we should pass a generator while calling the pipeline. First, we generate images with a
+Now, if we wanted to compare two checkpoints compatible with the [`StableVictorPipeline`] we should pass a generator while calling the pipeline. First, we generate images with a
 fixed seed with the [v1-4 Stable Diffusion checkpoint](https://huggingface.co/CompVis/stable-diffusion-v1-4):
 
 ```python
@@ -181,7 +181,7 @@ Then we load the [v1-5 checkpoint](https://huggingface.co/runwayml/stable-diffus
 
 ```python
 model_ckpt_1_5 = "runwayml/stable-diffusion-v1-5"
-sd_pipeline_1_5 = StableDiffusionPipeline.from_pretrained(model_ckpt_1_5, torch_dtype=weight_dtype).to(device)
+sd_pipeline_1_5 = StableVictorPipeline.from_pretrained(model_ckpt_1_5, torch_dtype=weight_dtype).to(device)
 
 images_1_5 = sd_pipeline_1_5(prompts, num_images_per_prompt=1, generator=generator, output_type="np").images
 ```
@@ -211,7 +211,7 @@ had to "engineer" some prompts here.
 
 ### Image-conditioned text-to-image generation
 
-In this case, we condition the generation pipeline with an input image as well as a text prompt. Let's take the [`StableDiffusionInstructPix2PixPipeline`], as an example. It takes an edit instruction as an input prompt and an input image to be edited.
+In this case, we condition the generation pipeline with an input image as well as a text prompt. Let's take the [`StableVictorInstructPix2PixPipeline`], as an example. It takes an edit instruction as an input prompt and an input image to be edited.
 
 Here is one example:
 
@@ -273,12 +273,12 @@ dataset[idx]["image"]
 
 We will first edit the images of our dataset with the edit instruction and compute the directional similarity.
 
-Let's first load the [`StableDiffusionInstructPix2PixPipeline`]:
+Let's first load the [`StableVictorInstructPix2PixPipeline`]:
 
 ```python
-from diffusers import StableDiffusionInstructPix2PixPipeline
+from VictorAI import StableVictorInstructPix2PixPipeline
 
-instruct_pix2pix_pipeline = StableDiffusionInstructPix2PixPipeline.from_pretrained(
+instruct_pix2pix_pipeline = StableVictorInstructPix2PixPipeline.from_pretrained(
     "timbrooks/instruct-pix2pix", torch_dtype=torch.float16
 ).to(device)
 ```
@@ -410,11 +410,11 @@ print(f"CLIP directional similarity: {np.mean(scores)}")
 
 Like the CLIP Score, the higher the CLIP directional similarity, the better it is.
 
-It should be noted that the `StableDiffusionInstructPix2PixPipeline` exposes two arguments, namely, `image_guidance_scale` and `guidance_scale` that let you control the quality of the final edited image. We encourage you to experiment with these two arguments and see the impact of that on the directional similarity.
+It should be noted that the `StableVictorInstructPix2PixPipeline` exposes two arguments, namely, `image_guidance_scale` and `guidance_scale` that let you control the quality of the final edited image. We encourage you to experiment with these two arguments and see the impact of that on the directional similarity.
 
 We can extend the idea of this metric to measure how similar the original image and edited version are. To do that, we can just do `F.cosine_similarity(img_feat_two, img_feat_one)`. For these kinds of edits, we would still want the primary semantics of the images to be preserved as much as possible, i.e., a high similarity score.
 
-We can use these metrics for similar pipelines such as the [`StableDiffusionPix2PixZeroPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/pix2pix_zero#diffusers.StableDiffusionPix2PixZeroPipeline).
+We can use these metrics for similar pipelines such as the [`StableVictorPix2PixZeroPipeline`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/pix2pix_zero#diffusers.StableVictorPix2PixZeroPipeline).
 
 <Tip>
 
@@ -492,7 +492,7 @@ print(real_images.shape)
 We now load the [`DiTPipeline`](https://huggingface.co/docs/diffusers/api/pipelines/dit) to generate images conditioned on the above-mentioned classes.
 
 ```python
-from diffusers import DiTPipeline, DPMSolverMultistepScheduler
+from VictorAI import DiTPipeline, DPMSolverMultistepScheduler
 
 dit_pipeline = DiTPipeline.from_pretrained("facebook/DiT-XL-2-256", torch_dtype=torch.float16)
 dit_pipeline.scheduler = DPMSolverMultistepScheduler.from_config(dit_pipeline.scheduler.config)

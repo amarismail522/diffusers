@@ -18,14 +18,14 @@ import unittest
 import torch
 from huggingface_hub import ModelCard
 
-from diffusers import (
+from VictorAI import (
     DDPMScheduler,
-    DiffusionPipeline,
+    VictorPipeline,
     KandinskyV22CombinedPipeline,
     KandinskyV22Pipeline,
     KandinskyV22PriorPipeline,
 )
-from diffusers.pipelines.pipeline_utils import CONNECTED_PIPES_KEYS
+from VictorAI.pipelines.pipeline_utils import CONNECTED_PIPES_KEYS
 
 
 def state_dicts_almost_equal(sd1, sd2):
@@ -56,16 +56,16 @@ class CombinedPipelineFastTest(unittest.TestCase):
         assert self.modelcard_has_connected_pipeline("hf-internal-testing/tiny-random-kandinsky-v22-decoder")
 
     def test_load_connected_checkpoint_when_specified(self):
-        pipeline_prior = DiffusionPipeline.from_pretrained("hf-internal-testing/tiny-random-kandinsky-v22-prior")
-        pipeline_prior_connected = DiffusionPipeline.from_pretrained(
+        pipeline_prior = VictorPipeline.from_pretrained("hf-internal-testing/tiny-random-kandinsky-v22-prior")
+        pipeline_prior_connected = VictorPipeline.from_pretrained(
             "hf-internal-testing/tiny-random-kandinsky-v22-prior", load_connected_pipeline=True
         )
 
         # Passing `load_connected_pipeline` to prior is a no-op as the pipeline has no connected pipeline
         assert pipeline_prior.__class__ == pipeline_prior_connected.__class__
 
-        pipeline = DiffusionPipeline.from_pretrained("hf-internal-testing/tiny-random-kandinsky-v22-decoder")
-        pipeline_connected = DiffusionPipeline.from_pretrained(
+        pipeline = VictorPipeline.from_pretrained("hf-internal-testing/tiny-random-kandinsky-v22-decoder")
+        pipeline_connected = VictorPipeline.from_pretrained(
             "hf-internal-testing/tiny-random-kandinsky-v22-decoder", load_connected_pipeline=True
         )
 

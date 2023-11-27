@@ -20,14 +20,14 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDIMParallelScheduler,
     DDPMParallelScheduler,
-    StableDiffusionParadigmsPipeline,
+    StableVictorParadigmsPipeline,
     UNet2DConditionModel,
 )
-from diffusers.utils.testing_utils import (
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     nightly,
     require_torch_gpu,
@@ -41,8 +41,8 @@ from ..test_pipelines_common import PipelineLatentTesterMixin, PipelineTesterMix
 enable_full_determinism()
 
 
-class StableDiffusionParadigmsPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = StableDiffusionParadigmsPipeline
+class StableVictorParadigmsPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = StableVictorParadigmsPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -128,7 +128,7 @@ class StableDiffusionParadigmsPipelineFastTests(PipelineLatentTesterMixin, Pipel
     def test_stable_diffusion_paradigms_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionParadigmsPipeline(**components)
+        sd_pipe = StableVictorParadigmsPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -147,7 +147,7 @@ class StableDiffusionParadigmsPipelineFastTests(PipelineLatentTesterMixin, Pipel
         torch.manual_seed(0)
         components["scheduler"] = DDPMParallelScheduler()
         torch.manual_seed(0)
-        sd_pipe = StableDiffusionParadigmsPipeline(**components)
+        sd_pipe = StableVictorParadigmsPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -171,7 +171,7 @@ class StableDiffusionParadigmsPipelineFastTests(PipelineLatentTesterMixin, Pipel
     def test_stable_diffusion_paradigms_negative_prompt(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionParadigmsPipeline(**components)
+        sd_pipe = StableVictorParadigmsPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -190,7 +190,7 @@ class StableDiffusionParadigmsPipelineFastTests(PipelineLatentTesterMixin, Pipel
 
 @nightly
 @require_torch_gpu
-class StableDiffusionParadigmsPipelineSlowTests(unittest.TestCase):
+class StableVictorParadigmsPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -212,7 +212,7 @@ class StableDiffusionParadigmsPipelineSlowTests(unittest.TestCase):
     def test_stable_diffusion_paradigms_default(self):
         model_ckpt = "stabilityai/stable-diffusion-2-base"
         scheduler = DDIMParallelScheduler.from_pretrained(model_ckpt, subfolder="scheduler")
-        pipe = StableDiffusionParadigmsPipeline.from_pretrained(model_ckpt, scheduler=scheduler, safety_checker=None)
+        pipe = StableVictorParadigmsPipeline.from_pretrained(model_ckpt, scheduler=scheduler, safety_checker=None)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()

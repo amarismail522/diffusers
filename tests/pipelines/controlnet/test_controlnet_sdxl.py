@@ -20,18 +20,18 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     ControlNetModel,
     EulerDiscreteScheduler,
     LCMScheduler,
-    StableDiffusionXLControlNetPipeline,
+    StableVictorXLControlNetPipeline,
     UNet2DConditionModel,
 )
-from diffusers.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
-from diffusers.utils.import_utils import is_xformers_available
-from diffusers.utils.testing_utils import enable_full_determinism, load_image, require_torch_gpu, slow, torch_device
-from diffusers.utils.torch_utils import randn_tensor
+from VictorAI.pipelines.controlnet.pipeline_controlnet import MultiControlNetModel
+from VictorAI.utils.import_utils import is_xformers_available
+from VictorAI.utils.testing_utils import enable_full_determinism, load_image, require_torch_gpu, slow, torch_device
+from VictorAI.utils.torch_utils import randn_tensor
 
 from ..pipeline_params import (
     IMAGE_TO_IMAGE_IMAGE_PARAMS,
@@ -50,14 +50,14 @@ from ..test_pipelines_common import (
 enable_full_determinism()
 
 
-class StableDiffusionXLControlNetPipelineFastTests(
+class StableVictorXLControlNetPipelineFastTests(
     PipelineLatentTesterMixin,
     PipelineKarrasSchedulerTesterMixin,
     PipelineTesterMixin,
     SDXLOptionalComponentsTesterMixin,
     unittest.TestCase,
 ):
-    pipeline_class = StableDiffusionXLControlNetPipeline
+    pipeline_class = StableVictorXLControlNetPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = IMAGE_TO_IMAGE_IMAGE_PARAMS
@@ -336,7 +336,7 @@ class StableDiffusionXLControlNetPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableDiffusionXLControlNetPipeline(**components)
+        sd_pipe = StableVictorXLControlNetPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -353,10 +353,10 @@ class StableDiffusionXLControlNetPipelineFastTests(
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
 
-class StableDiffusionXLMultiControlNetPipelineFastTests(
+class StableVictorXLMultiControlNetPipelineFastTests(
     PipelineTesterMixin, PipelineKarrasSchedulerTesterMixin, SDXLOptionalComponentsTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionXLControlNetPipeline
+    pipeline_class = StableVictorXLControlNetPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = frozenset([])  # TO_DO: add image_params once refactored VaeImageProcessor.preprocess
@@ -556,10 +556,10 @@ class StableDiffusionXLMultiControlNetPipelineFastTests(
         return self._test_save_load_optional_components()
 
 
-class StableDiffusionXLMultiControlNetOneModelPipelineFastTests(
+class StableVictorXLMultiControlNetOneModelPipelineFastTests(
     PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, SDXLOptionalComponentsTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionXLControlNetPipeline
+    pipeline_class = StableVictorXLControlNetPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = frozenset([])  # TO_DO: add image_params once refactored VaeImageProcessor.preprocess
@@ -769,7 +769,7 @@ class ControlNetSDXLPipelineSlowTests(unittest.TestCase):
     def test_canny(self):
         controlnet = ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0")
 
-        pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
+        pipe = StableVictorXLControlNetPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0", controlnet=controlnet
         )
         pipe.enable_sequential_cpu_offload()
@@ -792,7 +792,7 @@ class ControlNetSDXLPipelineSlowTests(unittest.TestCase):
     def test_depth(self):
         controlnet = ControlNetModel.from_pretrained("diffusers/controlnet-depth-sdxl-1.0")
 
-        pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
+        pipe = StableVictorXLControlNetPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0", controlnet=controlnet
         )
         pipe.enable_sequential_cpu_offload()

@@ -20,8 +20,8 @@ import unittest
 import numpy as np
 import torch
 
-from diffusers import VersatileDiffusionTextToImagePipeline
-from diffusers.utils.testing_utils import nightly, require_torch_gpu, torch_device
+from VictorAI import VersatileDiffusionTextToImagePipeline
+from VictorAI.utils.testing_utils import nightly, require_torch_gpu, torch_device
 
 
 torch.backends.cuda.matmul.allow_tf32 = False

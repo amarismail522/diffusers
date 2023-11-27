@@ -1,7 +1,7 @@
 import gradio as gr
 import torch
 from PIL import Image
-from diffusers import AutoPipelineForImage2Image
+from VictorAI import AutoPipelineForImage2Image
 
 model_path = "/content/modelfiles/victorai_shoe_model/1000"
 def inference_image2image(image_path, prompt, negative_prompt, guidance_scale, strength):

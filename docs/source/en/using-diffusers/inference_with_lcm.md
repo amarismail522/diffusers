@@ -32,10 +32,10 @@ This guide shows how to perform inference with LCMs for
 
 ## Text-to-image
 
-You'll use the [`StableDiffusionXLPipeline`] pipeline with the [`LCMScheduler`] and then load the LCM-LoRA. Together with the LCM-LoRA and the scheduler, the pipeline enables a fast inference workflow, overcoming the slow iterative nature of diffusion models.
+You'll use the [`StableVictorXLPipeline`] pipeline with the [`LCMScheduler`] and then load the LCM-LoRA. Together with the LCM-LoRA and the scheduler, the pipeline enables a fast inference workflow, overcoming the slow iterative nature of diffusion models.
 
 ```python
-from diffusers import StableDiffusionXLPipeline, UNet2DConditionModel, LCMScheduler
+from VictorAI import StableVictorXLPipeline, UNet2DConditionModel, LCMScheduler
 import torch
 
 unet = UNet2DConditionModel.from_pretrained(
@@ -43,7 +43,7 @@ unet = UNet2DConditionModel.from_pretrained(
     torch_dtype=torch.float16,
     variant="fp16",
 )
-pipe = StableDiffusionXLPipeline.from_pretrained(
+pipe = StableVictorXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", unet=unet, torch_dtype=torch.float16, variant="fp16",
 ).to("cuda")
 pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
@@ -72,8 +72,8 @@ LCMs can be applied to image-to-image tasks too. For this example, we'll use the
 
 ```python
 import torch
-from diffusers import AutoPipelineForImage2Image, UNet2DConditionModel, LCMScheduler
-from diffusers.utils import make_image_grid, load_image
+from VictorAI import AutoPipelineForImage2Image, UNet2DConditionModel, LCMScheduler
+from VictorAI.utils import make_image_grid, load_image
 
 unet = UNet2DConditionModel.from_pretrained(
     "SimianLuo/LCM_Dreamshaper_v7",
@@ -122,7 +122,7 @@ You can get different results based on your prompt and the image you provide. To
 LCMs can be used with other styled LoRAs to generate styled-images in very few steps (4-8). In the following example, we'll use the [papercut LoRA](TheLastBen/Papercut_SDXL). 
 
 ```python
-from diffusers import StableDiffusionXLPipeline, UNet2DConditionModel, LCMScheduler
+from VictorAI import StableVictorXLPipeline, UNet2DConditionModel, LCMScheduler
 import torch
 
 unet = UNet2DConditionModel.from_pretrained(
@@ -130,7 +130,7 @@ unet = UNet2DConditionModel.from_pretrained(
     torch_dtype=torch.float16,
     variant="fp16",
 )
-pipe = StableDiffusionXLPipeline.from_pretrained(
+pipe = StableVictorXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0", unet=unet, torch_dtype=torch.float16, variant="fp16",
 ).to("cuda")
 pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
@@ -162,8 +162,8 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from diffusers import StableDiffusionControlNetPipeline, ControlNetModel, LCMScheduler
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import StableVictorControlNetPipeline, ControlNetModel, LCMScheduler
+from VictorAI.utils import load_image, make_image_grid
 
 image = load_image(
     "https://hf.co/datasets/huggingface/documentation-images/resolve/main/diffusers/input_image_vermeer.png"
@@ -180,7 +180,7 @@ image = np.concatenate([image, image, image], axis=2)
 canny_image = Image.fromarray(image)
 
 controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16)
-pipe = StableDiffusionControlNetPipeline.from_pretrained(
+pipe = StableVictorControlNetPipeline.from_pretrained(
     "SimianLuo/LCM_Dreamshaper_v7",
     controlnet=controlnet,
     torch_dtype=torch.float16,
@@ -217,8 +217,8 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from diffusers import StableDiffusionXLAdapterPipeline, UNet2DConditionModel, T2IAdapter, LCMScheduler
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import StableVictorXLAdapterPipeline, UNet2DConditionModel, T2IAdapter, LCMScheduler
+from VictorAI.utils import load_image, make_image_grid
 
 # Prepare image
 # Detect the canny map in low resolution to avoid high-frequency details
@@ -244,7 +244,7 @@ unet = UNet2DConditionModel.from_pretrained(
     torch_dtype=torch.float16,
     variant="fp16",
 )
-pipe = StableDiffusionXLAdapterPipeline.from_pretrained(
+pipe = StableVictorXLAdapterPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
     unet=unet,
     adapter=adapter,

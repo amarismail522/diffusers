@@ -22,7 +22,7 @@ Based on the task, the `AutoPipeline` class automatically retrieves the relevant
 To seamlessly switch between tasks with the same checkpoint without reallocating additional memory, use the `from_pipe()` method to transfer the components from the original pipeline to the new one.
 
 ```py
-from diffusers import AutoPipelineForText2Image
+from VictorAI import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained(

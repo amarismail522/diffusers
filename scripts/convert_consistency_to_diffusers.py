@@ -3,7 +3,7 @@ import os
 
 import torch
 
-from diffusers import (
+from VictorAI import (
     CMStochasticIterativeScheduler,
     ConsistencyModelPipeline,
     UNet2DModel,

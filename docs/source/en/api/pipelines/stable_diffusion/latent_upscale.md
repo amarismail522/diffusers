@@ -22,9 +22,9 @@ If you're interested in using one of the official checkpoints for a task, explor
 
 </Tip>
 
-## StableDiffusionLatentUpscalePipeline
+## StableVictorLatentUpscalePipeline
 
-[[autodoc]] StableDiffusionLatentUpscalePipeline
+[[autodoc]] StableVictorLatentUpscalePipeline
 	- all
 	- __call__
 	- enable_sequential_cpu_offload
@@ -33,6 +33,6 @@ If you're interested in using one of the official checkpoints for a task, explor
 	- enable_xformers_memory_efficient_attention
 	- disable_xformers_memory_efficient_attention
 
-## StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

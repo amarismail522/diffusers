@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 Prompt weighting provides a way to emphasize or de-emphasize certain parts of a prompt, allowing for more control over the generated image. A prompt can include several concepts, which gets turned into contextualized text embeddings. The embeddings are used by the model to condition its cross-attention layers to generate an image (read the Stable Diffusion [blog post](https://huggingface.co/blog/stable_diffusion) to learn more about how it works).
 
-Prompt weighting works by increasing or decreasing the scale of the text embedding vector that corresponds to its concept in the prompt because you may not necessarily want the model to focus on all concepts equally. The easiest way to prepare the prompt-weighted embeddings is to use [Compel](https://github.com/damian0815/compel), a text prompt-weighting and blending library. Once you have the prompt-weighted embeddings, you can pass them to any pipeline that has a [`prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/text2img#diffusers.StableDiffusionPipeline.__call__.prompt_embeds) (and optionally [`negative_prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/text2img#diffusers.StableDiffusionPipeline.__call__.negative_prompt_embeds)) parameter, such as [`StableDiffusionPipeline`], [`StableDiffusionControlNetPipeline`], and [`StableDiffusionXLPipeline`].
+Prompt weighting works by increasing or decreasing the scale of the text embedding vector that corresponds to its concept in the prompt because you may not necessarily want the model to focus on all concepts equally. The easiest way to prepare the prompt-weighted embeddings is to use [Compel](https://github.com/damian0815/compel), a text prompt-weighting and blending library. Once you have the prompt-weighted embeddings, you can pass them to any pipeline that has a [`prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/text2img#diffusers.StableVictorPipeline.__call__.prompt_embeds) (and optionally [`negative_prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/text2img#diffusers.StableVictorPipeline.__call__.negative_prompt_embeds)) parameter, such as [`StableVictorPipeline`], [`StableVictorControlNetPipeline`], and [`StableVictorXLPipeline`].
 
 <Tip>
 
@@ -33,13 +33,13 @@ Before you begin, make sure you have the latest version of Compel installed:
 #!pip install compel --upgrade
 ```
 
-For this guide, let's generate an image with the prompt `"a red cat playing with a ball"` using the [`StableDiffusionPipeline`]:
+For this guide, let's generate an image with the prompt `"a red cat playing with a ball"` using the [`StableVictorPipeline`]:
 
 ```py
-from diffusers import StableDiffusionPipeline, UniPCMultistepScheduler
+from VictorAI import StableVictorPipeline, UniPCMultistepScheduler
 import torch
 
-pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", use_safetensors=True)
+pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", use_safetensors=True)
 pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
 pipe.to("cuda")
 
@@ -163,10 +163,10 @@ Create a pipeline and use the [`~loaders.TextualInversionLoaderMixin.load_textua
 
 ```py
 import torch
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 from compel import Compel, DiffusersTextualInversionManager
 
-pipe = StableDiffusionPipeline.from_pretrained(
+pipe = StableVictorPipeline.from_pretrained(
   "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16,
   use_safetensors=True, variant="fp16").to("cuda")
 pipe.load_textual_inversion("sd-concepts-library/midjourney-style")
@@ -197,14 +197,14 @@ image
 
 ## DreamBooth
 
-[DreamBooth](../training/dreambooth) is a technique for generating contextualized images of a subject given just a few images of the subject to train on. It is similar to textual inversion, but DreamBooth trains the full model whereas textual inversion only fine-tunes the text embeddings. This means you should use [`~DiffusionPipeline.from_pretrained`] to load the DreamBooth model (feel free to browse the [Stable Diffusion Dreambooth Concepts Library](https://huggingface.co/sd-dreambooth-library) for 100+ trained models):
+[DreamBooth](../training/dreambooth) is a technique for generating contextualized images of a subject given just a few images of the subject to train on. It is similar to textual inversion, but DreamBooth trains the full model whereas textual inversion only fine-tunes the text embeddings. This means you should use [`~VictorPipeline.from_pretrained`] to load the DreamBooth model (feel free to browse the [Stable Diffusion Dreambooth Concepts Library](https://huggingface.co/sd-dreambooth-library) for 100+ trained models):
 
 ```py
 import torch
-from diffusers import DiffusionPipeline, UniPCMultistepScheduler
+from VictorAI import VictorPipeline, UniPCMultistepScheduler
 from compel import Compel
 
-pipe = DiffusionPipeline.from_pretrained("sd-dreambooth-library/dndcoverart-v1", torch_dtype=torch.float16).to("cuda")
+pipe = VictorPipeline.from_pretrained("sd-dreambooth-library/dndcoverart-v1", torch_dtype=torch.float16).to("cuda")
 pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
 ```
 
@@ -227,11 +227,11 @@ Stable Diffusion XL (SDXL) has two tokenizers and text encoders so it's usage is
 
 ```py
 from compel import Compel, ReturnedEmbeddingsType
-from diffusers import DiffusionPipeline
-from diffusers.utils import make_image_grid
+from VictorAI import VictorPipeline
+from VictorAI.utils import make_image_grid
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
   "stabilityai/stable-diffusion-xl-base-1.0",
   variant="fp16",
   use_safetensors=True,
@@ -246,7 +246,7 @@ compel = Compel(
 )
 ```
 
-This time, let's upweight "ball" by a factor of 1.5 for the first prompt, and downweight "ball" by 0.6 for the second prompt. The [`StableDiffusionXLPipeline`] also requires [`pooled_prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLInpaintPipeline.__call__.pooled_prompt_embeds) (and optionally [`negative_pooled_prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLInpaintPipeline.__call__.negative_pooled_prompt_embeds)) so you should pass those to the pipeline along with the conditioning tensors:
+This time, let's upweight "ball" by a factor of 1.5 for the first prompt, and downweight "ball" by 0.6 for the second prompt. The [`StableVictorXLPipeline`] also requires [`pooled_prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableVictorXLInpaintPipeline.__call__.pooled_prompt_embeds) (and optionally [`negative_pooled_prompt_embeds`](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableVictorXLInpaintPipeline.__call__.negative_pooled_prompt_embeds)) so you should pass those to the pipeline along with the conditioning tensors:
 
 ```py
 # apply weights

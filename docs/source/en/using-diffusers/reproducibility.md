@@ -34,7 +34,7 @@ Gaussian noise tensors to denoise and adding noise to the scheduling step.
 Take a look at the tensor values in the [`DDIMPipeline`] after two inference steps:
 
 ```python
-from diffusers import DDIMPipeline
+from VictorAI import DDIMPipeline
 import numpy as np
 
 model_id = "google/ddpm-cifar10-32"
@@ -59,7 +59,7 @@ To generate reproducible results on a CPU, you'll need to use a PyTorch [`Genera
 
 ```python
 import torch
-from diffusers import DDIMPipeline
+from VictorAI import DDIMPipeline
 import numpy as np
 
 model_id = "google/ddpm-cifar10-32"
@@ -94,7 +94,7 @@ Writing a reproducible pipeline on a GPU is a bit trickier, and full reproducibi
 
 ```python
 import torch
-from diffusers import DDIMPipeline
+from VictorAI import DDIMPipeline
 import numpy as np
 
 model_id = "google/ddpm-cifar10-32"
@@ -119,7 +119,7 @@ You'll see the results are much closer now!
 
 ```python
 import torch
-from diffusers import DDIMPipeline
+from VictorAI import DDIMPipeline
 import numpy as np
 
 model_id = "google/ddpm-cifar10-32"
@@ -171,10 +171,10 @@ Now when you run the same pipeline twice, you'll get identical results.
 
 ```py
 import torch
-from diffusers import DDIMScheduler, StableDiffusionPipeline
+from VictorAI import DDIMScheduler, StableVictorPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipe = StableDiffusionPipeline.from_pretrained(model_id, use_safetensors=True).to("cuda")
+pipe = StableVictorPipeline.from_pretrained(model_id, use_safetensors=True).to("cuda")
 pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
 g = torch.Generator(device="cuda")
 

@@ -27,14 +27,14 @@ pip install --upgrade torch diffusers
 
 [`torch.nn.functional.scaled_dot_product_attention`](https://pytorch.org/docs/master/generated/torch.nn.functional.scaled_dot_product_attention) (SDPA) is an optimized and memory-efficient attention (similar to xFormers) that automatically enables several other optimizations depending on the model inputs and GPU type. SDPA is enabled by default if you're using PyTorch 2.0 and the latest version of 🤗 Diffusers, so you don't need to add anything to your code.
 
-However, if you want to explicitly enable it, you can set a [`DiffusionPipeline`] to use [`~models.attention_processor.AttnProcessor2_0`]:
+However, if you want to explicitly enable it, you can set a [`VictorPipeline`] to use [`~models.attention_processor.AttnProcessor2_0`]:
 
 ```diff
   import torch
-  from diffusers import DiffusionPipeline
-+ from diffusers.models.attention_processor import AttnProcessor2_0
+  from VictorAI import VictorPipeline
++ from VictorAI.models.attention_processor import AttnProcessor2_0
 
-  pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+  pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 + pipe.unet.set_attn_processor(AttnProcessor2_0())
 
   prompt = "a photo of an astronaut riding a horse on mars"
@@ -47,9 +47,9 @@ In some cases - such as making the pipeline more deterministic or converting it 
 
 ```diff
   import torch
-  from diffusers import DiffusionPipeline
+  from VictorAI import VictorPipeline
 
-  pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+  pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 + pipe.unet.set_default_attn_processor()
 
   prompt = "a photo of an astronaut riding a horse on mars"
@@ -61,10 +61,10 @@ In some cases - such as making the pipeline more deterministic or converting it 
 The `torch.compile` function can often provide an additional speed-up to your PyTorch code. In 🤗 Diffusers, it is usually best to wrap the UNet with `torch.compile` because it does most of the heavy lifting in the pipeline.
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
 images = pipe(prompt, num_inference_steps=steps, num_images_per_prompt=batch_size).images[0]
 ```
@@ -86,14 +86,14 @@ Expand the dropdown below to find the code used to benchmark each pipeline:
 ### Stable Diffusion text-to-image
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
 path = "runwayml/stable-diffusion-v1-5"
 
 run_compile = True  # Set True / False
 
-pipe = DiffusionPipeline.from_pretrained(path, torch_dtype=torch.float16, use_safetensors=True)
+pipe = VictorPipeline.from_pretrained(path, torch_dtype=torch.float16, use_safetensors=True)
 pipe = pipe.to("cuda")
 pipe.unet.to(memory_format=torch.channels_last)
 
@@ -110,8 +110,8 @@ for _ in range(3):
 ### Stable Diffusion image-to-image
 
 ```python
-from diffusers import StableDiffusionImg2ImgPipeline
-from diffusers.utils import load_image
+from VictorAI import StableVictorImg2ImgPipeline
+from VictorAI.utils import load_image
 import torch
 
 url = "https://raw.githubusercontent.com/CompVis/stable-diffusion/main/assets/stable-samples/img2img/sketch-mountains-input.jpg"
@@ -123,7 +123,7 @@ path = "runwayml/stable-diffusion-v1-5"
 
 run_compile = True  # Set True / False
 
-pipe = StableDiffusionImg2ImgPipeline.from_pretrained(path, torch_dtype=torch.float16, use_safetensors=True)
+pipe = StableVictorImg2ImgPipeline.from_pretrained(path, torch_dtype=torch.float16, use_safetensors=True)
 pipe = pipe.to("cuda")
 pipe.unet.to(memory_format=torch.channels_last)
 
@@ -140,8 +140,8 @@ for _ in range(3):
 ### Stable Diffusion inpainting
 
 ```python
-from diffusers import StableDiffusionInpaintPipeline
-from diffusers.utils import load_image
+from VictorAI import StableVictorInpaintPipeline
+from VictorAI.utils import load_image
 import torch
 
 img_url = "https://raw.githubusercontent.com/CompVis/latent-diffusion/main/data/inpainting_examples/overture-creations-5sI6fQgYIuo.png"
@@ -154,7 +154,7 @@ path = "runwayml/stable-diffusion-inpainting"
 
 run_compile = True  # Set True / False
 
-pipe = StableDiffusionInpaintPipeline.from_pretrained(path, torch_dtype=torch.float16, use_safetensors=True)
+pipe = StableVictorInpaintPipeline.from_pretrained(path, torch_dtype=torch.float16, use_safetensors=True)
 pipe = pipe.to("cuda")
 pipe.unet.to(memory_format=torch.channels_last)
 
@@ -171,8 +171,8 @@ for _ in range(3):
 ### ControlNet
 
 ```python
-from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
-from diffusers.utils import load_image
+from VictorAI import StableVictorControlNetPipeline, ControlNetModel
+from VictorAI.utils import load_image
 import torch
 
 url = "https://raw.githubusercontent.com/CompVis/stable-diffusion/main/assets/stable-samples/img2img/sketch-mountains-input.jpg"
@@ -184,7 +184,7 @@ path = "runwayml/stable-diffusion-v1-5"
 
 run_compile = True  # Set True / False
 controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16, use_safetensors=True)
-pipe = StableDiffusionControlNetPipeline.from_pretrained(
+pipe = StableVictorControlNetPipeline.from_pretrained(
     path, controlnet=controlnet, torch_dtype=torch.float16, use_safetensors=True
 )
 
@@ -206,16 +206,16 @@ for _ in range(3):
 ### DeepFloyd IF text-to-image + upscaling
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
 run_compile = True  # Set True / False
 
-pipe_1 = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16, use_safetensors=True)
+pipe_1 = VictorPipeline.from_pretrained("DeepFloyd/IF-I-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16, use_safetensors=True)
 pipe_1.to("cuda")
-pipe_2 = DiffusionPipeline.from_pretrained("DeepFloyd/IF-II-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16, use_safetensors=True)
+pipe_2 = VictorPipeline.from_pretrained("DeepFloyd/IF-II-M-v1.0", variant="fp16", text_encoder=None, torch_dtype=torch.float16, use_safetensors=True)
 pipe_2.to("cuda")
-pipe_3 = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", torch_dtype=torch.float16, use_safetensors=True)
+pipe_3 = VictorPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", torch_dtype=torch.float16, use_safetensors=True)
 pipe_3.to("cuda")
 
 
@@ -240,7 +240,7 @@ for _ in range(3):
 ```
 </details>
 
-The graph below highlights the relative speed-ups for the [`StableDiffusionPipeline`] across five GPU families with PyTorch 2.0 and `torch.compile` enabled. The benchmarks for the following graphs are measured in *number of iterations/second*.
+The graph below highlights the relative speed-ups for the [`StableVictorPipeline`] across five GPU families with PyTorch 2.0 and `torch.compile` enabled. The benchmarks for the following graphs are measured in *number of iterations/second*.
 
 ![t2i_speedup](https://huggingface.co/datasets/diffusers/docs-images/resolve/main/pt2_benchmarks/t2i_speedup.png)
 

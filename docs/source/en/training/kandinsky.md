@@ -271,10 +271,10 @@ Once training is finished, you can use your newly trained model for inference!
 <hfoption id="prior model">
 
 ```py
-from diffusers import AutoPipelineForText2Image, DiffusionPipeline
+from VictorAI import AutoPipelineForText2Image, VictorPipeline
 import torch
 
-prior_pipeline = DiffusionPipeline.from_pretrained(output_dir, torch_dtype=torch.float16)
+prior_pipeline = VictorPipeline.from_pretrained(output_dir, torch_dtype=torch.float16)
 prior_components = {"prior_" + k: v for k,v in prior_pipeline.components.items()}
 pipeline = AutoPipelineForText2Image.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", **prior_components, torch_dtype=torch.float16)
 
@@ -293,7 +293,7 @@ Feel free to replace `kandinsky-community/kandinsky-2-2-decoder` with your own t
 <hfoption id="decoder model">
 
 ```py
-from diffusers import AutoPipelineForText2Image
+from VictorAI import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("path/to/saved/model", torch_dtype=torch.float16)
@@ -306,7 +306,7 @@ image = pipeline(prompt=prompt).images[0]
 For the decoder model, you can also perform inference from a saved checkpoint which can be useful for viewing intermediate results. In this case, load the checkpoint into the UNet:
 
 ```py
-from diffusers import AutoPipelineForText2Image, UNet2DConditionModel
+from VictorAI import AutoPipelineForText2Image, UNet2DConditionModel
 
 unet = UNet2DConditionModel.from_pretrained("path/to/saved/model" + "/checkpoint-<N>/unet")
 

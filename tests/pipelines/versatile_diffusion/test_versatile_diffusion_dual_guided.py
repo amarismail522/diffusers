@@ -20,8 +20,8 @@ import unittest
 import numpy as np
 import torch
 
-from diffusers import VersatileDiffusionDualGuidedPipeline
-from diffusers.utils.testing_utils import load_image, nightly, require_torch_gpu, torch_device
+from VictorAI import VersatileDiffusionDualGuidedPipeline
+from VictorAI.utils.testing_utils import load_image, nightly, require_torch_gpu, torch_device
 
 
 torch.backends.cuda.matmul.allow_tf32 = False

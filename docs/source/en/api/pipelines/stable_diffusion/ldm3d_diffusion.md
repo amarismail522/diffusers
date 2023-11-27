@@ -24,9 +24,9 @@ Make sure to check out the Stable Diffusion [Tips](overview#tips) section to lea
 
 </Tip>
 
-## StableDiffusionLDM3DPipeline
+## StableVictorLDM3DPipeline
 
-[[autodoc]] StableDiffusionLDM3DPipeline
+[[autodoc]] StableVictorLDM3DPipeline
 	- all
 	- __call__
 

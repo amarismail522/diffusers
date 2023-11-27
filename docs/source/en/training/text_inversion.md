@@ -245,10 +245,10 @@ After training is complete, you can use your newly trained model for inference l
 <hfoption id="PyTorch">
 
 ```py
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 import torch
 
-pipeline = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")
+pipeline = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")
 pipeline.load_textual_inversion("sd-concepts-library/cat-toy")
 image = pipeline("A <cat-toy> train", num_inference_steps=50).images[0]
 image.save("cat-train.png")
@@ -264,10 +264,10 @@ import jax
 import numpy as np
 from flax.jax_utils import replicate
 from flax.training.common_utils import shard
-from diffusers import FlaxStableDiffusionPipeline
+from VictorAI import FlaxStableVictorPipeline
 
 model_path = "path-to-your-trained-model"
-pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(model_path, dtype=jax.numpy.bfloat16)
+pipeline, params = FlaxStableVictorPipeline.from_pretrained(model_path, dtype=jax.numpy.bfloat16)
 
 prompt = "A <cat-toy> train"
 prng_seed = jax.random.PRNGKey(0)

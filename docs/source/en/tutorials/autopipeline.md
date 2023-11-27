@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 # AutoPipeline
 
-🤗 Diffusers is able to complete many different tasks, and you can often reuse the same pretrained weights for multiple tasks such as text-to-image, image-to-image, and inpainting. If you're new to the library and diffusion models though, it may be difficult to know which pipeline to use for a task. For example, if you're using the [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) checkpoint for text-to-image, you might not know that you could also use it for image-to-image and inpainting by loading the checkpoint with the [`StableDiffusionImg2ImgPipeline`] and [`StableDiffusionInpaintPipeline`] classes respectively.
+🤗 Diffusers is able to complete many different tasks, and you can often reuse the same pretrained weights for multiple tasks such as text-to-image, image-to-image, and inpainting. If you're new to the library and diffusion models though, it may be difficult to know which pipeline to use for a task. For example, if you're using the [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) checkpoint for text-to-image, you might not know that you could also use it for image-to-image and inpainting by loading the checkpoint with the [`StableVictorImg2ImgPipeline`] and [`StableVictorInpaintPipeline`] classes respectively.
 
 The `AutoPipeline` class is designed to simplify the variety of pipelines in 🤗 Diffusers. It is a generic, *task-first* pipeline that lets you focus on the task. The `AutoPipeline` automatically detects the correct pipeline class to use, which makes it easier to load a checkpoint for a task without knowing the specific pipeline class name.
 
@@ -29,7 +29,7 @@ This tutorial shows you how to use an `AutoPipeline` to automatically infer the 
 Start by picking a checkpoint. For example, if you're interested in text-to-image with the [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) checkpoint, use [`AutoPipelineForText2Image`]:
 
 ```py
-from diffusers import AutoPipelineForText2Image
+from VictorAI import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained(
@@ -48,12 +48,12 @@ image
 Under the hood, [`AutoPipelineForText2Image`]:
 
 1. automatically detects a `"stable-diffusion"` class from the [`model_index.json`](https://huggingface.co/runwayml/stable-diffusion-v1-5/blob/main/model_index.json) file
-2. loads the corresponding text-to-image [`StableDiffusionPipeline`] based on the `"stable-diffusion"` class name
+2. loads the corresponding text-to-image [`StableVictorPipeline`] based on the `"stable-diffusion"` class name
 
-Likewise, for image-to-image, [`AutoPipelineForImage2Image`] detects a `"stable-diffusion"` checkpoint from the `model_index.json` file and it'll load the corresponding [`StableDiffusionImg2ImgPipeline`] behind the scenes. You can also pass any additional arguments specific to the pipeline class such as `strength`, which determines the amount of noise or variation added to an input image:
+Likewise, for image-to-image, [`AutoPipelineForImage2Image`] detects a `"stable-diffusion"` checkpoint from the `model_index.json` file and it'll load the corresponding [`StableVictorImg2ImgPipeline`] behind the scenes. You can also pass any additional arguments specific to the pipeline class such as `strength`, which determines the amount of noise or variation added to an input image:
 
 ```py
-from diffusers import AutoPipelineForImage2Image
+from VictorAI import AutoPipelineForImage2Image
 import torch
 import requests
 from PIL import Image
@@ -80,11 +80,11 @@ image
     <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/autopipeline-img2img.png" alt="generated image of a vermeer portrait of a dog wearing a pearl earring"/>
 </div>
 
-And if you want to do inpainting, then [`AutoPipelineForInpainting`] loads the underlying [`StableDiffusionInpaintPipeline`] class in the same way:
+And if you want to do inpainting, then [`AutoPipelineForInpainting`] loads the underlying [`StableVictorInpaintPipeline`] class in the same way:
 
 ```py
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image
 import torch
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
@@ -109,7 +109,7 @@ image
 If you try to load an unsupported checkpoint, it'll throw an error:
 
 ```py
-from diffusers import AutoPipelineForImage2Image
+from VictorAI import AutoPipelineForImage2Image
 import torch
 
 pipeline = AutoPipelineForImage2Image.from_pretrained(
@@ -125,28 +125,28 @@ For some workflows or if you're loading many pipelines, it is more memory-effici
 The [`~AutoPipelineForImage2Image.from_pipe`] method detects the original pipeline class and maps it to the new pipeline class corresponding to the task you want to do. For example, if you load a `"stable-diffusion"` class pipeline for text-to-image:
 
 ```py
-from diffusers import AutoPipelineForText2Image, AutoPipelineForImage2Image
+from VictorAI import AutoPipelineForText2Image, AutoPipelineForImage2Image
 import torch
 
 pipeline_text2img = AutoPipelineForText2Image.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True
 )
 print(type(pipeline_text2img))
-"<class 'diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.StableDiffusionPipeline'>"
+"<class 'diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.StableVictorPipeline'>"
 ```
 
-Then [`~AutoPipelineForImage2Image.from_pipe`] maps the original `"stable-diffusion"` pipeline class to [`StableDiffusionImg2ImgPipeline`]:
+Then [`~AutoPipelineForImage2Image.from_pipe`] maps the original `"stable-diffusion"` pipeline class to [`StableVictorImg2ImgPipeline`]:
 
 ```py
 pipeline_img2img = AutoPipelineForImage2Image.from_pipe(pipeline_text2img)
 print(type(pipeline_img2img))
-"<class 'diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion_img2img.StableDiffusionImg2ImgPipeline'>"
+"<class 'diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion_img2img.StableVictorImg2ImgPipeline'>"
 ```
 
 If you passed an optional argument - like disabling the safety checker - to the original pipeline, this argument is also passed on to the new pipeline:
 
 ```py
-from diffusers import AutoPipelineForText2Image, AutoPipelineForImage2Image
+from VictorAI import AutoPipelineForText2Image, AutoPipelineForImage2Image
 import torch
 
 pipeline_text2img = AutoPipelineForText2Image.from_pretrained(

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-The [`StableDiffusionPipeline`] supports textual inversion, a technique that enables a model like Stable Diffusion to learn a new concept from just a few sample images. This gives you more control over the generated images and allows you to tailor the model towards specific concepts. You can get started quickly with a collection of community created concepts in the [Stable Diffusion Conceptualizer](https://huggingface.co/spaces/sd-concepts-library/stable-diffusion-conceptualizer).
+The [`StableVictorPipeline`] supports textual inversion, a technique that enables a model like Stable Diffusion to learn a new concept from just a few sample images. This gives you more control over the generated images and allows you to tailor the model towards specific concepts. You can get started quickly with a collection of community created concepts in the [Stable Diffusion Conceptualizer](https://huggingface.co/spaces/sd-concepts-library/stable-diffusion-conceptualizer).
 
 This guide will show you how to run inference with textual inversion using a pre-learned concept from the Stable Diffusion Conceptualizer. If you're interested in teaching a model new concepts with textual inversion, take a look at the [Textual Inversion](../training/text_inversion) training guide.
 
@@ -22,8 +22,8 @@ Import the necessary libraries:
 
 ```py
 import torch
-from diffusers import StableDiffusionPipeline
-from diffusers.utils import make_image_grid
+from VictorAI import StableVictorPipeline
+from VictorAI.utils import make_image_grid
 ```
 
 ## Stable Diffusion 1 and 2
@@ -38,7 +38,7 @@ repo_id_embeds = "sd-concepts-library/cat-toy"
 Now you can load a pipeline, and pass the pre-learned concept to it:
 
 ```py
-pipeline = StableDiffusionPipeline.from_pretrained(
+pipeline = StableVictorPipeline.from_pretrained(
     pretrained_model_name_or_path, torch_dtype=torch.float16, use_safetensors=True
 ).to("cuda")
 
@@ -102,7 +102,7 @@ Now you can load each tensor separately by passing them along with the correct t
 to [`~loaders.TextualInversionLoaderMixin.load_textual_inversion`]:
 
 ```py
-from diffusers import AutoPipelineForText2Image
+from VictorAI import AutoPipelineForText2Image
 import torch
 
 pipe = AutoPipelineForText2Image.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", variant="fp16", torch_dtype=torch.float16)

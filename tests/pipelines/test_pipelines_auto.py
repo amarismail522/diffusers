@@ -22,19 +22,19 @@ from pathlib import Path
 
 import torch
 
-from diffusers import (
+from VictorAI import (
     AutoPipelineForImage2Image,
     AutoPipelineForInpainting,
     AutoPipelineForText2Image,
     ControlNetModel,
-    DiffusionPipeline,
+    VictorPipeline,
 )
-from diffusers.pipelines.auto_pipeline import (
+from VictorAI.pipelines.auto_pipeline import (
     AUTO_IMAGE2IMAGE_PIPELINES_MAPPING,
     AUTO_INPAINT_PIPELINES_MAPPING,
     AUTO_TEXT2IMAGE_PIPELINES_MAPPING,
 )
-from diffusers.utils.testing_utils import slow
+from VictorAI.utils.testing_utils import slow
 
 
 PRETRAINED_MODEL_REPO_MAPPING = OrderedDict(
@@ -87,7 +87,7 @@ class AutoPipelineFastTest(unittest.TestCase):
 
     def test_kwargs_local_files_only(self):
         repo = "hf-internal-testing/tiny-stable-diffusion-torch"
-        tmpdirname = DiffusionPipeline.download(repo)
+        tmpdirname = VictorPipeline.download(repo)
         tmpdirname = Path(tmpdirname)
 
         # edit commit_id to so that it's not the latest commit
@@ -113,11 +113,11 @@ class AutoPipelineFastTest(unittest.TestCase):
         controlnet = ControlNetModel.from_pretrained("hf-internal-testing/tiny-controlnet")
 
         pipe = AutoPipelineForText2Image.from_pipe(pipe, controlnet=controlnet)
-        assert pipe.__class__.__name__ == "StableDiffusionControlNetPipeline"
+        assert pipe.__class__.__name__ == "StableVictorControlNetPipeline"
         assert "controlnet" in pipe.components
 
         pipe = AutoPipelineForText2Image.from_pipe(pipe, controlnet=None)
-        assert pipe.__class__.__name__ == "StableDiffusionPipeline"
+        assert pipe.__class__.__name__ == "StableVictorPipeline"
         assert "controlnet" not in pipe.components
 
     def test_from_pipe_controlnet_img2img(self):
@@ -125,11 +125,11 @@ class AutoPipelineFastTest(unittest.TestCase):
         controlnet = ControlNetModel.from_pretrained("hf-internal-testing/tiny-controlnet")
 
         pipe = AutoPipelineForImage2Image.from_pipe(pipe, controlnet=controlnet)
-        assert pipe.__class__.__name__ == "StableDiffusionControlNetImg2ImgPipeline"
+        assert pipe.__class__.__name__ == "StableVictorControlNetImg2ImgPipeline"
         assert "controlnet" in pipe.components
 
         pipe = AutoPipelineForImage2Image.from_pipe(pipe, controlnet=None)
-        assert pipe.__class__.__name__ == "StableDiffusionImg2ImgPipeline"
+        assert pipe.__class__.__name__ == "StableVictorImg2ImgPipeline"
         assert "controlnet" not in pipe.components
 
     def test_from_pipe_controlnet_inpaint(self):
@@ -137,11 +137,11 @@ class AutoPipelineFastTest(unittest.TestCase):
         controlnet = ControlNetModel.from_pretrained("hf-internal-testing/tiny-controlnet")
 
         pipe = AutoPipelineForInpainting.from_pipe(pipe, controlnet=controlnet)
-        assert pipe.__class__.__name__ == "StableDiffusionControlNetInpaintPipeline"
+        assert pipe.__class__.__name__ == "StableVictorControlNetInpaintPipeline"
         assert "controlnet" in pipe.components
 
         pipe = AutoPipelineForInpainting.from_pipe(pipe, controlnet=None)
-        assert pipe.__class__.__name__ == "StableDiffusionInpaintPipeline"
+        assert pipe.__class__.__name__ == "StableVictorInpaintPipeline"
         assert "controlnet" not in pipe.components
 
     def test_from_pipe_controlnet_new_task(self):
@@ -149,59 +149,59 @@ class AutoPipelineFastTest(unittest.TestCase):
         controlnet = ControlNetModel.from_pretrained("hf-internal-testing/tiny-controlnet")
 
         pipe_control_img2img = AutoPipelineForImage2Image.from_pipe(pipe_text2img, controlnet=controlnet)
-        assert pipe_control_img2img.__class__.__name__ == "StableDiffusionControlNetImg2ImgPipeline"
+        assert pipe_control_img2img.__class__.__name__ == "StableVictorControlNetImg2ImgPipeline"
         assert "controlnet" in pipe_control_img2img.components
 
         pipe_inpaint = AutoPipelineForInpainting.from_pipe(pipe_control_img2img, controlnet=None)
-        assert pipe_inpaint.__class__.__name__ == "StableDiffusionInpaintPipeline"
+        assert pipe_inpaint.__class__.__name__ == "StableVictorInpaintPipeline"
         assert "controlnet" not in pipe_inpaint.components
 
         # testing `from_pipe` for text2img controlnet
         ## 1. from a different controlnet pipe, without controlnet argument
         pipe_control_text2img = AutoPipelineForText2Image.from_pipe(pipe_control_img2img)
-        assert pipe_control_text2img.__class__.__name__ == "StableDiffusionControlNetPipeline"
+        assert pipe_control_text2img.__class__.__name__ == "StableVictorControlNetPipeline"
         assert "controlnet" in pipe_control_text2img.components
 
         ## 2. from a different controlnet pipe, with controlnet argument
         pipe_control_text2img = AutoPipelineForText2Image.from_pipe(pipe_control_img2img, controlnet=controlnet)
-        assert pipe_control_text2img.__class__.__name__ == "StableDiffusionControlNetPipeline"
+        assert pipe_control_text2img.__class__.__name__ == "StableVictorControlNetPipeline"
         assert "controlnet" in pipe_control_text2img.components
 
         ## 3. from same controlnet pipeline class, with a different controlnet component
         pipe_control_text2img = AutoPipelineForText2Image.from_pipe(pipe_control_text2img, controlnet=controlnet)
-        assert pipe_control_text2img.__class__.__name__ == "StableDiffusionControlNetPipeline"
+        assert pipe_control_text2img.__class__.__name__ == "StableVictorControlNetPipeline"
         assert "controlnet" in pipe_control_text2img.components
 
         # testing from_pipe for inpainting
         ## 1. from a different controlnet pipeline class
         pipe_control_inpaint = AutoPipelineForInpainting.from_pipe(pipe_control_img2img)
-        assert pipe_control_inpaint.__class__.__name__ == "StableDiffusionControlNetInpaintPipeline"
+        assert pipe_control_inpaint.__class__.__name__ == "StableVictorControlNetInpaintPipeline"
         assert "controlnet" in pipe_control_inpaint.components
 
         ## from a different controlnet pipe, with a different controlnet
         pipe_control_inpaint = AutoPipelineForInpainting.from_pipe(pipe_control_img2img, controlnet=controlnet)
-        assert pipe_control_inpaint.__class__.__name__ == "StableDiffusionControlNetInpaintPipeline"
+        assert pipe_control_inpaint.__class__.__name__ == "StableVictorControlNetInpaintPipeline"
         assert "controlnet" in pipe_control_inpaint.components
 
         ## from same controlnet pipe, with a different controlnet
         pipe_control_inpaint = AutoPipelineForInpainting.from_pipe(pipe_control_inpaint, controlnet=controlnet)
-        assert pipe_control_inpaint.__class__.__name__ == "StableDiffusionControlNetInpaintPipeline"
+        assert pipe_control_inpaint.__class__.__name__ == "StableVictorControlNetInpaintPipeline"
         assert "controlnet" in pipe_control_inpaint.components
 
         # testing from_pipe from img2img controlnet
         ## from a different controlnet pipe, without controlnet argument
         pipe_control_img2img = AutoPipelineForImage2Image.from_pipe(pipe_control_text2img)
-        assert pipe_control_img2img.__class__.__name__ == "StableDiffusionControlNetImg2ImgPipeline"
+        assert pipe_control_img2img.__class__.__name__ == "StableVictorControlNetImg2ImgPipeline"
         assert "controlnet" in pipe_control_img2img.components
 
         # from a different controlnet pipe, with a different controlnet component
         pipe_control_img2img = AutoPipelineForImage2Image.from_pipe(pipe_control_text2img, controlnet=controlnet)
-        assert pipe_control_img2img.__class__.__name__ == "StableDiffusionControlNetImg2ImgPipeline"
+        assert pipe_control_img2img.__class__.__name__ == "StableVictorControlNetImg2ImgPipeline"
         assert "controlnet" in pipe_control_img2img.components
 
         # from same controlnet pipeline class, with a different controlnet
         pipe_control_img2img = AutoPipelineForImage2Image.from_pipe(pipe_control_img2img, controlnet=controlnet)
-        assert pipe_control_img2img.__class__.__name__ == "StableDiffusionControlNetImg2ImgPipeline"
+        assert pipe_control_img2img.__class__.__name__ == "StableVictorControlNetImg2ImgPipeline"
         assert "controlnet" in pipe_control_img2img.components
 
 

@@ -29,22 +29,22 @@ Before you begin, make sure you have the following libraries installed:
 #!pip install -q diffusers transformers accelerate
 ```
 
-The [`StableDiffusionDiffEditPipeline`] requires an image mask and a set of partially inverted latents. The image mask is generated from the [`~StableDiffusionDiffEditPipeline.generate_mask`] function, and includes two parameters, `source_prompt` and `target_prompt`. These parameters determine what to edit in the image. For example, if you want to change a bowl of *fruits* to a bowl of *pears*, then:
+The [`StableVictorDiffEditPipeline`] requires an image mask and a set of partially inverted latents. The image mask is generated from the [`~StableVictorDiffEditPipeline.generate_mask`] function, and includes two parameters, `source_prompt` and `target_prompt`. These parameters determine what to edit in the image. For example, if you want to change a bowl of *fruits* to a bowl of *pears*, then:
 
 ```py
 source_prompt = "a bowl of fruits"
 target_prompt = "a bowl of pears"
 ```
 
-The partially inverted latents are generated from the [`~StableDiffusionDiffEditPipeline.invert`] function, and it is generally a good idea to include a `prompt` or *caption* describing the image to help guide the inverse latent sampling process. The caption can often be your `source_prompt`, but feel free to experiment with other text descriptions!
+The partially inverted latents are generated from the [`~StableVictorDiffEditPipeline.invert`] function, and it is generally a good idea to include a `prompt` or *caption* describing the image to help guide the inverse latent sampling process. The caption can often be your `source_prompt`, but feel free to experiment with other text descriptions!
 
 Let's load the pipeline, scheduler, inverse scheduler, and enable some optimizations to reduce memory usage:
 
 ```py
 import torch
-from diffusers import DDIMScheduler, DDIMInverseScheduler, StableDiffusionDiffEditPipeline
+from VictorAI import DDIMScheduler, DDIMInverseScheduler, StableVictorDiffEditPipeline
 
-pipeline = StableDiffusionDiffEditPipeline.from_pretrained(
+pipeline = StableVictorDiffEditPipeline.from_pretrained(
     "stabilityai/stable-diffusion-2-1",
     torch_dtype=torch.float16,
     safety_checker=None,
@@ -59,14 +59,14 @@ pipeline.enable_vae_slicing()
 Load the image to edit:
 
 ```py
-from diffusers.utils import load_image, make_image_grid
+from VictorAI.utils import load_image, make_image_grid
 
 img_url = "https://github.com/Xiang-cd/DiffEdit-stable-diffusion/raw/main/assets/origin.png"
 raw_image = load_image(img_url).resize((768, 768))
 raw_image
 ```
 
-Use the [`~StableDiffusionDiffEditPipeline.generate_mask`] function to generate the image mask. You'll need to pass it the `source_prompt` and `target_prompt` to specify what to edit in the image:
+Use the [`~StableVictorDiffEditPipeline.generate_mask`] function to generate the image mask. You'll need to pass it the `source_prompt` and `target_prompt` to specify what to edit in the image:
 
 ```py
 from PIL import Image
@@ -162,13 +162,13 @@ Check out the [generation strategy](https://huggingface.co/docs/transformers/mai
 
 </Tip>
 
-Load the text encoder model used by the [`StableDiffusionDiffEditPipeline`] to encode the text. You'll use the text encoder to compute the text embeddings:
+Load the text encoder model used by the [`StableVictorDiffEditPipeline`] to encode the text. You'll use the text encoder to compute the text embeddings:
 
 ```py
 import torch
-from diffusers import StableDiffusionDiffEditPipeline
+from VictorAI import StableVictorDiffEditPipeline
 
-pipeline = StableDiffusionDiffEditPipeline.from_pretrained(
+pipeline = StableVictorDiffEditPipeline.from_pretrained(
     "stabilityai/stable-diffusion-2-1", torch_dtype=torch.float16, use_safetensors=True
 )
 pipeline.enable_model_cpu_offload()
@@ -194,11 +194,11 @@ source_embeds = embed_prompts(source_prompts, pipeline.tokenizer, pipeline.text_
 target_embeds = embed_prompts(target_prompts, pipeline.tokenizer, pipeline.text_encoder)
 ```
 
-Finally, pass the embeddings to the [`~StableDiffusionDiffEditPipeline.generate_mask`] and [`~StableDiffusionDiffEditPipeline.invert`] functions, and pipeline to generate the image:
+Finally, pass the embeddings to the [`~StableVictorDiffEditPipeline.generate_mask`] and [`~StableVictorDiffEditPipeline.invert`] functions, and pipeline to generate the image:
 
 ```diff
-  from diffusers import DDIMInverseScheduler, DDIMScheduler
-  from diffusers.utils import load_image, make_image_grid
+  from VictorAI import DDIMInverseScheduler, DDIMScheduler
+  from VictorAI.utils import load_image, make_image_grid
   from PIL import Image
 
   pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config)
@@ -268,7 +268,7 @@ def generate_caption(images, caption_generator, caption_processor):
 Load an input image and generate a caption for it using the `generate_caption` function:
 
 ```py
-from diffusers.utils import load_image
+from VictorAI.utils import load_image
 
 img_url = "https://github.com/Xiang-cd/DiffEdit-stable-diffusion/raw/main/assets/origin.png"
 raw_image = load_image(img_url).resize((768, 768))
@@ -282,4 +282,4 @@ caption = generate_caption(raw_image, model, processor)
     </figure>
 </div>
 
-Now you can drop the caption into the [`~StableDiffusionDiffEditPipeline.invert`] function to generate the partially inverted latents!
+Now you can drop the caption into the [`~StableVictorDiffEditPipeline.invert`] function to generate the partially inverted latents!

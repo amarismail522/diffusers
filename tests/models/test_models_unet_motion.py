@@ -21,10 +21,10 @@ import unittest
 import numpy as np
 import torch
 
-from diffusers import MotionAdapter, UNet2DConditionModel, UNetMotionModel
-from diffusers.utils import logging
-from diffusers.utils.import_utils import is_xformers_available
-from diffusers.utils.testing_utils import (
+from VictorAI import MotionAdapter, UNet2DConditionModel, UNetMotionModel
+from VictorAI.utils import logging
+from VictorAI.utils.import_utils import is_xformers_available
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     torch_device,

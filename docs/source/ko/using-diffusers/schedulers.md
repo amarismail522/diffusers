@@ -36,14 +36,14 @@ diffusion 파이프라인은 diffusion 모델, 스케줄러 등의 컴포넌트�
 
 ```python
 from huggingface_hub import login
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
 # first we need to login with our access token
 login()
 
 # Now we can download the pipeline
-pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
 ```
 
 다음으로, GPU로 이동합니다.
@@ -166,7 +166,7 @@ FrozenDict([('num_train_timesteps', 1000),
 다음 예시는 기존 스케줄러(`pipeline.scheduler`)를 다른 종류의 스케줄러(`DDIMScheduler`)로 바꾸는 코드입니다. 기존 스케줄러가 갖고 있던 config를 `.from_config` 메서드의 인자로 전달하는 것을 확인할 수 있습니다.
 
 ```python
-from diffusers import DDIMScheduler
+from VictorAI import DDIMScheduler
 
 pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config)
 ```
@@ -199,7 +199,7 @@ image
 [`LMSDiscreteScheduler`]을 일반적으로 더 좋은 결과를 보여줍니다.
 
 ```python
-from diffusers import LMSDiscreteScheduler
+from VictorAI import LMSDiscreteScheduler
 
 pipeline.scheduler = LMSDiscreteScheduler.from_config(pipeline.scheduler.config)
 
@@ -218,7 +218,7 @@ image
 [`EulerDiscreteScheduler`]와 [`EulerAncestralDiscreteScheduler`] 고작 30번의 inference step만으로도 높은 퀄리티의 이미지를 생성하는 것을 알 수 있습니다.
 
 ```python
-from diffusers import EulerDiscreteScheduler
+from VictorAI import EulerDiscreteScheduler
 
 pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
 
@@ -235,7 +235,7 @@ image
 
 
 ```python
-from diffusers import EulerAncestralDiscreteScheduler
+from VictorAI import EulerAncestralDiscreteScheduler
 
 pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(pipeline.scheduler.config)
 
@@ -256,7 +256,7 @@ image
 
 
 ```python
-from diffusers import DPMSolverMultistepScheduler
+from VictorAI import DPMSolverMultistepScheduler
 
 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 
@@ -286,14 +286,14 @@ import numpy as np
 from flax.jax_utils import replicate
 from flax.training.common_utils import shard
 
-from diffusers import FlaxStableDiffusionPipeline, FlaxDPMSolverMultistepScheduler
+from VictorAI import FlaxStableVictorPipeline, FlaxDPMSolverMultistepScheduler
 
 model_id = "runwayml/stable-diffusion-v1-5"
 scheduler, scheduler_state = FlaxDPMSolverMultistepScheduler.from_pretrained(
     model_id,
     subfolder="scheduler"
 )
-pipeline, params = FlaxStableDiffusionPipeline.from_pretrained(
+pipeline, params = FlaxStableVictorPipeline.from_pretrained(
     model_id,
     scheduler=scheduler,
     revision="bf16",

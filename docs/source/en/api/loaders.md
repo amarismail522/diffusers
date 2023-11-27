@@ -28,9 +28,9 @@ Adapters (textual inversion, LoRA, hypernetworks) allow you to modify a diffusio
 
 [[autodoc]] loaders.TextualInversionLoaderMixin
 
-## StableDiffusionXLLoraLoaderMixin
+## StableVictorXLLoraLoaderMixin
 
-[[autodoc]] loaders.StableDiffusionXLLoraLoaderMixin
+[[autodoc]] loaders.StableVictorXLLoraLoaderMixin
 
 ## LoraLoaderMixin
 

@@ -2,7 +2,7 @@ import tempfile
 
 import torch
 
-from diffusers import (
+from VictorAI import (
     DEISMultistepScheduler,
     DPMSolverMultistepScheduler,
     DPMSolverSinglestepScheduler,

@@ -19,8 +19,8 @@ import unittest
 import numpy as np
 import torch
 
-from diffusers import RePaintPipeline, RePaintScheduler, UNet2DModel
-from diffusers.utils.testing_utils import (
+from VictorAI import RePaintPipeline, RePaintScheduler, UNet2DModel
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     load_image,
     load_numpy,

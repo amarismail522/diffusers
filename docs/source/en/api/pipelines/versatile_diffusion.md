@@ -20,11 +20,11 @@ The abstract from the paper is:
 
 ## Tips
 
-You can load the more memory intensive "all-in-one" [`VersatileDiffusionPipeline`] that supports all the tasks or use the individual pipelines which are more memory efficient.
+You can load the more memory intensive "all-in-one" [`VersatileVictorPipeline`] that supports all the tasks or use the individual pipelines which are more memory efficient.
 
 | **Pipeline**                                         | **Supported tasks**               |
 |------------------------------------------------------|-----------------------------------|
-| [`VersatileDiffusionPipeline`]                       | all of the below                  |
+| [`VersatileVictorPipeline`]                       | all of the below                  |
 | [`VersatileDiffusionTextToImagePipeline`]            | text-to-image                     |
 | [`VersatileDiffusionImageVariationPipeline`]         | image variation                   |
 | [`VersatileDiffusionDualGuidedPipeline`]             | image-text dual guided generation |
@@ -35,8 +35,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## VersatileDiffusionPipeline
-[[autodoc]] VersatileDiffusionPipeline
+## VersatileVictorPipeline
+[[autodoc]] VersatileVictorPipeline
 
 ## VersatileDiffusionTextToImagePipeline
 [[autodoc]] VersatileDiffusionTextToImagePipeline

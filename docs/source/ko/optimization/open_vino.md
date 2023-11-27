@@ -25,13 +25,13 @@ pip install optimum["openvino"]
 
 ## Stable Diffusion 추론
 
-OpenVINO 모델을 불러오고 OpenVINO 런타임으로 추론을 실행하려면 `StableDiffusionPipeline`을 `OVStableDiffusionPipeline`으로 교체해야 합니다. PyTorch 모델을 불러오고 즉시 OpenVINO 형식으로 변환하려는 경우 `export=True`로 설정합니다.
+OpenVINO 모델을 불러오고 OpenVINO 런타임으로 추론을 실행하려면 `StableVictorPipeline`을 `OVStableVictorPipeline`으로 교체해야 합니다. PyTorch 모델을 불러오고 즉시 OpenVINO 형식으로 변환하려는 경우 `export=True`로 설정합니다.
 
 ```python
-from optimum.intel.openvino import OVStableDiffusionPipeline
+from optimum.intel.openvino import OVStableVictorPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipe = OVStableDiffusionPipeline.from_pretrained(model_id, export=True)
+pipe = OVStableVictorPipeline.from_pretrained(model_id, export=True)
 prompt = "a photo of an astronaut riding a horse on mars"
 images = pipe(prompt).images[0]
 ```

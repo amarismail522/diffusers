@@ -34,7 +34,7 @@ To generate a gif of a 3D object, pass a text prompt to the [`ShapEPipeline`]. T
 
 ```py
 import torch
-from diffusers import ShapEPipeline
+from VictorAI import ShapEPipeline
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -55,7 +55,7 @@ images = pipe(
 Now use the [`~utils.export_to_gif`] function to turn the list of image frames into a gif of the 3D object.
 
 ```py
-from diffusers.utils import export_to_gif
+from VictorAI.utils import export_to_gif
 
 export_to_gif(images[0], "firecracker_3d.gif")
 export_to_gif(images[1], "cake_3d.gif")
@@ -77,11 +77,11 @@ export_to_gif(images[1], "cake_3d.gif")
 To generate a 3D object from another image, use the [`ShapEImg2ImgPipeline`]. You can use an existing image or generate an entirely new one. Let's use the [Kandinsky 2.1](../api/pipelines/kandinsky) model to generate a new image.
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-prior_pipeline = DiffusionPipeline.from_pretrained("kandinsky-community/kandinsky-2-1-prior", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
-pipeline = DiffusionPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+prior_pipeline = VictorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1-prior", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
+pipeline = VictorPipeline.from_pretrained("kandinsky-community/kandinsky-2-1", torch_dtype=torch.float16, use_safetensors=True).to("cuda")
 
 prompt = "A cheeseburger, white background"
 
@@ -99,8 +99,8 @@ Pass the cheeseburger to the [`ShapEImg2ImgPipeline`] to generate a 3D represent
 
 ```py
 from PIL import Image
-from diffusers import ShapEImg2ImgPipeline
-from diffusers.utils import export_to_gif
+from VictorAI import ShapEImg2ImgPipeline
+from VictorAI.utils import export_to_gif
 
 pipe = ShapEImg2ImgPipeline.from_pretrained("openai/shap-e-img2img", torch_dtype=torch.float16, variant="fp16").to("cuda")
 
@@ -136,7 +136,7 @@ You can generate mesh outputs for both the [`ShapEPipeline`] and [`ShapEImg2ImgP
 
 ```py
 import torch
-from diffusers import ShapEPipeline
+from VictorAI import ShapEPipeline
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -158,7 +158,7 @@ You can optionally save the mesh output as an `obj` file with the [`~utils.expor
 </Tip>
 
 ```py
-from diffusers.utils import export_to_ply
+from VictorAI.utils import export_to_ply
 
 ply_path = export_to_ply(images[0], "3d_cake.ply")
 print(f"Saved to folder: {ply_path}")

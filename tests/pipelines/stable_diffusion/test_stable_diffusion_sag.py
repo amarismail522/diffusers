@@ -20,13 +20,13 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDIMScheduler,
-    StableDiffusionSAGPipeline,
+    StableVictorSAGPipeline,
     UNet2DConditionModel,
 )
-from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
+from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
 
 from ..pipeline_params import TEXT_TO_IMAGE_BATCH_PARAMS, TEXT_TO_IMAGE_IMAGE_PARAMS, TEXT_TO_IMAGE_PARAMS
 from ..test_pipelines_common import PipelineLatentTesterMixin, PipelineTesterMixin
@@ -35,8 +35,8 @@ from ..test_pipelines_common import PipelineLatentTesterMixin, PipelineTesterMix
 enable_full_determinism()
 
 
-class StableDiffusionSAGPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
-    pipeline_class = StableDiffusionSAGPipeline
+class StableVictorSAGPipelineFastTests(PipelineLatentTesterMixin, PipelineTesterMixin, unittest.TestCase):
+    pipeline_class = StableVictorSAGPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -117,7 +117,7 @@ class StableDiffusionSAGPipelineFastTests(PipelineLatentTesterMixin, PipelineTes
 
 @nightly
 @require_torch_gpu
-class StableDiffusionPipelineIntegrationTests(unittest.TestCase):
+class StableVictorPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -125,7 +125,7 @@ class StableDiffusionPipelineIntegrationTests(unittest.TestCase):
         torch.cuda.empty_cache()
 
     def test_stable_diffusion_1(self):
-        sag_pipe = StableDiffusionSAGPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        sag_pipe = StableVictorSAGPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         sag_pipe = sag_pipe.to(torch_device)
         sag_pipe.set_progress_bar_config(disable=None)
 
@@ -145,7 +145,7 @@ class StableDiffusionPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 5e-2
 
     def test_stable_diffusion_2(self):
-        sag_pipe = StableDiffusionSAGPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
+        sag_pipe = StableVictorSAGPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
         sag_pipe = sag_pipe.to(torch_device)
         sag_pipe.set_progress_bar_config(disable=None)
 
@@ -165,7 +165,7 @@ class StableDiffusionPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 5e-2
 
     def test_stable_diffusion_2_non_square(self):
-        sag_pipe = StableDiffusionSAGPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
+        sag_pipe = StableVictorSAGPipeline.from_pretrained("stabilityai/stable-diffusion-2-1-base")
         sag_pipe = sag_pipe.to(torch_device)
         sag_pipe.set_progress_bar_config(disable=None)
 

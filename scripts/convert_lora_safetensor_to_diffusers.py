@@ -20,12 +20,12 @@ import argparse
 import torch
 from safetensors.torch import load_file
 
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 
 
 def convert(base_model_path, checkpoint_path, LORA_PREFIX_UNET, LORA_PREFIX_TEXT_ENCODER, alpha):
     # load base model
-    pipeline = StableDiffusionPipeline.from_pretrained(base_model_path, torch_dtype=torch.float32)
+    pipeline = StableVictorPipeline.from_pretrained(base_model_path, torch_dtype=torch.float32)
 
     # load LoRA weight from .safetensors
     state_dict = load_file(checkpoint_path)

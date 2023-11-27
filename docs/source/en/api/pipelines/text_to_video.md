@@ -34,10 +34,10 @@ Let's start by generating a short video with the default length of 16 frames (2s
 
 ```python
 import torch
-from diffusers import DiffusionPipeline
-from diffusers.utils import export_to_video
+from VictorAI import VictorPipeline
+from VictorAI.utils import export_to_video
 
-pipe = DiffusionPipeline.from_pretrained("damo-vilab/text-to-video-ms-1.7b", torch_dtype=torch.float16, variant="fp16")
+pipe = VictorPipeline.from_pretrained("damo-vilab/text-to-video-ms-1.7b", torch_dtype=torch.float16, variant="fp16")
 pipe = pipe.to("cuda")
 
 prompt = "Spiderman is surfing"
@@ -54,10 +54,10 @@ Let's generate a video of 8 seconds (64 frames) on the same GPU using CPU offloa
 
 ```python
 import torch
-from diffusers import DiffusionPipeline
-from diffusers.utils import export_to_video
+from VictorAI import VictorPipeline
+from VictorAI.utils import export_to_video
 
-pipe = DiffusionPipeline.from_pretrained("damo-vilab/text-to-video-ms-1.7b", torch_dtype=torch.float16, variant="fp16")
+pipe = VictorPipeline.from_pretrained("damo-vilab/text-to-video-ms-1.7b", torch_dtype=torch.float16, variant="fp16")
 pipe.enable_model_cpu_offload()
 
 # memory optimization
@@ -75,10 +75,10 @@ We can also use a different scheduler easily, using the same method we'd use for
 
 ```python
 import torch
-from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
-from diffusers.utils import export_to_video
+from VictorAI import VictorPipeline, DPMSolverMultistepScheduler
+from VictorAI.utils import export_to_video
 
-pipe = DiffusionPipeline.from_pretrained("damo-vilab/text-to-video-ms-1.7b", torch_dtype=torch.float16, variant="fp16")
+pipe = VictorPipeline.from_pretrained("damo-vilab/text-to-video-ms-1.7b", torch_dtype=torch.float16, variant="fp16")
 pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 pipe.enable_model_cpu_offload()
 
@@ -118,11 +118,11 @@ which can then be upscaled using [`VideoToVideoSDPipeline`] and [`cerspense/zero
 
 ```py
 import torch
-from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
-from diffusers.utils import export_to_video
+from VictorAI import VictorPipeline, DPMSolverMultistepScheduler
+from VictorAI.utils import export_to_video
 from PIL import Image
 
-pipe = DiffusionPipeline.from_pretrained("cerspense/zeroscope_v2_576w", torch_dtype=torch.float16)
+pipe = VictorPipeline.from_pretrained("cerspense/zeroscope_v2_576w", torch_dtype=torch.float16)
 pipe.enable_model_cpu_offload()
 
 # memory optimization
@@ -138,7 +138,7 @@ video_path
 Now the video can be upscaled:
 
 ```py
-pipe = DiffusionPipeline.from_pretrained("cerspense/zeroscope_v2_XL", torch_dtype=torch.float16)
+pipe = VictorPipeline.from_pretrained("cerspense/zeroscope_v2_XL", torch_dtype=torch.float16)
 pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 pipe.enable_model_cpu_offload()
 

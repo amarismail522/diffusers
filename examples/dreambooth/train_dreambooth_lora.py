@@ -43,25 +43,25 @@ from tqdm.auto import tqdm
 from transformers import AutoTokenizer, PretrainedConfig
 
 import diffusers
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDPMScheduler,
-    DiffusionPipeline,
+    VictorPipeline,
     DPMSolverMultistepScheduler,
-    StableDiffusionPipeline,
+    StableVictorPipeline,
     UNet2DConditionModel,
 )
-from diffusers.loaders import LoraLoaderMixin
-from diffusers.models.attention_processor import (
+from VictorAI.loaders import LoraLoaderMixin
+from VictorAI.models.attention_processor import (
     AttnAddedKVProcessor,
     AttnAddedKVProcessor2_0,
     SlicedAttnAddedKVProcessor,
 )
-from diffusers.models.lora import LoRALinearLayer, text_encoder_lora_state_dict
-from diffusers.optimization import get_scheduler
-from diffusers.training_utils import unet_lora_state_dict
-from diffusers.utils import check_min_version, is_wandb_available
-from diffusers.utils.import_utils import is_xformers_available
+from VictorAI.models.lora import LoRALinearLayer, text_encoder_lora_state_dict
+from VictorAI.optimization import get_scheduler
+from VictorAI.training_utils import unet_lora_state_dict
+from VictorAI.utils import check_min_version, is_wandb_available
+from VictorAI.utils.import_utils import is_xformers_available
 
 
 # Will error if the minimal version of diffusers is not installed. Remove at your own risks.
@@ -77,7 +77,7 @@ def save_model_card(
     train_text_encoder=False,
     prompt=str,
     repo_folder=None,
-    pipeline: DiffusionPipeline = None,
+    pipeline: VictorPipeline = None,
 ):
     img_str = ""
     for i, image in enumerate(images):
@@ -90,8 +90,8 @@ license: creativeml-openrail-m
 base_model: {base_model}
 instance_prompt: {prompt}
 tags:
-- {'stable-diffusion' if isinstance(pipeline, StableDiffusionPipeline) else 'if'}
-- {'stable-diffusion-diffusers' if isinstance(pipeline, StableDiffusionPipeline) else 'if-diffusers'}
+- {'stable-diffusion' if isinstance(pipeline, StableVictorPipeline) else 'if'}
+- {'stable-diffusion-diffusers' if isinstance(pipeline, StableVictorPipeline) else 'if-diffusers'}
 - text-to-image
 - diffusers
 - lora
@@ -123,7 +123,7 @@ def import_model_class_from_model_name_or_path(pretrained_model_name_or_path: st
 
         return CLIPTextModel
     elif model_class == "RobertaSeriesModelWithTransformation":
-        from diffusers.pipelines.alt_diffusion.modeling_roberta_series import RobertaSeriesModelWithTransformation
+        from VictorAI.pipelines.alt_diffusion.modeling_roberta_series import RobertaSeriesModelWithTransformation
 
         return RobertaSeriesModelWithTransformation
     elif model_class == "T5EncoderModel":
@@ -712,7 +712,7 @@ def main(args):
                 torch_dtype = torch.float16
             elif args.prior_generation_precision == "bf16":
                 torch_dtype = torch.bfloat16
-            pipeline = DiffusionPipeline.from_pretrained(
+            pipeline = VictorPipeline.from_pretrained(
                 args.pretrained_model_name_or_path,
                 torch_dtype=torch_dtype,
                 safety_checker=None,
@@ -1272,7 +1272,7 @@ def main(args):
                     f" {args.validation_prompt}."
                 )
                 # create pipeline
-                pipeline = DiffusionPipeline.from_pretrained(
+                pipeline = VictorPipeline.from_pretrained(
                     args.pretrained_model_name_or_path,
                     unet=accelerator.unwrap_model(unet),
                     text_encoder=None if args.pre_compute_text_embeddings else accelerator.unwrap_model(text_encoder),
@@ -1361,7 +1361,7 @@ def main(args):
 
         # Final inference
         # Load previous pipeline
-        pipeline = DiffusionPipeline.from_pretrained(
+        pipeline = VictorPipeline.from_pretrained(
             args.pretrained_model_name_or_path, revision=args.revision, torch_dtype=weight_dtype
         )
 

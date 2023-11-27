@@ -201,7 +201,7 @@ accelerate launch --mixed_precision="fp16"  train_text_to_image_lora.py \
 Once training has been completed, you can use your model for inference:
 
 ```py
-from diffusers import AutoPipelineForText2Image
+from VictorAI import AutoPipelineForText2Image
 import torch
 
 pipeline = AutoPipelineForText2Image.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to("cuda")

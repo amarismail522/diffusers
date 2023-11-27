@@ -18,7 +18,7 @@ Stable Diffusion is trained on 512x512 images from a subset of the LAION-5B data
 
 For more details about how Stable Diffusion works and how it differs from the base latent diffusion model, take a look at the Stability AI [announcement](https://stability.ai/blog/stable-diffusion-announcement) and our own [blog post](https://huggingface.co/blog/stable_diffusion#how-does-stable-diffusion-work) for more technical details.
 
-You can find the original codebase for Stable Diffusion v1.0 at [CompVis/stable-diffusion](https://github.com/CompVis/stable-diffusion) and Stable Diffusion v2.0 at [Stability-AI/stablediffusion](https://github.com/Stability-AI/stablediffusion) as well as their original scripts for various tasks. Additional official checkpoints for the different Stable Diffusion versions and tasks can be found on the [CompVis](https://huggingface.co/CompVis), [Runway](https://huggingface.co/runwayml), and [Stability AI](https://huggingface.co/stabilityai) Hub organizations. Explore these organizations to find the best checkpoint for your use-case!
+You can find the original codebase for Stable Diffusion v1.0 at [CompVis/stable-diffusion](https://github.com/CompVis/stable-diffusion) and Stable Diffusion v2.0 at [Stability-AI/StableVictor](https://github.com/Stability-AI/StableVictor) as well as their original scripts for various tasks. Additional official checkpoints for the different Stable Diffusion versions and tasks can be found on the [CompVis](https://huggingface.co/CompVis), [Runway](https://huggingface.co/runwayml), and [Stability AI](https://huggingface.co/stabilityai) Hub organizations. Explore these organizations to find the best checkpoint for your use-case!
 
 The table below summarizes the available Stable Diffusion pipelines, their supported tasks, and an interactive demo:
 
@@ -41,7 +41,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         <tbody class="divide-y divide-gray-200">
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./text2img">StableDiffusion</a>
+            <a href="./text2img">StableVictor</a>
             </td>
             <td class="px-4 py-2 text-gray-700">text-to-image</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/stabilityai/stable-diffusion"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -49,7 +49,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./img2img">StableDiffusionImg2Img</a>
+            <a href="./img2img">StableVictorImg2Img</a>
             </td>
             <td class="px-4 py-2 text-gray-700">image-to-image</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/huggingface/diffuse-the-rest"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -57,7 +57,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./inpaint">StableDiffusionInpaint</a>
+            <a href="./inpaint">StableVictorInpaint</a>
             </td>
             <td class="px-4 py-2 text-gray-700">inpainting</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/runwayml/stable-diffusion-inpainting"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -65,7 +65,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./depth2img">StableDiffusionDepth2Img</a>
+            <a href="./depth2img">StableVictorDepth2Img</a>
             </td>
             <td class="px-4 py-2 text-gray-700">depth-to-image</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/radames/stable-diffusion-depth2img"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -73,7 +73,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./image_variation">StableDiffusionImageVariation</a>
+            <a href="./image_variation">StableVictorImageVariation</a>
             </td>
             <td class="px-4 py-2 text-gray-700">image variation</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/lambdalabs/stable-diffusion-image-variations"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -81,7 +81,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./stable_diffusion_safe">StableDiffusionPipelineSafe</a>
+            <a href="./stable_diffusion_safe">StableVictorPipelineSafe</a>
             </td>
             <td class="px-4 py-2 text-gray-700">filtered text-to-image</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/AIML-TUDA/unsafe-vs-safe-stable-diffusion"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -89,7 +89,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./stable_diffusion_2">StableDiffusion2</a>
+            <a href="./stable_diffusion_2">StableVictor2</a>
             </td>
             <td class="px-4 py-2 text-gray-700">text-to-image, inpainting, depth-to-image, super-resolution</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/stabilityai/stable-diffusion"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -97,7 +97,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./stable_diffusion_xl">StableDiffusionXL</a>
+            <a href="./stable_diffusion_xl">StableVictorXL</a>
             </td>
             <td class="px-4 py-2 text-gray-700">text-to-image, image-to-image</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/RamAnanth1/stable-diffusion-xl"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -105,7 +105,7 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./latent_upscale">StableDiffusionLatentUpscale</a>
+            <a href="./latent_upscale">StableVictorLatentUpscale</a>
             </td>
             <td class="px-4 py-2 text-gray-700">super-resolution</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/huggingface-projects/stable-diffusion-latent-upscaler"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -113,13 +113,13 @@ The table below summarizes the available Stable Diffusion pipelines, their suppo
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./upscale">StableDiffusionUpscale</a>
+            <a href="./upscale">StableVictorUpscale</a>
             </td>
             <td class="px-4 py-2 text-gray-700">super-resolution</td>
         </tr>
         <tr>
             <td class="px-4 py-2 text-gray-700">
-            <a href="./ldm3d_diffusion">StableDiffusionLDM3D</a>
+            <a href="./ldm3d_diffusion">StableVictorLDM3D</a>
             </td>
             <td class="px-4 py-2 text-gray-700">text-to-rgb, text-to-depth</td>
             <td class="px-4 py-2"><a href="https://huggingface.co/spaces/r23/ldm3d-space"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue"/></a>
@@ -136,17 +136,17 @@ To help you get the most out of the Stable Diffusion pipelines, here are a few t
 
 ### Explore tradeoff between speed and quality
 
-[`StableDiffusionPipeline`] uses the [`PNDMScheduler`] by default, but 🤗 Diffusers provides many other schedulers (some of which are faster or output better quality) that are compatible. For example, if you want to use the [`EulerDiscreteScheduler`] instead of the default:
+[`StableVictorPipeline`] uses the [`PNDMScheduler`] by default, but 🤗 Diffusers provides many other schedulers (some of which are faster or output better quality) that are compatible. For example, if you want to use the [`EulerDiscreteScheduler`] instead of the default:
 
 ```py
-from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
+from VictorAI import StableVictorPipeline, EulerDiscreteScheduler
 
-pipeline = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+pipeline = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
 pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config)
 
 # or
 euler_scheduler = EulerDiscreteScheduler.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="scheduler")
-pipeline = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", scheduler=euler_scheduler)
+pipeline = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", scheduler=euler_scheduler)
 ```
 
 ### Reuse pipeline components to save memory
@@ -154,15 +154,15 @@ pipeline = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-
 To save memory and use the same components across multiple pipelines, use the `.components` method to avoid loading weights into RAM more than once.
 
 ```py
-from diffusers import (
-    StableDiffusionPipeline,
-    StableDiffusionImg2ImgPipeline,
-    StableDiffusionInpaintPipeline,
+from VictorAI import (
+    StableVictorPipeline,
+    StableVictorImg2ImgPipeline,
+    StableVictorInpaintPipeline,
 )
 
-text2img = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
-img2img = StableDiffusionImg2ImgPipeline(**text2img.components)
-inpaint = StableDiffusionInpaintPipeline(**text2img.components)
+text2img = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+img2img = StableVictorImg2ImgPipeline(**text2img.components)
+inpaint = StableVictorInpaintPipeline(**text2img.components)
 
 # now you can use text2img(...), img2img(...), inpaint(...) just like the call methods of each respective pipeline
 ```

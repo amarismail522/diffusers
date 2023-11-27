@@ -22,9 +22,9 @@ Make sure to check out the Stable Diffusion [Tips](./overview#tips) section to l
 
 </Tip>
 
-## StableDiffusionImageVariationPipeline
+## StableVictorImageVariationPipeline
 
-[[autodoc]] StableDiffusionImageVariationPipeline
+[[autodoc]] StableVictorImageVariationPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -32,6 +32,6 @@ Make sure to check out the Stable Diffusion [Tips](./overview#tips) section to l
 	- enable_xformers_memory_efficient_attention
 	- disable_xformers_memory_efficient_attention
 
-## StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

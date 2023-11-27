@@ -22,8 +22,8 @@ With 🤗 Diffusers, here is how you can do inpainting:
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "kandinsky-community/kandinsky-2-2-decoder-inpaint", torch_dtype=torch.float16
@@ -35,7 +35,7 @@ pipeline.enable_xformers_memory_efficient_attention()
 
 <Tip>
 
-You'll notice throughout the guide, we use [`~DiffusionPipeline.enable_model_cpu_offload`] and [`~DiffusionPipeline.enable_xformers_memory_efficient_attention`], to save memory and increase inference speed. If you're using PyTorch 2.0, it's not necessary to call [`~DiffusionPipeline.enable_xformers_memory_efficient_attention`] on your pipeline because it'll already be using PyTorch 2.0's native [scaled-dot product attention](../optimization/torch2.0#scaled-dot-product-attention).
+You'll notice throughout the guide, we use [`~VictorPipeline.enable_model_cpu_offload`] and [`~VictorPipeline.enable_xformers_memory_efficient_attention`], to save memory and increase inference speed. If you're using PyTorch 2.0, it's not necessary to call [`~VictorPipeline.enable_xformers_memory_efficient_attention`] on your pipeline because it'll already be using PyTorch 2.0's native [scaled-dot product attention](../optimization/torch2.0#scaled-dot-product-attention).
 
 </Tip>
 
@@ -93,8 +93,8 @@ Stable Diffusion Inpainting is a latent diffusion model finetuned on 512x512 ima
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16, variant="fp16"
@@ -119,8 +119,8 @@ SDXL is a larger and more powerful version of Stable Diffusion v1.5. This model 
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "diffusers/stable-diffusion-xl-1.0-inpainting-0.1", torch_dtype=torch.float16, variant="fp16"
@@ -145,8 +145,8 @@ The Kandinsky model family is similar to SDXL because it uses two models as well
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "kandinsky-community/kandinsky-2-2-decoder-inpaint", torch_dtype=torch.float16
@@ -195,8 +195,8 @@ The image on the left is generated from a regular checkpoint, and the image on t
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, variant="fp16"
@@ -220,8 +220,8 @@ make_image_grid([init_image, image], rows=1, cols=2)
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16, variant="fp16"
@@ -261,8 +261,8 @@ However, for more basic tasks like erasing an object from an image (like the roc
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, variant="fp16"
@@ -284,8 +284,8 @@ make_image_grid([init_image, image], rows=1, cols=2)
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16, variant="fp16"
@@ -325,8 +325,8 @@ import PIL
 import numpy as np
 import torch
 
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 device = "cuda"
 pipeline = AutoPipelineForInpainting.from_pretrained(
@@ -374,8 +374,8 @@ Image features - like quality and "creativity" - are dependent on pipeline param
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16, variant="fp16"
@@ -419,8 +419,8 @@ You can use `strength` and `guidance_scale` together for more control over how e
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16, variant="fp16"
@@ -459,8 +459,8 @@ A negative prompt assumes the opposite role of a prompt; it guides the model awa
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16, variant="fp16"
@@ -498,8 +498,8 @@ Start with the text-to-image pipeline to create a castle:
 
 ```py
 import torch
-from diffusers import AutoPipelineForText2Image, AutoPipelineForInpainting
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForText2Image, AutoPipelineForInpainting
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForText2Image.from_pretrained(
     "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
@@ -551,8 +551,8 @@ Begin by inpainting an image:
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting, AutoPipelineForImage2Image
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import AutoPipelineForInpainting, AutoPipelineForImage2Image
+from VictorAI.utils import load_image, make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16, variant="fp16"
@@ -631,8 +631,8 @@ Once you've generated the embeddings, pass them to the `prompt_embeds` (and `neg
 
 ```py
 import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import make_image_grid
+from VictorAI import AutoPipelineForInpainting
+from VictorAI.utils import make_image_grid
 
 pipeline = AutoPipelineForInpainting.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16,
@@ -658,14 +658,14 @@ For example, let's condition an image with a ControlNet pretrained on inpaint im
 ```py
 import torch
 import numpy as np
-from diffusers import ControlNetModel, StableDiffusionControlNetInpaintPipeline
-from diffusers.utils import load_image, make_image_grid
+from VictorAI import ControlNetModel, StableVictorControlNetInpaintPipeline
+from VictorAI.utils import load_image, make_image_grid
 
 # load ControlNet
 controlnet = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_inpaint", torch_dtype=torch.float16, variant="fp16")
 
 # pass ControlNet to the pipeline
-pipeline = StableDiffusionControlNetInpaintPipeline.from_pretrained(
+pipeline = StableVictorControlNetInpaintPipeline.from_pretrained(
     "runwayml/stable-diffusion-inpainting", controlnet=controlnet, torch_dtype=torch.float16, variant="fp16"
 )
 pipeline.enable_model_cpu_offload()
@@ -701,7 +701,7 @@ make_image_grid([init_image, mask_image, PIL.Image.fromarray(np.uint8(control_im
 You can take this a step further and chain it with an image-to-image pipeline to apply a new [style](https://huggingface.co/nitrosocke/elden-ring-diffusion):
 
 ```py
-from diffusers import AutoPipelineForImage2Image
+from VictorAI import AutoPipelineForImage2Image
 
 pipeline = AutoPipelineForImage2Image.from_pretrained(
     "nitrosocke/elden-ring-diffusion", torch_dtype=torch.float16,

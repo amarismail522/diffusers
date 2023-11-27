@@ -22,9 +22,9 @@ import torch
 from PIL import Image
 from transformers import XLMRobertaTokenizerFast
 
-from diffusers import DDIMScheduler, KandinskyInpaintPipeline, KandinskyPriorPipeline, UNet2DConditionModel, VQModel
-from diffusers.pipelines.kandinsky.text_encoder import MCLIPConfig, MultilingualCLIP
-from diffusers.utils.testing_utils import (
+from VictorAI import DDIMScheduler, KandinskyInpaintPipeline, KandinskyPriorPipeline, UNet2DConditionModel, VQModel
+from VictorAI.pipelines.kandinsky.text_encoder import MCLIPConfig, MultilingualCLIP
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,

@@ -14,7 +14,7 @@ from transformers import (
     GPT2Tokenizer,
 )
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DPMSolverMultistepScheduler,
     UniDiffuserModel,
@@ -33,7 +33,7 @@ SCHEDULER_CONFIG = Namespace(
 )
 
 
-# Copied from diffusers.pipelines.stable_diffusion.convert_from_ckpt.shave_segments
+# Copied from VictorAI.pipelines.stable_diffusion.convert_from_ckpt.shave_segments
 def shave_segments(path, n_shave_prefix_segments=1):
     """
     Removes segments. Positive values shave the first segments, negative shave the last segments.
@@ -44,7 +44,7 @@ def shave_segments(path, n_shave_prefix_segments=1):
         return ".".join(path.split(".")[:n_shave_prefix_segments])
 
 
-# Copied from diffusers.pipelines.stable_diffusion.convert_from_ckpt.renew_vae_resnet_paths
+# Copied from VictorAI.pipelines.stable_diffusion.convert_from_ckpt.renew_vae_resnet_paths
 def renew_vae_resnet_paths(old_list, n_shave_prefix_segments=0):
     """
     Updates paths inside resnets to the new naming scheme (local renaming)
@@ -61,7 +61,7 @@ def renew_vae_resnet_paths(old_list, n_shave_prefix_segments=0):
     return mapping
 
 
-# Copied from diffusers.pipelines.stable_diffusion.convert_from_ckpt.renew_vae_attention_paths
+# Copied from VictorAI.pipelines.stable_diffusion.convert_from_ckpt.renew_vae_attention_paths
 def renew_vae_attention_paths(old_list, n_shave_prefix_segments=0):
     """
     Updates paths inside attentions to the new naming scheme (local renaming)
@@ -92,7 +92,7 @@ def renew_vae_attention_paths(old_list, n_shave_prefix_segments=0):
     return mapping
 
 
-# Copied from diffusers.pipelines.stable_diffusion.convert_from_ckpt.conv_attn_to_linear
+# Copied from VictorAI.pipelines.stable_diffusion.convert_from_ckpt.conv_attn_to_linear
 def conv_attn_to_linear(checkpoint):
     keys = list(checkpoint.keys())
     attn_keys = ["query.weight", "key.weight", "value.weight"]
@@ -105,7 +105,7 @@ def conv_attn_to_linear(checkpoint):
                 checkpoint[key] = checkpoint[key][:, :, 0]
 
 
-# Modified from diffusers.pipelines.stable_diffusion.convert_from_ckpt.assign_to_checkpoint
+# Modified from VictorAI.pipelines.stable_diffusion.convert_from_ckpt.assign_to_checkpoint
 # config.num_head_channels => num_head_channels
 def assign_to_checkpoint(
     paths,

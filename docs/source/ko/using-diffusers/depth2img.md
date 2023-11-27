@@ -14,19 +14,19 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-[`StableDiffusionDepth2ImgPipeline`]을 사용하면 텍스트 프롬프트와 초기 이미지를 전달하여 새 이미지의 생성을 조절할 수 있습니다. 또한 이미지 구조를 보존하기 위해 `depth_map`을 전달할 수도 있습니다. `depth_map`이 제공되지 않으면 파이프라인은 통합된 [depth-estimation model](https://github.com/isl-org/MiDaS)을 통해 자동으로 깊이를 예측합니다.
+[`StableVictorDepth2ImgPipeline`]을 사용하면 텍스트 프롬프트와 초기 이미지를 전달하여 새 이미지의 생성을 조절할 수 있습니다. 또한 이미지 구조를 보존하기 위해 `depth_map`을 전달할 수도 있습니다. `depth_map`이 제공되지 않으면 파이프라인은 통합된 [depth-estimation model](https://github.com/isl-org/MiDaS)을 통해 자동으로 깊이를 예측합니다.
 
 
-먼저 [`StableDiffusionDepth2ImgPipeline`]의 인스턴스를 생성합니다:
+먼저 [`StableVictorDepth2ImgPipeline`]의 인스턴스를 생성합니다:
 
 ```python
 import torch
 import requests
 from PIL import Image
 
-from diffusers import StableDiffusionDepth2ImgPipeline
+from VictorAI import StableVictorDepth2ImgPipeline
 
-pipe = StableDiffusionDepth2ImgPipeline.from_pretrained(
+pipe = StableVictorDepth2ImgPipeline.from_pretrained(
     "stabilityai/stable-diffusion-2-depth",
     torch_dtype=torch.float16,
 ).to("cuda")

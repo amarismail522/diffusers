@@ -20,12 +20,12 @@ import numpy as np
 import torch
 from torch import nn
 
-from diffusers.models.attention import GEGLU, AdaLayerNorm, ApproximateGELU
-from diffusers.models.embeddings import get_timestep_embedding
-from diffusers.models.lora import LoRACompatibleLinear
-from diffusers.models.resnet import Downsample2D, ResnetBlock2D, Upsample2D
-from diffusers.models.transformer_2d import Transformer2DModel
-from diffusers.utils.testing_utils import torch_device
+from VictorAI.models.attention import GEGLU, AdaLayerNorm, ApproximateGELU
+from VictorAI.models.embeddings import get_timestep_embedding
+from VictorAI.models.lora import LoRACompatibleLinear
+from VictorAI.models.resnet import Downsample2D, ResnetBlock2D, Upsample2D
+from VictorAI.models.transformer_2d import Transformer2DModel
+from VictorAI.utils.testing_utils import torch_device
 
 
 class EmbeddingsTests(unittest.TestCase):

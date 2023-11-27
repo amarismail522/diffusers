@@ -28,17 +28,17 @@ If you look at the [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/run
 For more explicit control, you can optionally set `use_safetensors=True` (if `safetensors` is not installed, you'll get an error message asking you to install it):
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipeline = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
+pipeline = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", use_safetensors=True)
 ```
 
 However, model weights are not necessarily stored in separate subfolders like in the example above. Sometimes, all the weights are stored in a single `.safetensors` file. In this case, if the weights are Stable Diffusion weights, you can load the file directly with the [`~diffusers.loaders.FromSingleFileMixin.from_single_file`] method:
 
 ```py
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 
-pipeline = StableDiffusionPipeline.from_single_file(
+pipeline = StableVictorPipeline.from_single_file(
     "https://huggingface.co/WarriorMama777/OrangeMixs/blob/main/Models/AbyssOrangeMix/AbyssOrangeMix.safetensors"
 )
 ```
@@ -50,9 +50,9 @@ Not all weights on the Hub are available in the `.safetensors` format, and you m
 You can use the model with the new `.safetensors` weights by specifying the reference to the Pull Request in the `revision` parameter (you can also test it in this [Check PR](https://huggingface.co/spaces/diffusers/check_pr) Space on the Hub), for example `refs/pr/22`:
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipeline = DiffusionPipeline.from_pretrained(
+pipeline = VictorPipeline.from_pretrained(
     "stabilityai/stable-diffusion-2-1", revision="refs/pr/22", use_safetensors=True
 )
 ```
@@ -67,9 +67,9 @@ There are several reasons for using safetensors:
 	The time it takes to load the entire pipeline:
 
 	```py
- 	from diffusers import StableDiffusionPipeline
+ 	from VictorAI import StableVictorPipeline
 
- 	pipeline = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2-1", use_safetensors=True)
+ 	pipeline = StableVictorPipeline.from_pretrained("stabilityai/stable-diffusion-2-1", use_safetensors=True)
  	"Loaded in safetensors 0:00:02.033658"
  	"Loaded in PyTorch 0:00:02.663379"
 	```

@@ -19,9 +19,9 @@ import unittest
 
 import torch
 
-from diffusers import UNet2DModel
-from diffusers.utils import logging
-from diffusers.utils.testing_utils import (
+from VictorAI import UNet2DModel
+from VictorAI.utils import logging
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     slow,

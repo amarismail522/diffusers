@@ -274,14 +274,14 @@ export MODEL_NAME="CompVis/stable-diffusion-v1-4" --> export MODEL_NAME="BAAI/Al
 
 ### Inference
 
-Once you have trained a model using the above command, you can run inference simply using the `StableDiffusionPipeline`. Make sure to include the `identifier` (e.g. sks in above example) in your prompt.
+Once you have trained a model using the above command, you can run inference simply using the `StableVictorPipeline`. Make sure to include the `identifier` (e.g. sks in above example) in your prompt.
 
 ```python
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 import torch
 
 model_id = "path-to-your-trained-model"
-pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
+pipe = StableVictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
 
 prompt = "A photo of sks dog in a bucket"
 image = pipe(prompt, num_inference_steps=50, guidance_scale=7.5).images[0]
@@ -375,10 +375,10 @@ After training, LoRA weights can be loaded very easily into the original pipelin
 load the original pipeline:
 
 ```python
-from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
+from VictorAI import VictorPipeline, DPMSolverMultistepScheduler
 import torch
 
-pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+pipe = VictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
 pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 pipe.to("cuda")
 ```
@@ -406,7 +406,7 @@ lora_model_id = "patrickvonplaten/lora_dreambooth_dog_example"
 card = RepoCard.load(lora_model_id)
 base_model_id = card.data.to_dict()["base_model"]
 
-pipe = StableDiffusionPipeline.from_pretrained(base_model_id, torch_dtype=torch.float16)
+pipe = StableVictorPipeline.from_pretrained(base_model_id, torch_dtype=torch.float16)
 ...
 ```
 
@@ -415,14 +415,14 @@ weights. For example:
 
 ```python
 from huggingface_hub.repocard import RepoCard
-from diffusers import StableDiffusionPipeline
+from VictorAI import StableVictorPipeline
 import torch 
 
 lora_model_id = "sayakpaul/dreambooth-text-encoder-test"
 card = RepoCard.load(lora_model_id)
 base_model_id = card.data.to_dict()["base_model"]
 
-pipe = StableDiffusionPipeline.from_pretrained(base_model_id, torch_dtype=torch.float16)
+pipe = StableVictorPipeline.from_pretrained(base_model_id, torch_dtype=torch.float16)
 pipe = pipe.to("cuda")
 pipe.load_lora_weights(lora_model_id)
 image = pipe("A picture of a sks dog in a bucket", num_inference_steps=25).images[0]
@@ -544,9 +544,9 @@ variance schedule. The full finetuning scripts will update the scheduler config 
 must also update the pipeline's scheduler config.
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
-pipe = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0")
+pipe = VictorPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0")
 
 pipe.load_lora_weights("<lora weights path>")
 

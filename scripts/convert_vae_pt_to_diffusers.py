@@ -5,8 +5,8 @@ import requests
 import torch
 from omegaconf import OmegaConf
 
-from diffusers import AutoencoderKL
-from diffusers.pipelines.stable_diffusion.convert_from_ckpt import (
+from VictorAI import AutoencoderKL
+from VictorAI.pipelines.stable_diffusion.convert_from_ckpt import (
     assign_to_checkpoint,
     conv_attn_to_linear,
     create_vae_diffusers_config,

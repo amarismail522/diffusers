@@ -25,7 +25,7 @@ import torch
 from huggingface_hub import hf_hub_download
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDIMScheduler,
     DPMSolverMultistepScheduler,
@@ -34,12 +34,12 @@ from diffusers import (
     LCMScheduler,
     LMSDiscreteScheduler,
     PNDMScheduler,
-    StableDiffusionPipeline,
+    StableVictorPipeline,
     UNet2DConditionModel,
     logging,
 )
-from diffusers.models.attention_processor import AttnProcessor
-from diffusers.utils.testing_utils import (
+from VictorAI.models.attention_processor import AttnProcessor
+from VictorAI.utils.testing_utils import (
     CaptureLogger,
     enable_full_determinism,
     load_image,
@@ -75,7 +75,7 @@ def _test_stable_diffusion_compile(in_queue, out_queue, timeout):
         seed = inputs.pop("seed")
         inputs["generator"] = torch.Generator(device=torch_device).manual_seed(seed)
 
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         sd_pipe.scheduler = DDIMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
 
@@ -99,10 +99,10 @@ def _test_stable_diffusion_compile(in_queue, out_queue, timeout):
     out_queue.join()
 
 
-class StableDiffusionPipelineFastTests(
+class StableVictorPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionPipeline
+    pipeline_class = StableVictorPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -184,7 +184,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -203,7 +203,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components(time_cond_proj_dim=256)
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -221,7 +221,7 @@ class StableDiffusionPipelineFastTests(
 
     def test_stable_diffusion_prompt_embeds(self):
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -257,7 +257,7 @@ class StableDiffusionPipelineFastTests(
 
     def test_stable_diffusion_negative_prompt_embeds(self):
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -297,7 +297,7 @@ class StableDiffusionPipelineFastTests(
 
     def test_stable_diffusion_prompt_embeds_with_plain_negative_prompt_list(self):
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -338,7 +338,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -356,7 +356,7 @@ class StableDiffusionPipelineFastTests(
     def test_stable_diffusion_pndm(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe.scheduler = PNDMScheduler(skip_prk_steps=True)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -372,10 +372,10 @@ class StableDiffusionPipelineFastTests(
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_stable_diffusion_no_safety_checker(self):
-        pipe = StableDiffusionPipeline.from_pretrained(
+        pipe = StableVictorPipeline.from_pretrained(
             "hf-internal-testing/tiny-stable-diffusion-lms-pipe", safety_checker=None
         )
-        assert isinstance(pipe, StableDiffusionPipeline)
+        assert isinstance(pipe, StableVictorPipeline)
         assert isinstance(pipe.scheduler, LMSDiscreteScheduler)
         assert pipe.safety_checker is None
 
@@ -385,7 +385,7 @@ class StableDiffusionPipelineFastTests(
         # check that there's no error when saving a pipeline with one of the models being None
         with tempfile.TemporaryDirectory() as tmpdirname:
             pipe.save_pretrained(tmpdirname)
-            pipe = StableDiffusionPipeline.from_pretrained(tmpdirname)
+            pipe = StableVictorPipeline.from_pretrained(tmpdirname)
 
         # sanity check that the pipeline still works
         assert pipe.safety_checker is None
@@ -396,7 +396,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe.scheduler = LMSDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -415,7 +415,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -434,7 +434,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
 
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe.scheduler = EulerDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -453,7 +453,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
         components["scheduler"] = LMSDiscreteScheduler.from_config(components["scheduler"].config)
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -478,7 +478,7 @@ class StableDiffusionPipelineFastTests(
 
         # make sure here that pndm scheduler skips prk
         components["safety_checker"] = None
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -505,7 +505,7 @@ class StableDiffusionPipelineFastTests(
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
         components["scheduler"] = PNDMScheduler(skip_prk_steps=True)
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -524,7 +524,7 @@ class StableDiffusionPipelineFastTests(
     def test_stable_diffusion_long_prompt(self):
         components = self.get_dummy_components()
         components["scheduler"] = LMSDiscreteScheduler.from_config(components["scheduler"].config)
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -570,7 +570,7 @@ class StableDiffusionPipelineFastTests(
     def test_stable_diffusion_height_width_opt(self):
         components = self.get_dummy_components()
         components["scheduler"] = LMSDiscreteScheduler.from_config(components["scheduler"].config)
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -599,7 +599,7 @@ class StableDiffusionPipelineFastTests(
 
     def test_freeu_enabled(self):
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -615,7 +615,7 @@ class StableDiffusionPipelineFastTests(
 
     def test_freeu_disabled(self):
         components = self.get_dummy_components()
-        sd_pipe = StableDiffusionPipeline(**components)
+        sd_pipe = StableVictorPipeline(**components)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -641,7 +641,7 @@ class StableDiffusionPipelineFastTests(
 
 @slow
 @require_torch_gpu
-class StableDiffusionPipelineSlowTests(unittest.TestCase):
+class StableVictorPipelineSlowTests(unittest.TestCase):
     def setUp(self):
         gc.collect()
         torch.cuda.empty_cache()
@@ -661,7 +661,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_1_1_pndm(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-1")
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-1")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -674,7 +674,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert np.abs(image_slice - expected_slice).max() < 3e-3
 
     def test_stable_diffusion_v1_4_with_freeu(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
         inputs = self.get_inputs(torch_device)
@@ -688,7 +688,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_stable_diffusion_1_4_pndm(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -701,7 +701,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert np.abs(image_slice - expected_slice).max() < 3e-3
 
     def test_stable_diffusion_ddim(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         sd_pipe.scheduler = DDIMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -715,7 +715,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert np.abs(image_slice - expected_slice).max() < 1e-4
 
     def test_stable_diffusion_lms(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         sd_pipe.scheduler = LMSDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -729,7 +729,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert np.abs(image_slice - expected_slice).max() < 3e-3
 
     def test_stable_diffusion_dpm(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", safety_checker=None)
         sd_pipe.scheduler = DPMSolverMultistepScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -744,7 +744,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
 
     def test_stable_diffusion_attention_slicing(self):
         torch.cuda.reset_peak_memory_stats()
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
         pipe.unet.set_default_attn_processor()
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -773,7 +773,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
 
     def test_stable_diffusion_vae_slicing(self):
         torch.cuda.reset_peak_memory_stats()
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -807,7 +807,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
     def test_stable_diffusion_vae_tiling(self):
         torch.cuda.reset_peak_memory_stats()
         model_id = "CompVis/stable-diffusion-v1-4"
-        pipe = StableDiffusionPipeline.from_pretrained(
+        pipe = StableVictorPipeline.from_pretrained(
             model_id, revision="fp16", torch_dtype=torch.float16, safety_checker=None
         )
         pipe.set_progress_bar_config(disable=None)
@@ -855,7 +855,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
     def test_stable_diffusion_fp16_vs_autocast(self):
         # this test makes sure that the original model with autocast
         # and the new model with fp16 yield the same result
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -900,7 +900,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
 
         callback_fn.has_been_called = False
 
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing()
@@ -914,12 +914,12 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         pipeline_id = "CompVis/stable-diffusion-v1-4"
 
         start_time = time.time()
-        pipeline_low_cpu_mem_usage = StableDiffusionPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16)
+        pipeline_low_cpu_mem_usage = StableVictorPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16)
         pipeline_low_cpu_mem_usage.to(torch_device)
         low_cpu_mem_usage_time = time.time() - start_time
 
         start_time = time.time()
-        _ = StableDiffusionPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16, low_cpu_mem_usage=False)
+        _ = StableVictorPipeline.from_pretrained(pipeline_id, torch_dtype=torch.float16, low_cpu_mem_usage=False)
         normal_load_time = time.time() - start_time
 
         assert 2 * low_cpu_mem_usage_time < normal_load_time
@@ -929,7 +929,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         torch.cuda.reset_max_memory_allocated()
         torch.cuda.reset_peak_memory_stats()
 
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
         pipe = pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
         pipe.enable_attention_slicing(1)
@@ -951,7 +951,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
 
         # Normal inference
 
-        pipe = StableDiffusionPipeline.from_pretrained(
+        pipe = StableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             torch_dtype=torch.float16,
         )
@@ -964,7 +964,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         # With model offloading
 
         # Reload but don't move to cuda
-        pipe = StableDiffusionPipeline.from_pretrained(
+        pipe = StableVictorPipeline.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             torch_dtype=torch.float16,
         )
@@ -1004,7 +1004,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert mem_bytes_slicing < 3 * 10**9
 
     def test_stable_diffusion_textual_inversion(self):
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         pipe.load_textual_inversion("sd-concepts-library/low-poly-hd-logos-icons")
 
         a111_file = hf_hub_download("hf-internal-testing/text_inv_embedding_a1111_format", "winter_style.pt")
@@ -1029,7 +1029,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert max_diff < 8e-1
 
     def test_stable_diffusion_textual_inversion_with_model_cpu_offload(self):
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         pipe.enable_model_cpu_offload()
         pipe.load_textual_inversion("sd-concepts-library/low-poly-hd-logos-icons")
 
@@ -1054,7 +1054,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
         assert max_diff < 8e-1
 
     def test_stable_diffusion_textual_inversion_with_sequential_cpu_offload(self):
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
         pipe.enable_sequential_cpu_offload()
         pipe.load_textual_inversion("sd-concepts-library/low-poly-hd-logos-icons")
 
@@ -1091,7 +1091,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
 
     def test_stable_diffusion_lcm(self):
         unet = UNet2DConditionModel.from_pretrained("SimianLuo/LCM_Dreamshaper_v7", subfolder="unet")
-        sd_pipe = StableDiffusionPipeline.from_pretrained("Lykon/dreamshaper-7", unet=unet).to(torch_device)
+        sd_pipe = StableVictorPipeline.from_pretrained("Lykon/dreamshaper-7", unet=unet).to(torch_device)
         sd_pipe.scheduler = LCMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -1115,7 +1115,7 @@ class StableDiffusionPipelineSlowTests(unittest.TestCase):
 
 @slow
 @require_torch_gpu
-class StableDiffusionPipelineCkptTests(unittest.TestCase):
+class StableVictorPipelineCkptTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -1128,7 +1128,7 @@ class StableDiffusionPipelineCkptTests(unittest.TestCase):
         ]
 
         for ckpt_path in ckpt_paths:
-            pipe = StableDiffusionPipeline.from_single_file(ckpt_path, torch_dtype=torch.float16)
+            pipe = StableVictorPipeline.from_single_file(ckpt_path, torch_dtype=torch.float16)
             pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
             pipe.to("cuda")
 
@@ -1139,7 +1139,7 @@ class StableDiffusionPipelineCkptTests(unittest.TestCase):
     def test_download_local(self):
         filename = hf_hub_download("runwayml/stable-diffusion-v1-5", filename="v1-5-pruned-emaonly.ckpt")
 
-        pipe = StableDiffusionPipeline.from_single_file(filename, torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_single_file(filename, torch_dtype=torch.float16)
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.to("cuda")
 
@@ -1150,7 +1150,7 @@ class StableDiffusionPipelineCkptTests(unittest.TestCase):
     def test_download_ckpt_diff_format_is_same(self):
         ckpt_path = "https://huggingface.co/runwayml/stable-diffusion-v1-5/blob/main/v1-5-pruned-emaonly.ckpt"
 
-        pipe = StableDiffusionPipeline.from_single_file(ckpt_path)
+        pipe = StableVictorPipeline.from_single_file(ckpt_path)
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.unet.set_attn_processor(AttnProcessor())
         pipe.to("cuda")
@@ -1158,7 +1158,7 @@ class StableDiffusionPipelineCkptTests(unittest.TestCase):
         generator = torch.Generator(device="cpu").manual_seed(0)
         image_ckpt = pipe("a turtle", num_inference_steps=2, generator=generator, output_type="np").images[0]
 
-        pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.unet.set_attn_processor(AttnProcessor())
         pipe.to("cuda")
@@ -1173,7 +1173,7 @@ class StableDiffusionPipelineCkptTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class StableDiffusionPipelineNightlyTests(unittest.TestCase):
+class StableVictorPipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -1194,7 +1194,7 @@ class StableDiffusionPipelineNightlyTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_1_4_pndm(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
         inputs = self.get_inputs(torch_device)
@@ -1208,7 +1208,7 @@ class StableDiffusionPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_stable_diffusion_1_5_pndm(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5").to(torch_device)
+        sd_pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5").to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 
         inputs = self.get_inputs(torch_device)
@@ -1222,7 +1222,7 @@ class StableDiffusionPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_stable_diffusion_ddim(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
         sd_pipe.scheduler = DDIMScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -1237,7 +1237,7 @@ class StableDiffusionPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 3e-3
 
     def test_stable_diffusion_lms(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
         sd_pipe.scheduler = LMSDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.set_progress_bar_config(disable=None)
 
@@ -1252,7 +1252,7 @@ class StableDiffusionPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_stable_diffusion_euler(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
+        sd_pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4").to(torch_device)
         sd_pipe.scheduler = EulerDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe.set_progress_bar_config(disable=None)
 

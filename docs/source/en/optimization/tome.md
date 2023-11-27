@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 # Token merging
 
-[Token merging](https://huggingface.co/papers/2303.17604) (ToMe) merges redundant tokens/patches progressively in the forward pass of a Transformer-based network which can speed-up the inference latency of [`StableDiffusionPipeline`].
+[Token merging](https://huggingface.co/papers/2303.17604) (ToMe) merges redundant tokens/patches progressively in the forward pass of a Transformer-based network which can speed-up the inference latency of [`StableVictorPipeline`].
 
 Install ToMe from `pip`:
 
@@ -23,11 +23,11 @@ pip install tomesd
 You can use ToMe from the [`tomesd`](https://github.com/dbolya/tomesd) library with the [`apply_patch`](https://github.com/dbolya/tomesd?tab=readme-ov-file#usage) function:
 
 ```diff
-  from diffusers import StableDiffusionPipeline
+  from VictorAI import StableVictorPipeline
   import torch
   import tomesd
 
-  pipeline = StableDiffusionPipeline.from_pretrained(
+  pipeline = StableVictorPipeline.from_pretrained(
         "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16, use_safetensors=True,
   ).to("cuda")
 + tomesd.apply_patch(pipeline, ratio=0.5)
@@ -39,7 +39,7 @@ The `apply_patch` function exposes a number of [arguments](https://github.com/db
 
 As reported in the [paper](https://huggingface.co/papers/2303.17604), ToMe can greatly preserve the quality of the generated images while boosting inference speed. By increasing the `ratio`, you can speed-up inference even further, but at the cost of some degraded image quality.
 
-To test the quality of the generated images, we sampled a few prompts from [Parti Prompts](https://parti.research.google/) and performed inference with the [`StableDiffusionPipeline`] with the following settings:
+To test the quality of the generated images, we sampled a few prompts from [Parti Prompts](https://parti.research.google/) and performed inference with the [`StableVictorPipeline`] with the following settings:
 
 <div class="flex justify-center">
       <img src="https://huggingface.co/datasets/diffusers/docs-images/resolve/main/tome/tome_samples.png">
@@ -49,7 +49,7 @@ We didn’t notice any significant decrease in the quality of the generated samp
 
 ## Benchmarks
 
-We also benchmarked the impact of `tomesd` on the [`StableDiffusionPipeline`] with [xFormers](https://huggingface.co/docs/diffusers/optimization/xformers) enabled across several image resolutions. The results are obtained from A100 and V100 GPUs in the following development environment:
+We also benchmarked the impact of `tomesd` on the [`StableVictorPipeline`] with [xFormers](https://huggingface.co/docs/diffusers/optimization/xformers) enabled across several image resolutions. The results are obtained from A100 and V100 GPUs in the following development environment:
 
 ```bash
 - `diffusers` version: 0.15.1

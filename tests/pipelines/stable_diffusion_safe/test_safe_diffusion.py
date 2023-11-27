@@ -22,12 +22,12 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
-from diffusers import AutoencoderKL, DDIMScheduler, LMSDiscreteScheduler, PNDMScheduler, UNet2DConditionModel
-from diffusers.pipelines.stable_diffusion_safe import StableDiffusionPipelineSafe as StableDiffusionPipeline
-from diffusers.utils.testing_utils import floats_tensor, nightly, require_torch_gpu, torch_device
+from VictorAI import AutoencoderKL, DDIMScheduler, LMSDiscreteScheduler, PNDMScheduler, UNet2DConditionModel
+from VictorAI.pipelines.stable_diffusion_safe import StableVictorPipelineSafe as StableVictorPipeline
+from VictorAI.utils.testing_utils import floats_tensor, nightly, require_torch_gpu, torch_device
 
 
-class SafeDiffusionPipelineFastTests(unittest.TestCase):
+class SafeVictorPipelineFastTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -118,7 +118,7 @@ class SafeDiffusionPipelineFastTests(unittest.TestCase):
         tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionPipeline(
+        sd_pipe = StableVictorPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -164,7 +164,7 @@ class SafeDiffusionPipelineFastTests(unittest.TestCase):
         tokenizer = CLIPTokenizer.from_pretrained("hf-internal-testing/tiny-random-clip")
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionPipeline(
+        sd_pipe = StableVictorPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -202,10 +202,10 @@ class SafeDiffusionPipelineFastTests(unittest.TestCase):
         assert np.abs(image_from_tuple_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_stable_diffusion_no_safety_checker(self):
-        pipe = StableDiffusionPipeline.from_pretrained(
+        pipe = StableVictorPipeline.from_pretrained(
             "hf-internal-testing/tiny-stable-diffusion-lms-pipe", safety_checker=None
         )
-        assert isinstance(pipe, StableDiffusionPipeline)
+        assert isinstance(pipe, StableVictorPipeline)
         assert isinstance(pipe.scheduler, LMSDiscreteScheduler)
         assert pipe.safety_checker is None
 
@@ -215,7 +215,7 @@ class SafeDiffusionPipelineFastTests(unittest.TestCase):
         # check that there's no error when saving a pipeline with one of the models being None
         with tempfile.TemporaryDirectory() as tmpdirname:
             pipe.save_pretrained(tmpdirname)
-            pipe = StableDiffusionPipeline.from_pretrained(tmpdirname)
+            pipe = StableVictorPipeline.from_pretrained(tmpdirname)
 
         # sanity check that the pipeline still works
         assert pipe.safety_checker is None
@@ -237,7 +237,7 @@ class SafeDiffusionPipelineFastTests(unittest.TestCase):
         bert = bert.half()
 
         # make sure here that pndm scheduler skips prk
-        sd_pipe = StableDiffusionPipeline(
+        sd_pipe = StableVictorPipeline(
             unet=unet,
             scheduler=scheduler,
             vae=vae,
@@ -257,7 +257,7 @@ class SafeDiffusionPipelineFastTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class SafeDiffusionPipelineIntegrationTests(unittest.TestCase):
+class SafeVictorPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -265,7 +265,7 @@ class SafeDiffusionPipelineIntegrationTests(unittest.TestCase):
         torch.cuda.empty_cache()
 
     def test_harm_safe_stable_diffusion(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", safety_checker=None)
+        sd_pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", safety_checker=None)
         sd_pipe.scheduler = LMSDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -326,7 +326,7 @@ class SafeDiffusionPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_nudity_safe_stable_diffusion(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", safety_checker=None)
+        sd_pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", safety_checker=None)
         sd_pipe.scheduler = LMSDiscreteScheduler.from_config(sd_pipe.scheduler.config)
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
@@ -380,7 +380,7 @@ class SafeDiffusionPipelineIntegrationTests(unittest.TestCase):
         assert np.abs(image_slice.flatten() - expected_slice).max() < 1e-2
 
     def test_nudity_safetychecker_safe_stable_diffusion(self):
-        sd_pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+        sd_pipe = StableVictorPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
         sd_pipe = sd_pipe.to(torch_device)
         sd_pipe.set_progress_bar_config(disable=None)
 

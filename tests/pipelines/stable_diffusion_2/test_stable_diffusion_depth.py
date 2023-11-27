@@ -30,17 +30,17 @@ from transformers import (
     DPTForDepthEstimation,
 )
 
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     DDIMScheduler,
     DPMSolverMultistepScheduler,
     LMSDiscreteScheduler,
     PNDMScheduler,
-    StableDiffusionDepth2ImgPipeline,
+    StableVictorDepth2ImgPipeline,
     UNet2DConditionModel,
 )
-from diffusers.utils import is_accelerate_available, is_accelerate_version
-from diffusers.utils.testing_utils import (
+from VictorAI.utils import is_accelerate_available, is_accelerate_version
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -66,10 +66,10 @@ enable_full_determinism()
 
 
 @skip_mps
-class StableDiffusionDepth2ImgPipelineFastTests(
+class StableVictorDepth2ImgPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionDepth2ImgPipeline
+    pipeline_class = StableVictorDepth2ImgPipeline
     test_save_load_optional_components = False
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {"height", "width"}
     required_optional_params = PipelineTesterMixin.required_optional_params - {"latents"}
@@ -289,7 +289,7 @@ class StableDiffusionDepth2ImgPipelineFastTests(
     def test_stable_diffusion_depth2img_default_case(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        pipe = StableDiffusionDepth2ImgPipeline(**components)
+        pipe = StableVictorDepth2ImgPipeline(**components)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -308,7 +308,7 @@ class StableDiffusionDepth2ImgPipelineFastTests(
     def test_stable_diffusion_depth2img_negative_prompt(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        pipe = StableDiffusionDepth2ImgPipeline(**components)
+        pipe = StableVictorDepth2ImgPipeline(**components)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -329,7 +329,7 @@ class StableDiffusionDepth2ImgPipelineFastTests(
     def test_stable_diffusion_depth2img_multiple_init_images(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        pipe = StableDiffusionDepth2ImgPipeline(**components)
+        pipe = StableVictorDepth2ImgPipeline(**components)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -351,7 +351,7 @@ class StableDiffusionDepth2ImgPipelineFastTests(
     def test_stable_diffusion_depth2img_pil(self):
         device = "cpu"  # ensure determinism for the device-dependent torch.Generator
         components = self.get_dummy_components()
-        pipe = StableDiffusionDepth2ImgPipeline(**components)
+        pipe = StableVictorDepth2ImgPipeline(**components)
         pipe = pipe.to(device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -377,7 +377,7 @@ class StableDiffusionDepth2ImgPipelineFastTests(
 
 @slow
 @require_torch_gpu
-class StableDiffusionDepth2ImgPipelineSlowTests(unittest.TestCase):
+class StableVictorDepth2ImgPipelineSlowTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -400,7 +400,7 @@ class StableDiffusionDepth2ImgPipelineSlowTests(unittest.TestCase):
         return inputs
 
     def test_stable_diffusion_depth2img_pipeline_default(self):
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained(
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-depth", safety_checker=None
         )
         pipe.to(torch_device)
@@ -417,7 +417,7 @@ class StableDiffusionDepth2ImgPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 6e-1
 
     def test_stable_diffusion_depth2img_pipeline_k_lms(self):
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained(
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-depth", safety_checker=None
         )
         pipe.unet.set_default_attn_processor()
@@ -436,7 +436,7 @@ class StableDiffusionDepth2ImgPipelineSlowTests(unittest.TestCase):
         assert np.abs(expected_slice - image_slice).max() < 8e-4
 
     def test_stable_diffusion_depth2img_pipeline_ddim(self):
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained(
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-depth", safety_checker=None
         )
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
@@ -481,7 +481,7 @@ class StableDiffusionDepth2ImgPipelineSlowTests(unittest.TestCase):
 
         callback_fn.has_been_called = False
 
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained(
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-depth", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -498,7 +498,7 @@ class StableDiffusionDepth2ImgPipelineSlowTests(unittest.TestCase):
         torch.cuda.reset_max_memory_allocated()
         torch.cuda.reset_peak_memory_stats()
 
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained(
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained(
             "stabilityai/stable-diffusion-2-depth", safety_checker=None, torch_dtype=torch.float16
         )
         pipe = pipe.to(torch_device)
@@ -516,7 +516,7 @@ class StableDiffusionDepth2ImgPipelineSlowTests(unittest.TestCase):
 
 @nightly
 @require_torch_gpu
-class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
+class StableVictorImg2ImgPipelineNightlyTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -539,7 +539,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         return inputs
 
     def test_depth2img_pndm(self):
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
 
@@ -554,7 +554,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_depth2img_ddim(self):
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
         pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -570,7 +570,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_img2img_lms(self):
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
         pipe.scheduler = LMSDiscreteScheduler.from_config(pipe.scheduler.config)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)
@@ -586,7 +586,7 @@ class StableDiffusionImg2ImgPipelineNightlyTests(unittest.TestCase):
         assert max_diff < 1e-3
 
     def test_img2img_dpm(self):
-        pipe = StableDiffusionDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
+        pipe = StableVictorDepth2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-2-depth")
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
         pipe.to(torch_device)
         pipe.set_progress_bar_config(disable=None)

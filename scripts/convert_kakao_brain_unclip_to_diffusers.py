@@ -5,10 +5,10 @@ import torch
 from accelerate import load_checkpoint_and_dispatch
 from transformers import CLIPTextModelWithProjection, CLIPTokenizer
 
-from diffusers import UnCLIPPipeline, UNet2DConditionModel, UNet2DModel
-from diffusers.models.prior_transformer import PriorTransformer
-from diffusers.pipelines.unclip.text_proj import UnCLIPTextProjModel
-from diffusers.schedulers.scheduling_unclip import UnCLIPScheduler
+from VictorAI import UnCLIPPipeline, UNet2DConditionModel, UNet2DModel
+from VictorAI.models.prior_transformer import PriorTransformer
+from VictorAI.pipelines.unclip.text_proj import UnCLIPTextProjModel
+from VictorAI.schedulers.scheduling_unclip import UnCLIPScheduler
 
 
 r"""

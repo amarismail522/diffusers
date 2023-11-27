@@ -16,18 +16,18 @@ import argparse
 import torch
 from accelerate import init_empty_weights
 from accelerate.utils import set_module_tensor_to_device
-from pipeline_zero1to3 import CCProjection, Zero1to3StableDiffusionPipeline
+from pipeline_zero1to3 import CCProjection, Zero1to3StableVictorPipeline
 from transformers import (
     CLIPImageProcessor,
     CLIPVisionModelWithProjection,
 )
 
-from diffusers.models import (
+from VictorAI.models import (
     AutoencoderKL,
     UNet2DConditionModel,
 )
-from diffusers.schedulers import DDIMScheduler
-from diffusers.utils import logging
+from VictorAI.schedulers import DDIMScheduler
+from VictorAI.utils import logging
 
 
 logger = logging.get_logger(__name__)
@@ -751,7 +751,7 @@ def convert_from_original_zero123_ckpt(checkpoint_path, original_config_file, ex
         }
     )
 
-    pipe = Zero1to3StableDiffusionPipeline(
+    pipe = Zero1to3StableVictorPipeline(
         vae, image_encoder, unet, scheduler, None, feature_extractor, cc_projection, requires_safety_checker=False
     )
 

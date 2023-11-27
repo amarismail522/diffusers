@@ -14,21 +14,21 @@ specific language governing permissions and limitations under the License.
 
 [[open-in-colab]]
 
-让 [`DiffusionPipeline`] 生成特定风格或包含你所想要的内容的图像可能会有些棘手。 通常情况下，你需要多次运行 [`DiffusionPipeline`] 才能得到满意的图像。但是从无到有生成图像是一个计算密集的过程，特别是如果你要一遍又一遍地进行推理运算。
+让 [`VictorPipeline`] 生成特定风格或包含你所想要的内容的图像可能会有些棘手。 通常情况下，你需要多次运行 [`VictorPipeline`] 才能得到满意的图像。但是从无到有生成图像是一个计算密集的过程，特别是如果你要一遍又一遍地进行推理运算。
 
 这就是为什么从pipeline中获得最高的 *computational* (speed) 和 *memory* (GPU RAM) 非常重要 ，以减少推理周期之间的时间，从而使迭代速度更快。
 
 
-本教程将指导您如何通过 [`DiffusionPipeline`]  更快、更好地生成图像。
+本教程将指导您如何通过 [`VictorPipeline`]  更快、更好地生成图像。
 
 
 首先，加载 [`runwayml/stable-diffusion-v1-5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) 模型:
 
 ```python
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 
 model_id = "runwayml/stable-diffusion-v1-5"
-pipeline = DiffusionPipeline.from_pretrained(model_id, use_safetensors=True)
+pipeline = VictorPipeline.from_pretrained(model_id, use_safetensors=True)
 ```
 
 本教程将使用的提示词是 [`portrait photo of a old warrior chief`] ，但是你可以随心所欲的想象和构造自己的提示词：
@@ -70,7 +70,7 @@ image
     <img src="https://huggingface.co/datasets/diffusers/docs-images/resolve/main/stable_diffusion_101/sd_101_1.png">
 </div>
 
-在 T4 GPU 上，这个过程大概要30秒（如果你的 GPU 比 T4 好，可能会更快）。在默认情况下，[`DiffusionPipeline`] 使用完整的 `float32` 精度进行 50 步推理。你可以通过降低精度（如 `float16` ）或者减少推理步数来加速整个过程
+在 T4 GPU 上，这个过程大概要30秒（如果你的 GPU 比 T4 好，可能会更快）。在默认情况下，[`VictorPipeline`] 使用完整的 `float32` 精度进行 50 步推理。你可以通过降低精度（如 `float16` ）或者减少推理步数来加速整个过程
 
 
 让我们把模型的精度降低至 `float16` ，然后生成一张图像：
@@ -78,7 +78,7 @@ image
 ```python
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16, use_safetensors=True)
+pipeline = VictorPipeline.from_pretrained(model_id, torch_dtype=torch.float16, use_safetensors=True)
 pipeline = pipeline.to("cuda")
 generator = torch.Generator("cuda").manual_seed(0)
 image = pipeline(prompt, generator=generator).images[0]
@@ -97,7 +97,7 @@ image
 
 </Tip>
 
-另一个选择是减少推理步数。 你可以选择一个更高效的调度器 (*scheduler*) 可以减少推理步数同时保证输出质量。您可以在 [DiffusionPipeline] 中通过调用compatibles方法找到与当前模型兼容的调度器 (*scheduler*)。 
+另一个选择是减少推理步数。 你可以选择一个更高效的调度器 (*scheduler*) 可以减少推理步数同时保证输出质量。您可以在 [VictorPipeline] 中通过调用compatibles方法找到与当前模型兼容的调度器 (*scheduler*)。 
 
 ```python
 pipeline.scheduler.compatibles
@@ -121,7 +121,7 @@ pipeline.scheduler.compatibles
 Stable Diffusion 模型默认使用的是 [`PNDMScheduler`] ，通常要大概50步推理, 但是像 [`DPMSolverMultistepScheduler`] 这样更高效的调度器只要大概 20 或 25 步推理. 使用 [`ConfigMixin.from_config`] 方法加载新的调度器:
 
 ```python
-from diffusers import DPMSolverMultistepScheduler
+from VictorAI import DPMSolverMultistepScheduler
 
 pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 ```
@@ -159,13 +159,13 @@ def get_inputs(batch_size=1):
 设置 `batch_size=4` ，然后看一看我们消耗了多少内存:
 
 ```python
-from diffusers.utils import make_image_grid 
+from VictorAI.utils import make_image_grid 
 
 images = pipeline(**get_inputs(batch_size=4)).images
 make_image_grid(images, 2, 2)
 ```
 
-除非你有一个更大内存的GPU, 否则上述代码会返回 `OOM` 错误! 大部分内存被 cross-attention 层使用。按顺序运行可以节省大量内存，而不是在批处理中进行。你可以为 pipeline 配置 [`~DiffusionPipeline.enable_attention_slicing`] 函数:
+除非你有一个更大内存的GPU, 否则上述代码会返回 `OOM` 错误! 大部分内存被 cross-attention 层使用。按顺序运行可以节省大量内存，而不是在批处理中进行。你可以为 pipeline 配置 [`~VictorPipeline.enable_attention_slicing`] 函数:
 
 ```python
 pipeline.enable_attention_slicing()
@@ -199,7 +199,7 @@ make_image_grid(images, rows=2, cols=4)
 也可以尝试用新版本替换当前 pipeline 组件。让我们加载最新的 [autodecoder](https://huggingface.co/stabilityai/stable-diffusion-2-1/tree/main/vae) 从 Stability AI 加载到 pipeline, 并生成一些图像:
 
 ```python
-from diffusers import AutoencoderKL
+from VictorAI import AutoencoderKL
 
 vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse", torch_dtype=torch.float16).to("cuda")
 pipeline.vae = vae
@@ -257,7 +257,7 @@ make_image_grid(images, 2, 2)
 
 ## 最后
 
-在本教程中, 您学习了如何优化[`DiffusionPipeline`]以提高计算和内存效率，以及提高生成输出的质量. 如果你有兴趣让你的 pipeline 更快, 可以看一看以下资源:
+在本教程中, 您学习了如何优化[`VictorPipeline`]以提高计算和内存效率，以及提高生成输出的质量. 如果你有兴趣让你的 pipeline 更快, 可以看一看以下资源:
 
 - 学习 [PyTorch 2.0](./optimization/torch2.0) 和 [`torch.compile`](https://pytorch.org/docs/stable/generated/torch.compile.html) 可以让推理速度提高 5 - 300% . 在 A100 GPU 上, 推理速度可以提高 50% !
 - 如果你没法用 PyTorch 2, 我们建议你安装 [xFormers](./optimization/xformers)。它的内存高效注意力机制（*memory-efficient attention mechanism*）与PyTorch 1.13.1配合使用，速度更快，内存消耗更少。

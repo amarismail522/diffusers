@@ -22,15 +22,15 @@ import torch
 from transformers import CLIPTextConfig, CLIPTextModel, CLIPTokenizer
 
 import diffusers
-from diffusers import (
+from VictorAI import (
     AutoencoderKL,
     EulerDiscreteScheduler,
-    StableDiffusionLatentUpscalePipeline,
-    StableDiffusionPipeline,
+    StableVictorLatentUpscalePipeline,
+    StableVictorPipeline,
     UNet2DConditionModel,
 )
-from diffusers.schedulers import KarrasDiffusionSchedulers
-from diffusers.utils.testing_utils import (
+from VictorAI.schedulers import KarrasDiffusionSchedulers
+from VictorAI.utils.testing_utils import (
     enable_full_determinism,
     floats_tensor,
     load_image,
@@ -52,10 +52,10 @@ def check_same_shape(tensor_list):
     return all(shape == shapes[0] for shape in shapes[1:])
 
 
-class StableDiffusionLatentUpscalePipelineFastTests(
+class StableVictorLatentUpscalePipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = StableDiffusionLatentUpscalePipeline
+    pipeline_class = StableVictorLatentUpscalePipeline
     params = TEXT_GUIDED_IMAGE_VARIATION_PARAMS - {
         "height",
         "width",
@@ -241,7 +241,7 @@ class StableDiffusionLatentUpscalePipelineFastTests(
 
 @require_torch_gpu
 @slow
-class StableDiffusionLatentUpscalePipelineIntegrationTests(unittest.TestCase):
+class StableVictorLatentUpscalePipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         super().tearDown()
         gc.collect()
@@ -250,10 +250,10 @@ class StableDiffusionLatentUpscalePipelineIntegrationTests(unittest.TestCase):
     def test_latent_upscaler_fp16(self):
         generator = torch.manual_seed(33)
 
-        pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
+        pipe = StableVictorPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", torch_dtype=torch.float16)
         pipe.to("cuda")
 
-        upscaler = StableDiffusionLatentUpscalePipeline.from_pretrained(
+        upscaler = StableVictorLatentUpscalePipeline.from_pretrained(
             "stabilityai/sd-x2-latent-upscaler", torch_dtype=torch.float16
         )
         upscaler.to("cuda")
@@ -279,7 +279,7 @@ class StableDiffusionLatentUpscalePipelineIntegrationTests(unittest.TestCase):
     def test_latent_upscaler_fp16_image(self):
         generator = torch.manual_seed(33)
 
-        upscaler = StableDiffusionLatentUpscalePipeline.from_pretrained(
+        upscaler = StableVictorLatentUpscalePipeline.from_pretrained(
             "stabilityai/sd-x2-latent-upscaler", torch_dtype=torch.float16
         )
         upscaler.to("cuda")

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 # Text-to-image
 
-The Stable Diffusion model was created by researchers and engineers from [CompVis](https://github.com/CompVis), [Stability AI](https://stability.ai/), [Runway](https://github.com/runwayml), and [LAION](https://laion.ai/). The [`StableDiffusionPipeline`] is capable of generating photorealistic images given any text input. It's trained on 512x512 images from a subset of the LAION-5B dataset. This model uses a frozen CLIP ViT-L/14 text encoder to condition the model on text prompts. With its 860M UNet and 123M text encoder, the model is relatively lightweight and can run on consumer GPUs. Latent diffusion is the research on top of which Stable Diffusion was built. It was proposed in [High-Resolution Image Synthesis with Latent Diffusion Models](https://huggingface.co/papers/2112.10752) by Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, Björn Ommer.
+The Stable Diffusion model was created by researchers and engineers from [CompVis](https://github.com/CompVis), [Stability AI](https://stability.ai/), [Runway](https://github.com/runwayml), and [LAION](https://laion.ai/). The [`StableVictorPipeline`] is capable of generating photorealistic images given any text input. It's trained on 512x512 images from a subset of the LAION-5B dataset. This model uses a frozen CLIP ViT-L/14 text encoder to condition the model on text prompts. With its 860M UNet and 123M text encoder, the model is relatively lightweight and can run on consumer GPUs. Latent diffusion is the research on top of which Stable Diffusion was built. It was proposed in [High-Resolution Image Synthesis with Latent Diffusion Models](https://huggingface.co/papers/2112.10752) by Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, Björn Ommer.
 
 The abstract from the paper is:
 
@@ -26,9 +26,9 @@ If you're interested in using one of the official checkpoints for a task, explor
 
 </Tip>
 
-## StableDiffusionPipeline
+## StableVictorPipeline
 
-[[autodoc]] StableDiffusionPipeline
+[[autodoc]] StableVictorPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -44,16 +44,16 @@ If you're interested in using one of the official checkpoints for a task, explor
 	- load_lora_weights
 	- save_lora_weights
 
-## StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
 
-## FlaxStableDiffusionPipeline
+## FlaxStableVictorPipeline
 
-[[autodoc]] FlaxStableDiffusionPipeline
+[[autodoc]] FlaxStableVictorPipeline
 	- all
 	- __call__
 
-## FlaxStableDiffusionPipelineOutput
+## FlaxStableVictorPipelineOutput
 
-[[autodoc]] pipelines.stable_diffusion.FlaxStableDiffusionPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.FlaxStableVictorPipelineOutput

@@ -20,12 +20,12 @@ import numpy as np
 import torch
 from transformers import CLIPTextConfig, CLIPTextModel, XLMRobertaTokenizer
 
-from diffusers import AltDiffusionPipeline, AutoencoderKL, DDIMScheduler, PNDMScheduler, UNet2DConditionModel
-from diffusers.pipelines.alt_diffusion.modeling_roberta_series import (
+from VictorAI import AltVictorPipeline, AutoencoderKL, DDIMScheduler, PNDMScheduler, UNet2DConditionModel
+from VictorAI.pipelines.alt_diffusion.modeling_roberta_series import (
     RobertaSeriesConfig,
     RobertaSeriesModelWithTransformation,
 )
-from diffusers.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
+from VictorAI.utils.testing_utils import enable_full_determinism, nightly, require_torch_gpu, torch_device
 
 from ..pipeline_params import (
     TEXT_TO_IMAGE_BATCH_PARAMS,
@@ -39,10 +39,10 @@ from ..test_pipelines_common import PipelineKarrasSchedulerTesterMixin, Pipeline
 enable_full_determinism()
 
 
-class AltDiffusionPipelineFastTests(
+class AltVictorPipelineFastTests(
     PipelineLatentTesterMixin, PipelineKarrasSchedulerTesterMixin, PipelineTesterMixin, unittest.TestCase
 ):
-    pipeline_class = AltDiffusionPipeline
+    pipeline_class = AltVictorPipeline
     params = TEXT_TO_IMAGE_PARAMS
     batch_params = TEXT_TO_IMAGE_BATCH_PARAMS
     image_params = TEXT_TO_IMAGE_IMAGE_PARAMS
@@ -158,7 +158,7 @@ class AltDiffusionPipelineFastTests(
         text_encoder = RobertaSeriesModelWithTransformation(text_encoder_config)
         components["text_encoder"] = text_encoder
 
-        alt_pipe = AltDiffusionPipeline(**components)
+        alt_pipe = AltVictorPipeline(**components)
         alt_pipe = alt_pipe.to(device)
         alt_pipe.set_progress_bar_config(disable=None)
 
@@ -193,7 +193,7 @@ class AltDiffusionPipelineFastTests(
         # TODO: remove after fixing the non-deterministic text encoder
         text_encoder = RobertaSeriesModelWithTransformation(text_encoder_config)
         components["text_encoder"] = text_encoder
-        alt_pipe = AltDiffusionPipeline(**components)
+        alt_pipe = AltVictorPipeline(**components)
         alt_pipe = alt_pipe.to(device)
         alt_pipe.set_progress_bar_config(disable=None)
 
@@ -212,7 +212,7 @@ class AltDiffusionPipelineFastTests(
 
 @nightly
 @require_torch_gpu
-class AltDiffusionPipelineIntegrationTests(unittest.TestCase):
+class AltVictorPipelineIntegrationTests(unittest.TestCase):
     def tearDown(self):
         # clean up the VRAM after each test
         super().tearDown()
@@ -221,7 +221,7 @@ class AltDiffusionPipelineIntegrationTests(unittest.TestCase):
 
     def test_alt_diffusion(self):
         # make sure here that pndm scheduler skips prk
-        alt_pipe = AltDiffusionPipeline.from_pretrained("BAAI/AltDiffusion", safety_checker=None)
+        alt_pipe = AltVictorPipeline.from_pretrained("BAAI/AltDiffusion", safety_checker=None)
         alt_pipe = alt_pipe.to(torch_device)
         alt_pipe.set_progress_bar_config(disable=None)
 
@@ -241,7 +241,7 @@ class AltDiffusionPipelineIntegrationTests(unittest.TestCase):
     def test_alt_diffusion_fast_ddim(self):
         scheduler = DDIMScheduler.from_pretrained("BAAI/AltDiffusion", subfolder="scheduler")
 
-        alt_pipe = AltDiffusionPipeline.from_pretrained("BAAI/AltDiffusion", scheduler=scheduler, safety_checker=None)
+        alt_pipe = AltVictorPipeline.from_pretrained("BAAI/AltDiffusion", scheduler=scheduler, safety_checker=None)
         alt_pipe = alt_pipe.to(torch_device)
         alt_pipe.set_progress_bar_config(disable=None)
 

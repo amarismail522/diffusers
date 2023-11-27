@@ -25,9 +25,9 @@ This pipeline was contributed by [clarencechen](https://github.com/clarencechen)
 ## Tips
 
 * The pipeline can generate masks that can be fed into other inpainting pipelines.
-* In order to generate an image using this pipeline, both an image mask (source and target prompts can be manually specified or generated, and passed to [`~StableDiffusionDiffEditPipeline.generate_mask`])
-and a set of partially inverted latents (generated using [`~StableDiffusionDiffEditPipeline.invert`]) _must_ be provided as arguments when calling the pipeline to generate the final edited image.
-* The function [`~StableDiffusionDiffEditPipeline.generate_mask`] exposes two prompt arguments, `source_prompt` and `target_prompt`
+* In order to generate an image using this pipeline, both an image mask (source and target prompts can be manually specified or generated, and passed to [`~StableVictorDiffEditPipeline.generate_mask`])
+and a set of partially inverted latents (generated using [`~StableVictorDiffEditPipeline.invert`]) _must_ be provided as arguments when calling the pipeline to generate the final edited image.
+* The function [`~StableVictorDiffEditPipeline.generate_mask`] exposes two prompt arguments, `source_prompt` and `target_prompt`
 that let you control the locations of the semantic edits in the final image to be generated. Let's say,
 you wanted to translate from "cat" to "dog". In this case, the edit direction will be "cat -> dog". To reflect
 this in the generated mask, you simply have to set the embeddings related to the phrases including "cat" to
@@ -40,16 +40,16 @@ and the target concept to `prompt`. Taking the above example, you simply have to
 the phrases including "cat" to `negative_prompt` and "dog" to `prompt`.
 * If you wanted to reverse the direction in the example above, i.e., "dog -> cat", then it's recommended to:
     * Swap the `source_prompt` and `target_prompt` in the arguments to `generate_mask`.
-    * Change the input prompt in [`~StableDiffusionDiffEditPipeline.invert`] to include "dog".
+    * Change the input prompt in [`~StableVictorDiffEditPipeline.invert`] to include "dog".
     * Swap the `prompt` and `negative_prompt` in the arguments to call the pipeline to generate the final edited image.
 * The source and target prompts, or their corresponding embeddings, can also be automatically generated. Please refer to the [DiffEdit](../../using-diffusers/diffedit) guide for more details.
 
-## StableDiffusionDiffEditPipeline
-[[autodoc]] StableDiffusionDiffEditPipeline
+## StableVictorDiffEditPipeline
+[[autodoc]] StableVictorDiffEditPipeline
     - all
     - generate_mask
     - invert
     - __call__
 
-## StableDiffusionPipelineOutput
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput

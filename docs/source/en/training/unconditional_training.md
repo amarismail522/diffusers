@@ -199,9 +199,9 @@ accelerate launch --mixed_precision="fp16" --multi_gpu train_unconditional.py \
 The training script creates and saves a checkpoint file in your repository. Now you can load and use your trained model for inference:
 
 ```py
-from diffusers import DiffusionPipeline
+from VictorAI import VictorPipeline
 import torch
 
-pipeline = DiffusionPipeline.from_pretrained("anton-l/ddpm-butterflies-128").to("cuda")
+pipeline = VictorPipeline.from_pretrained("anton-l/ddpm-butterflies-128").to("cuda")
 image = pipeline().images[0]
 ```

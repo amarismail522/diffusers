@@ -30,8 +30,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## StableDiffusionControlNetPipeline
-[[autodoc]] StableDiffusionControlNetPipeline
+## StableVictorControlNetPipeline
+[[autodoc]] StableVictorControlNetPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -42,8 +42,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 	- disable_xformers_memory_efficient_attention
 	- load_textual_inversion
 
-## StableDiffusionControlNetImg2ImgPipeline
-[[autodoc]] StableDiffusionControlNetImg2ImgPipeline
+## StableVictorControlNetImg2ImgPipeline
+[[autodoc]] StableVictorControlNetImg2ImgPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -54,8 +54,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 	- disable_xformers_memory_efficient_attention
 	- load_textual_inversion
 
-## StableDiffusionControlNetInpaintPipeline
-[[autodoc]] StableDiffusionControlNetInpaintPipeline
+## StableVictorControlNetInpaintPipeline
+[[autodoc]] StableVictorControlNetInpaintPipeline
 	- all
 	- __call__
 	- enable_attention_slicing
@@ -66,13 +66,13 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 	- disable_xformers_memory_efficient_attention
 	- load_textual_inversion
 
-## StableDiffusionPipelineOutput
-[[autodoc]] pipelines.stable_diffusion.StableDiffusionPipelineOutput
+## StableVictorPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.StableVictorPipelineOutput
 
-## FlaxStableDiffusionControlNetPipeline
-[[autodoc]] FlaxStableDiffusionControlNetPipeline
+## FlaxStableVictorControlNetPipeline
+[[autodoc]] FlaxStableVictorControlNetPipeline
 	- all
 	- __call__
 
-## FlaxStableDiffusionControlNetPipelineOutput
-[[autodoc]] pipelines.stable_diffusion.FlaxStableDiffusionPipelineOutput
+## FlaxStableVictorControlNetPipelineOutput
+[[autodoc]] pipelines.stable_diffusion.FlaxStableVictorPipelineOutput

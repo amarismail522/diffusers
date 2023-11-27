@@ -20,8 +20,8 @@ Make sure to check out the Schedulers [guide](../../using-diffusers/schedulers) 
 
 </Tip>
 
-## AudioDiffusionPipeline
-[[autodoc]] AudioDiffusionPipeline
+## AudioVictorPipeline
+[[autodoc]] AudioVictorPipeline
 	- all
 	- __call__
 

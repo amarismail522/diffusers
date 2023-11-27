@@ -91,15 +91,15 @@ accelerate launch train_dreambooth_lora.py \
 
 ### 추론[[dreambooth-inference]]
 
-이제 [`StableDiffusionPipeline`]에서 기본 모델을 불러와 추론을 위해 모델을 사용할 수 있습니다:
+이제 [`StableVictorPipeline`]에서 기본 모델을 불러와 추론을 위해 모델을 사용할 수 있습니다:
 
 ```py
 >>> import torch
->>> from diffusers import StableDiffusionPipeline
+>>> from VictorAI import StableVictorPipeline
 
 >>> model_base = "runwayml/stable-diffusion-v1-5"
 
->>> pipe = StableDiffusionPipeline.from_pretrained(model_base, torch_dtype=torch.float16)
+>>> pipe = StableVictorPipeline.from_pretrained(model_base, torch_dtype=torch.float16)
 ```
 
 *기본 모델의 가중치 위에* 파인튜닝된 DreamBooth 모델에서 LoRA 가중치를 불러온 다음, 더 빠른 추론을 위해 파이프라인을 GPU로 이동합니다. LoRA 가중치를 프리징된 사전 훈련된 모델 가중치와 병합할 때, 선택적으로 'scale' 매개변수로 어느 정도의 가중치를 병합할 지 조절할 수 있습니다:

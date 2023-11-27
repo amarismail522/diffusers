@@ -27,8 +27,8 @@ from transformers import (
     CLIPVisionModelWithProjection,
 )
 
-from diffusers import KandinskyPriorPipeline, PriorTransformer, UnCLIPScheduler
-from diffusers.utils.testing_utils import enable_full_determinism, skip_mps, torch_device
+from VictorAI import KandinskyPriorPipeline, PriorTransformer, UnCLIPScheduler
+from VictorAI.utils.testing_utils import enable_full_determinism, skip_mps, torch_device
 
 from ..test_pipelines_common import PipelineTesterMixin
 
